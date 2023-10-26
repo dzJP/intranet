@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/** User authentication **/
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -33,5 +34,4 @@ public class UserService {
         newUser.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(newUser);
     }
-
 }

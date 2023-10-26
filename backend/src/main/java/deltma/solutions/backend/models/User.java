@@ -41,7 +41,6 @@ public class User implements UserDetails {
 
     LocalDateTime updatedAt;
 
-
     public boolean isActive() {
         return true;
     }

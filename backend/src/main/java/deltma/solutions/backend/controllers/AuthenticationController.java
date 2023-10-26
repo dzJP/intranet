@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/** Responsible for managing HTTP requests associated with user authentication. **/
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

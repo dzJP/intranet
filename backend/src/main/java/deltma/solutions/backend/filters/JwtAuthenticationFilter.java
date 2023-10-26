@@ -22,6 +22,7 @@ import java.io.IOException;
 /**
  * Intercepts incoming requests, extracts and validates the JWT token,
  * and sets up the authentication context if the token is valid. */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j

@@ -23,7 +23,7 @@ public class JwtService {
     // Injects the JWT secret key and expiration time in milliseconds from application properties.
     @Value("${token.secret.key}")
     String jwtSecretKey;
-    @Value("${token.expirations}")
+    @Value("${token.expirationms}")
     Long jwtExpirationMs;
 
     // Extracts the username from a JWT token.

@@ -19,6 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Intercepts incoming requests, extracts and validates the JWT token,
+ * and sets up the authentication context if the token is valid. */
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -32,20 +36,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        // Extracts the Authorization header from the HTTP request.
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+
+        // Checks if the Authorization header is missing or not formatted as expected.
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+        // Extracts the JWT token from the Authorization header.
         jwt = authHeader.substring(7);
-        log.debug("JWT - {}", jwt.toString());
+        log.debug("JWT - {}", jwt.toString()); // logs JWT for debugging purposes
+
+        // Extracts the user's email from the JWT.
         userEmail = jwtService.extractUserName(jwt);
+
+        // Checks if the user's email is not empty and if the user is not already authenticated.
         if (StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Loads user details from the database using the user's email.
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userEmail);
+
+            // Checks if the JWT token is valid for the user.
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                log.debug("User - {}", userDetails);
+                log.debug("User - {}", userDetails);// logs user details for debugging purposes.
+
+                // Sets up the user's authentication details in the security context.
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -54,6 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(context);
             }
         }
+        // Continue with the filter chain.
         filterChain.doFilter(request, response);
     }
 }

@@ -23,12 +23,14 @@ public class AuthenticationService {
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+
         // Create a new User object using builder pattern with provided details.
         var user = User.builder()
+                .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword())) // Encode the password.
+                .phoneNumber(request.getPhoneNumber())
                 .role(Role.ROLE_USER) // Assign a role to the user (e.g., ROLE_USER).
                 .build();
 

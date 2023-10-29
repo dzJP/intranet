@@ -29,10 +29,10 @@ public class User implements UserDetails {
 
     String lastName;
 
-    String phoneNumber;
-
     @Column(unique = true)
     String password;
+
+    String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     Role role;

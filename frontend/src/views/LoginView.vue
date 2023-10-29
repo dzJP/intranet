@@ -1,15 +1,15 @@
 <template>
-<LoginForm />
+	<LoginForm />
 </template>
 
 <script>
 import LoginForm from '@/components/LoginForm.vue';
 
 export default {
-  name: 'HomeView',
-  components: {
-    LoginForm,
-  },
+	name: 'HomeView',
+	components: {
+		LoginForm,
+	},
 };
 
 </script>

@@ -29,11 +29,11 @@ public class SeedDataConfig implements CommandLineRunner {
 
         User admin1 = User
                 .builder()
+                .email("admin1@admin.com")
                 .firstName("admin1")
                 .lastName("admin1")
-                .phoneNumber("123456789")
-                .email("admin1@admin.com")
                 .password(passwordEncoder.encode("password"))
+                .phoneNumber("123456789")
                 .role(Role.ROLE_ADMIN)
                 .build();
 
@@ -42,11 +42,11 @@ public class SeedDataConfig implements CommandLineRunner {
 
         User user1 = User
                 .builder()
+                .email("user1@user.com")
                 .firstName("user1")
                 .lastName("user1")
-                .phoneNumber("123456789")
-                .email("user1@user.com")
                 .password(passwordEncoder.encode("password"))
+                .phoneNumber("123456789")
                 .role(Role.ROLE_USER)
                 .build();
 

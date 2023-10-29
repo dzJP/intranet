@@ -1,11 +1,18 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
   },
   {
     path: '/profile',
@@ -17,6 +24,7 @@ const routes = [
     name: 'colleagues',
     component: () => import('../views/ColleaguesView.vue')
   },
+  
   {
     path: '/admin',
     name: 'admin',
@@ -25,8 +33,20 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach(async (to) => {
+  const publicPages = ['/login']
+  const authRequired = !publicPages.includes(to.path)
+  const auth = useAuthStore();
+
+  // if auth is required and the user is not logged in
+  if(authRequired && !auth.user) {
+    auth.returnUrl = to.fullPath;
+    return '/login';
+  }
+});
 
 export default router

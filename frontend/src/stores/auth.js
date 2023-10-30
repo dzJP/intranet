@@ -33,7 +33,14 @@ export const useAuthStore = defineStore({
 					this.user = email;
 					this.token = token;
 					this.role = role;
-					router.push(this.returnUrl || '/');
+
+					if (role === 'ROLE_ADMIN') {
+						router.push('/admin');
+					} else {
+						router.push(this.returnUrl || '/');
+					}
+
+					console.log('Logged-in user role:', this.role);
 				}
 			} catch (error) {
 				console.error('Login failed:', error);
@@ -68,11 +75,14 @@ export const useAuthStore = defineStore({
 		logout() {
 			this.user = '';
 			this.token = '';
-			this.role = ''; 
+			this.role = '';
 			localStorage.removeItem('user');
 			localStorage.removeItem('token');
-			localStorage.removeItem('role'); 
+			localStorage.removeItem('role');
 			router.push('/login');
+		},
+		checkUserRole() {
+			console.log('Logged-in user role:', this.role);
 		}
 	}
 

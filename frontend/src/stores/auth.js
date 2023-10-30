@@ -8,6 +8,7 @@ export const useAuthStore = defineStore({
 		return {
 			user: localStorage.getItem('user') || '',
 			token: localStorage.getItem('token') || '',
+			role: localStorage.getItem('role') || '',
 			returnUrl: '/'
 		}
 	},
@@ -25,10 +26,13 @@ export const useAuthStore = defineStore({
 
 				if (response.status === 200) {
 					const token = response.data.token;
+					const role = response.data.role;
 					localStorage.setItem('user', email);
 					localStorage.setItem('token', token);
+					localStorage.setItem('role', role);
 					this.user = email;
 					this.token = token;
+					this.role = role;
 					router.push(this.returnUrl || '/');
 				}
 			} catch (error) {
@@ -64,8 +68,10 @@ export const useAuthStore = defineStore({
 		logout() {
 			this.user = '';
 			this.token = '';
+			this.role = ''; 
 			localStorage.removeItem('user');
 			localStorage.removeItem('token');
+			localStorage.removeItem('role'); 
 			router.push('/login');
 		}
 	}

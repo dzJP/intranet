@@ -57,7 +57,18 @@ public class AuthenticationService {
         // Generate a JWT token for the authenticated user.
         var jwt = jwtService.generateToken(user);
 
+        // Retrieve the user's role from the User entity.
+        Role role = user.getRole();
+        System.out.println(role.toString());
+
         // Return a JwtAuthenticationResponse containing the generated token.
-        return JwtAuthenticationResponse.builder().token(jwt).build();
+        return JwtAuthenticationResponse
+                .builder()
+                .token(jwt)
+                .role(role.toString())
+                .build();
     }
+
+
+
 }

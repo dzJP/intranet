@@ -27,11 +27,7 @@ public class UserService {
     }
 
     public User save(User newUser) {
-        if(newUser.getEmail() == null) {
-            newUser.setCreatedAt(LocalDateTime.now());
+            return userRepository.save(newUser);
         }
 
-        newUser.setUpdatedAt(LocalDateTime.now());
-        return userRepository.save(newUser);
-    }
 }

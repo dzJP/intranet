@@ -17,7 +17,7 @@ public class EmailSenderService {
         SimpleMailMessage message = new SimpleMailMessage();
 
         // Setting the sender's email address
-        message.setFrom("jakobpietrzyk93@gmail.com");
+        message.setFrom("noreply@deltmasolutions.com");
 
         // Setting the recipient's email address
         message.setTo(toEmail);

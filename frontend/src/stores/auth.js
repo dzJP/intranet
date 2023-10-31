@@ -35,7 +35,12 @@ export const useAuthStore = defineStore({
 					this.role = role;
 
 					if (role === 'ROLE_ADMIN') {
-						router.push('/admin');
+						// Client-side check
+						if (this.role === 'ROLE_ADMIN') {
+							router.push('/admin');
+						} else {
+							console.error('User does not have access tooooo admin panel.');
+						}
 					} else {
 						router.push(this.returnUrl || '/');
 					}

@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,13 +36,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    LocalDateTime createdAt;
-
-    LocalDateTime updatedAt;
-
-    public boolean isActive() {
-        return true;
-    }
+    boolean isActive = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,7 +66,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isActive;
     }
 
 }

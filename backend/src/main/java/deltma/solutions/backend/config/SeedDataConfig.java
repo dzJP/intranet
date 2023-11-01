@@ -35,6 +35,7 @@ public class SeedDataConfig implements CommandLineRunner {
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_ADMIN)
+                .isActive(true)
                 .build();
 
         userService.save(admin1);
@@ -48,6 +49,7 @@ public class SeedDataConfig implements CommandLineRunner {
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_USER)
+                .isActive(false)
                 .build();
 
         userService.save(user1);

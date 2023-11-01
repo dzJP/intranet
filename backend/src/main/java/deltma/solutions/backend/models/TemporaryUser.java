@@ -8,14 +8,13 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "temporary_users")
 public class TemporaryUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "email", nullable = false, unique = true)
     String email;
 
-    @Column(unique = true)
     UUID uuid;
 
     public TemporaryUser(String email) {

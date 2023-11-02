@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,28 +53,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
-                // Disable Cross-Site Request Forgery (CSRF) protection.
-                .csrf(AbstractHttpConfigurer::disable
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource()) // Use your existing corsConfigurationSource
                 )
-                // Set session management to be stateless = no session will be created or used.
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Authorize specific HTTP requests based on their method and path.
                 .authorizeHttpRequests(authorize -> authorize
-                        // Allow POST requests to "/api/v1/signup" and "/api/v1/signin" without authentication.
                         .requestMatchers(HttpMethod.POST, "/api/v1/signup", "/api/v1/signin").permitAll()
-                        // Allow GET requests to paths starting with "/api/v1/test/" without authentication.
                         .requestMatchers(HttpMethod.GET, "/api/v1/test/**").permitAll()
-                        // For any other request, authentication is required.
                         .anyRequest().authenticated()
                 )
-                // Set a custom authentication provider and add a JWT authentication filter before the
-                // UsernamePasswordAuthenticationFilter.
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Build and return the configured HttpSecurity object.
         return http.build();
     }
 
@@ -84,10 +75,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8081"));
         configuration.setAllowedMethods(List.of("GET", "POST"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-type", "X-CSRF-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

@@ -28,6 +28,9 @@ public class UserService {
 
     public User save(User newUser) {
             return userRepository.save(newUser);
-        }
+    }
 
+    public boolean isEmailAssociatedWithUser(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ValidatorServiceImpl implements ValidatorService {
 
-
     @Override
     public void validateUser(User user) {
         if (user == null) {

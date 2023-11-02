@@ -21,5 +21,4 @@ public class TemporaryUser {
         this.email = email;
         this.uuid = UUID.randomUUID();
     }
-
 }

@@ -68,7 +68,4 @@ public class AuthenticationService {
                 .role(role.toString())
                 .build();
     }
-
-
-
 }

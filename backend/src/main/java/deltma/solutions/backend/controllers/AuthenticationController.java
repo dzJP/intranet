@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
+// use response entity
     @PostMapping("/signup")
     public JwtAuthenticationResponse signup(@RequestBody SignUpRequest request) {
         return authenticationService.signup(request);

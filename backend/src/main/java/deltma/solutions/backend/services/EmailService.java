@@ -13,7 +13,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendInvitations(List<String> emails, String invitationLink) {
+    public void sendInvitation(List<String> emails, String invitationLink) {
         for (String email : emails) {
             try {
                 SimpleMailMessage message = new SimpleMailMessage();

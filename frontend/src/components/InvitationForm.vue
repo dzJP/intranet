@@ -6,7 +6,10 @@
                 <span class="toggle" @click="togglePopup">&times;</span>
                 <h2>Invite Users</h2>
                 <form @submit.prevent="inviteUsers">
-                    <input v-for="(email, index) in emails" :key="index" v-model="emails[index]" type="email" required />
+                    <div v-for="(email, index) in emails" :key="index">
+                        <input v-model="emails[index]" type="email" required />
+                    </div>
+                    <button @click.prevent="addEmail">Add Another Email</button>
                     <button type="submit">Send Invitations</button>
                 </form>
             </div>
@@ -22,7 +25,7 @@ export default {
     data() {
         return {
             isPopupVisible: false,
-            emails: [''],
+            emails: ['', ''], // Initial array with 2 empty strings for 2 fields
         };
     },
     methods: {
@@ -41,15 +44,14 @@ export default {
         sendInvitations(emails) {
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-            const jwtToken = localStorage.getItem('token');
-            console.log('JWT Token:', jwtToken);
+            const jwtToken = localStorage.getItem('token');  // Add this line
 
             axios
                 .post('http://localhost:8080/api/v1/send-invitations', emails, {
                     headers: {
                         [csrfHeader]: csrfToken,
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`
+                        'Authorization': `Bearer ${jwtToken}`  // Include the JWT token in the header
                     }
                 })
                 .then(response => {
@@ -59,11 +61,14 @@ export default {
                 .catch(error => {
                     console.error('Error sending invitations:', error);
                 });
-        }
+        },
+        addEmail() {
+            this.emails.push('');
+        },
     },
 };
 </script>
-
+  
 <style>
 .popup {
     position: fixed;
@@ -74,4 +79,7 @@ export default {
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* Add any additional styles as needed */
 </style>
+  

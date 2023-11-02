@@ -47,7 +47,7 @@ public class TemporaryUserService {
 
             // Send invitation email
             String invitationLink = generateInvitationLink(temporaryUser.getUuid());
-            emailService.sendInvitations(List.of(email), invitationLink);
+            emailService.sendInvitation(List.of(email), invitationLink);
         }
     }
 

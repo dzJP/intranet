@@ -20,7 +20,8 @@ public class EmailService {
                 message.setFrom("noreply@deltmasolutions.com");
                 message.setTo(email);
                 message.setSubject("Invitation to Register");
-                message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: " + invitationLink);
+                message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
+                        + invitationLink);
 
                 javaMailSender.send(message);
 

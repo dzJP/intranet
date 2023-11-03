@@ -3,14 +3,13 @@ package deltma.solutions.backend;
 import deltma.solutions.backend.models.Role;
 import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.services.ValidatorService;
-import deltma.solutions.backend.services.ValidatorServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ValidatorServiceImplTest {
+public class ValidatorServiceTest {
 
-    private final ValidatorService validatorService = new ValidatorServiceImpl();
+    private final ValidatorService validatorService = new ValidatorService();
 
     // Email validation tests
     @Test

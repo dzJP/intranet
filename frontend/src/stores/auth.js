@@ -53,7 +53,7 @@ export const useAuthStore = defineStore({
 		},
 		async register(email, firstName, lastName, password, phoneNumber) {
 			try {
-				const response = await axios.post('http://localhost:8080/api/v1/signup', {
+				const response = await axios.post('http://localhost:8080/api/v1/register', {
 					email,
 					firstName,
 					lastName,

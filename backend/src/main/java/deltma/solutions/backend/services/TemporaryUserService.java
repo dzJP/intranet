@@ -2,7 +2,9 @@ package deltma.solutions.backend.services;
 
 import deltma.solutions.backend.dto.TemporaryUserDTO;
 import deltma.solutions.backend.models.TemporaryUser;
+import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.TemporaryUserRepository;
+import deltma.solutions.backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +14,12 @@ import java.util.UUID;
 @Service
 public class TemporaryUserService {
 
+    private final UserRepository userRepository;
     private final TemporaryUserRepository temporaryUserRepository;
     private final EmailService emailService;
 
-    public TemporaryUserService(
-            TemporaryUserRepository temporaryUserRepository,
-            EmailService emailService
-    ) {
+    public TemporaryUserService(UserRepository userRepository, TemporaryUserRepository temporaryUserRepository, EmailService emailService) {
+        this.userRepository = userRepository;
         this.temporaryUserRepository = temporaryUserRepository;
         this.emailService = emailService;
     }
@@ -45,25 +46,25 @@ public class TemporaryUserService {
                 new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
     }
 
-    public void inviteTemporaryUsers(List<String> emails) {
-        for (String email : emails) {
-            TemporaryUser temporaryUser = new TemporaryUser(email);
-            temporaryUser = temporaryUserRepository.save(temporaryUser);
+        public void inviteTemporaryUsers(List<String> emails) {
+            for (String email : emails) {
+                TemporaryUser temporaryUser = new TemporaryUser(email);
+                temporaryUser = temporaryUserRepository.save(temporaryUser);
 
-            // Send invitation email
-            String invitationLink = generateInvitationLink(temporaryUser.getUuid());
-            emailService.sendInvitation(List.of(email), invitationLink);
+                String invitationLink = generateInvitationLink(temporaryUser.getUuid());
+                emailService.sendInvitation(List.of(email), invitationLink);
+            }
         }
-    }
 
     private String generateInvitationLink(UUID uuid) {
         return "http://localhost:8081/register/" + uuid;
     }
 
-    public boolean isEmailAssociatedWithTemporaryUser(String email) {
-        return temporaryUserRepository.existsById(email);
+    public boolean isEmailAssociated(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
+        return userOptional.isPresent() || tempUserOptional.isPresent();
     }
-
 }
 
 

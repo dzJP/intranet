@@ -19,7 +19,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -51,12 +50,18 @@ public class AuthenticationController {
 
     @PostMapping("/send-invitations")
     public ResponseEntity<String> sendInvitations(@RequestBody List<String> emails) {
-        System.out.println("Received request to send invitations: " + emails);
+        for (String email : emails) {
+            boolean isAssociated = temporaryUserService.isEmailAssociated(email);
+            if (isAssociated) {
+                throw new RuntimeException("Email " + email + " is associated with an existing user.");
+            }
+        }
+
         try {
-            // Save temporary users and send invitations
             temporaryUserService.inviteTemporaryUsers(emails);
             return ResponseEntity.ok("Invitations sent successfully!");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error sending invitations: " + e.getMessage());
         }

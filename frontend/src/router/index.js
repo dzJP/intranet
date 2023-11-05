@@ -41,29 +41,19 @@ const router = createRouter({
 	routes
 })
 router.beforeEach(async (to) => {
-
-	// Define an array of public page paths that don't require authentication
 	const publicPages = ['/login', '/register'];
-
-	// Determine if the page being accessed requires authentication
 	const authRequired = !publicPages.includes(to.path);
 
-	// Access the authentication store to get user information
 	const auth = useAuthStore();
 
-	// If authentication is required and the user is not logged in
 	if (authRequired && !auth.user) {
-		// Store the current URL as the return URL for after login
 		auth.returnUrl = to.fullPath;
-		// Redirect to the login page
 		return '/login';
 	}
 
-	// If the user is trying to access the admin page but is not an admin
 	if (to.path === '/admin' && auth.role !== 'ROLE_ADMIN') {
 		console.error('User does not have access to admin panel.');
 
-		// Redirect to a different page if the user doesn't have the required role
 		return '/';
 	}
 });

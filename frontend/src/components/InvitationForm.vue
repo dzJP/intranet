@@ -16,7 +16,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 import axios from 'axios';
 
@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             isPopupVisible: false,
-            emails: ['', ''], // Initial array with 2 empty strings for 2 fields
+            emails: ['', ''], // Initial array with 2 empty strings for 2 fields (or more)
         };
     },
     methods: {
@@ -41,17 +41,43 @@ export default {
                 this.sendInvitations(validEmails);
             }
         },
+        checkEmailsAssociation(emails) {
+            const jwtToken = localStorage.getItem('token');
+
+            axios
+                .post('http://localhost:8080/api/v1/checkEmail', emails, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}`
+                    }
+                })
+                .then(response => {
+                    console.log('Emails checked successfully:', response.data);
+
+                    const notAssociatedEmails = response.data.filter(result => result.includes('not associated'));
+                    if (notAssociatedEmails.length === emails.length) {
+                        this.sendInvitations(emails);
+                    } else {
+                        console.error('Some emails are associated with existing users.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking emails:', error);
+                });
+        },
         sendInvitations(emails) {
+            const jwtToken = localStorage.getItem('token');
+            console.log('JWT Token:', jwtToken);
+
             const csrfToken = document.querySelector('meta[name="_csrf"]').content;
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-            const jwtToken = localStorage.getItem('token');  // Add this line
 
             axios
                 .post('http://localhost:8080/api/v1/send-invitations', emails, {
                     headers: {
                         [csrfHeader]: csrfToken,
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`  // Include the JWT token in the header
+                        'Authorization': `Bearer ${jwtToken}`
                     }
                 })
                 .then(response => {
@@ -68,7 +94,7 @@ export default {
     },
 };
 </script>
-  
+
 <style>
 .popup {
     position: fixed;
@@ -79,7 +105,4 @@ export default {
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Add any additional styles as needed */
 </style>
-  

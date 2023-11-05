@@ -66,10 +66,9 @@ export default {
     },
 };
 </script>
-  
+
 <style scoped>
 .registration-form {
     width: 500px;
 }
 </style>
-  

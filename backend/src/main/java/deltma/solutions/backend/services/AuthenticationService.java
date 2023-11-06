@@ -4,6 +4,7 @@ import deltma.solutions.backend.dto.JwtAuthenticationResponse;
 import deltma.solutions.backend.dto.SignInRequest;
 import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.models.Role;
+import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,16 +16,21 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final UserService userService;
+    private final TemporaryUserService temporaryUserService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+        User newUser = userService.createAndSaveUser(request);
 
-            return JwtAuthenticationResponse
-                    .builder()
-                    .token(userService.generateJwtToken(userService.createAndSaveUser(request)))
-                    .build();
+        // TODO: Registration is only allowed for email addresses that exist in the database.
+
+        temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
+
+        return JwtAuthenticationResponse.builder()
+                .token(userService.generateJwtToken(newUser))
+                .build();
         }
 
     // SignInRequest is used to authenticate an existing user.

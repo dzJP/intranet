@@ -40,7 +40,7 @@ export default {
             if (validEmails.length > 0) {
                 this.sendInvitations(validEmails);
             }
-        },
+        }/* ,
         checkEmailsAssociation(emails) {
             const jwtToken = localStorage.getItem('token');
 
@@ -64,7 +64,7 @@ export default {
                 .catch(error => {
                     console.error('Error checking emails:', error);
                 });
-        },
+        } */,
         sendInvitations(emails) {
             const jwtToken = localStorage.getItem('token');
             console.log('JWT Token:', jwtToken);

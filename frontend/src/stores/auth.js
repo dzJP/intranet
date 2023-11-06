@@ -65,13 +65,19 @@ export const useAuthStore = defineStore({
 					}
 				});
 
-				if (response.status === 201) {
-					const token = response.data.token;
+				console.log(response.status);
+
+				if (response.status === 200) {
+					// TODO: Bug. Redirects to login page but you can access the pages without logging in.
+
+					/* const token = response.data.token;
 					localStorage.setItem('user', email);
 					localStorage.setItem('token', token);
 					this.user = email;
-					this.token = token;
-					router.push(this.returnUrl || '/');
+					this.token = token; */
+					router.push( '/login');
+					
+					
 				}
 			} catch (error) {
 				console.error('Registration failed:', error);

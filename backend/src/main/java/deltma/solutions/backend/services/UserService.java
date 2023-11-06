@@ -54,6 +54,7 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
                 .role(Role.ROLE_USER)
+                .isActive(true)
                 .build();
 
         return userRepository.save(user);

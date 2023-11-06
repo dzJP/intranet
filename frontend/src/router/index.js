@@ -25,7 +25,7 @@ const routes = [
 		component: () => import('../views/ColleaguesView.vue')
 	},
 	{
-		path: '/register',
+		path: '/register/:uuid',
 		name: 'register',
 		component: () => import('../views/RegisterView.vue')
 	},
@@ -40,21 +40,20 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes
 })
-router.beforeEach(async (to) => {
-	const publicPages = ['/login', '/register'];
+router.beforeEach(async (to, from, next) => {
+	const publicPages = ['/login', '/register/:uuid'];
 	const authRequired = !publicPages.includes(to.path);
 
 	const auth = useAuthStore();
 
-	if (authRequired && !auth.user) {
+	if (authRequired && !auth.user && to.path !== `/register/${to.params.uuid}`) {
 		auth.returnUrl = to.fullPath;
-		return '/login';
-	}
-
-	if (to.path === '/admin' && auth.role !== 'ROLE_ADMIN') {
-		console.error('User does not have access to admin panel.');
-
-		return '/';
+		next('/login');
+	} else if (to.path === '/admin' && auth.role !== 'ROLE_ADMIN') {
+		console.error('User does not have access to the admin panel.');
+		next('/');
+	} else {
+		next();
 	}
 });
 

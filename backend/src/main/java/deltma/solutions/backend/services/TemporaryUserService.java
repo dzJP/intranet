@@ -56,6 +56,12 @@ public class TemporaryUserService {
         return userOptional.isPresent() || tempUserOptional.isPresent();
     }
 
+    public void deleteTemporaryUserByEmail(String email) {
+        temporaryUserRepository.findByEmail(email).ifPresent(temporaryUser -> {
+            temporaryUserRepository.delete(temporaryUser);
+        });
+    }
+
 }
 
 

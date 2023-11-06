@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-/** User authentication **/
+/**
+ * User authentication
+ **/
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -20,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ValidatorService validatorService;
 
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
@@ -31,8 +34,19 @@ public class UserService {
         };
     }
 
+    public void validateUser(SignUpRequest request) {
+        validatorService.validateEmail(request.getEmail());
+        validatorService.validateName(request.getFirstName());
+        validatorService.validateName(request.getLastName());
+        validatorService.validatePassword(request.getPassword());
+        validatorService.validatePhoneNumber(request.getPhoneNumber());
+    }
+
     // Create a new User object using builder pattern with provided details.
     public User createAndSaveUser(SignUpRequest request) {
+
+        validateUser(request);
+
         var user = User.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstName())

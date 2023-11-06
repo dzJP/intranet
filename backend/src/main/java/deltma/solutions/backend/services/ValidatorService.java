@@ -22,7 +22,7 @@ public class ValidatorService {
 
     // Validate so name contains only alphabetic characters
     public void validateName(String name) {
-        if (!name.matches("^[a-zA-Z]+$")) {
+        if (!name.matches("^[a-zA-Z]+$") || name.length() < 2 || name.length() > 30) {
             throw new IllegalArgumentException("Invalid name format");
         }
     }

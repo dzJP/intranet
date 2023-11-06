@@ -68,6 +68,18 @@ public class ValidatorServiceTest {
         assertThrows(IllegalArgumentException.class, () -> validatorService.validateString(invalidInput, fieldName));
     }
 
+    @Test
+    public void testInvalidNameShort() {
+        String invalidName = "A";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateName(invalidName));
+        assertEquals("Invalid name format", exception.getMessage());
+    }
+
+    @Test void testInvalidNameLongerThan32() {
+        String invalidName = "AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateName(invalidName));
+    }
+
     // Phone Number validation tests
     @Test
     void validatePhoneNumber_ValidInput_NoExceptionThrown() {

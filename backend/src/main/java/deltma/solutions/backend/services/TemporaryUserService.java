@@ -24,40 +24,30 @@ public class TemporaryUserService {
         this.emailService = emailService;
     }
 
-    public Optional<TemporaryUserDTO> findTempUserByEmail(String email) {
-        Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByEmail(email);
-        return temporaryUserOptional.map(temporaryUser -> new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
-    }
+    public void inviteAndSaveTemporaryUsers(List<String> emails) {
+        for (String email : emails) {
+            UUID uuid = UUID.randomUUID();
+            TemporaryUser temporaryUser = new TemporaryUser(email, uuid.toString());
+            temporaryUserRepository.save(temporaryUser);
 
-    public TemporaryUserDTO saveTempUser(String email) {
-        TemporaryUser temporaryUser = new TemporaryUser(email);
-        try {
-            temporaryUser = temporaryUserRepository.save(temporaryUser);
-            return new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            String invitationLink = generateInvitationLink(uuid);
+            emailService.sendInvitation(List.of(email), invitationLink);
         }
     }
 
-    public Optional<TemporaryUserDTO> findTempUserByUuid(UUID uuid) {
+    private String generateInvitationLink(UUID uuid) {
+        return "http://localhost:8081/register/" + uuid;
+    }
+
+    public Optional<TemporaryUserDTO> findTempUserByUuid(String uuid) {
         Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByUuid(uuid);
         return temporaryUserOptional.map(temporaryUser ->
                 new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
     }
 
-        public void inviteTemporaryUsers(List<String> emails) {
-            for (String email : emails) {
-                TemporaryUser temporaryUser = new TemporaryUser(email);
-                temporaryUser = temporaryUserRepository.save(temporaryUser);
-
-                String invitationLink = generateInvitationLink(temporaryUser.getUuid());
-                emailService.sendInvitation(List.of(email), invitationLink);
-            }
-        }
-
-    private String generateInvitationLink(UUID uuid) {
-        return "http://localhost:8081/register/" + uuid;
+    public Optional<TemporaryUserDTO> findTempUserByEmail(String email) {
+        Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByEmail(email);
+        return temporaryUserOptional.map(temporaryUser -> new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
     }
 
     public boolean isEmailAssociated(String email) {
@@ -65,6 +55,7 @@ public class TemporaryUserService {
         Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
         return userOptional.isPresent() || tempUserOptional.isPresent();
     }
+
 }
 
 

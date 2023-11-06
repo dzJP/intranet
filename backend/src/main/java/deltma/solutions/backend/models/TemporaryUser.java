@@ -6,9 +6,6 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
-
 @Data
 @NoArgsConstructor
 @Entity(name = "temporary_users")
@@ -18,11 +15,12 @@ public class TemporaryUser {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    private UUID uuid;
+    @Column(name = "uuid", nullable = false)
+    private String uuid;
 
-    public TemporaryUser(String email) {
+    public TemporaryUser(String email, String uuid) {
         this.email = email;
-        this.uuid = UUID.randomUUID();
+        this.uuid = uuid;
     }
 
 }

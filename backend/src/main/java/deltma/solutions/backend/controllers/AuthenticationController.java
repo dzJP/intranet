@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /** Responsible for managing HTTP requests associated with user authentication. **/
 @RestController
@@ -35,7 +34,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/register/{uuid}")
-    public ResponseEntity<?> registerUser(@PathVariable UUID uuid) {
+    public ResponseEntity<?> registerUser(@PathVariable String uuid) {
         // Retrieve the temporary user using the UUID
         Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
 
@@ -58,7 +57,7 @@ public class AuthenticationController {
         }
 
         try {
-            temporaryUserService.inviteTemporaryUsers(emails);
+            temporaryUserService.inviteAndSaveTemporaryUsers(emails);
             return ResponseEntity.ok("Invitations sent successfully!");
         } catch (Exception e) {
             e.printStackTrace();

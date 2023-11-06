@@ -9,9 +9,9 @@ import java.util.UUID;
 public class TemporaryUserDTO {
 
     private String email;
-    private UUID uuid;
+    private String uuid;
 
-    public TemporaryUserDTO(String email, UUID uuid) {
+    public TemporaryUserDTO(String email, String uuid) {
         this.email = email;
         this.uuid = uuid;
     }

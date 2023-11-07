@@ -22,16 +22,19 @@ public class AuthenticationService {
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        User newUser = userService.createAndSaveUser(request);
+        // Check if a temporary user with the given email exists in the repository
+        if (temporaryUserService.isEmailAssociated(request.getEmail())) {
+            User newUser = userService.createAndSaveUser(request);
 
-        // TODO: Registration is only allowed for email addresses that exist in the database.
+            temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
 
-        temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
-
-        return JwtAuthenticationResponse.builder()
-                .token(userService.generateJwtToken(newUser))
-                .build();
+            return JwtAuthenticationResponse.builder()
+                    .token(userService.generateJwtToken(newUser))
+                    .build();
+        } else {
+            throw new IllegalArgumentException("Email does not exist in temporary user database");
         }
+    }
 
     // SignInRequest is used to authenticate an existing user.
     public JwtAuthenticationResponse signin(SignInRequest request) {

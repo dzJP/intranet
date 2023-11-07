@@ -7,7 +7,7 @@
                 <h2>Invite Users</h2>
                 <form @submit.prevent="inviteUsers">
                     <div v-for="(email, index) in emails" :key="index">
-                        <input v-model="emails[index]" type="email" required />
+                        <input v-model="emails[index]" type="email" />
                     </div>
                     <button @click.prevent="addEmail">Add Another Email</button>
                     <button type="submit">Send Invitations</button>
@@ -39,11 +39,12 @@ export default {
 
             if (validEmails.length > 0) {
                 this.sendInvitations(validEmails);
+            } else {
+                console.error('No valid emails to send invitations.');
             }
-        }/* ,
+        },/*
         checkEmailsAssociation(emails) {
             const jwtToken = localStorage.getItem('token');
-
             axios
                 .post('http://localhost:8080/api/v1/checkEmail', emails, {
                     headers: {
@@ -64,7 +65,7 @@ export default {
                 .catch(error => {
                     console.error('Error checking emails:', error);
                 });
-        } */,
+        },*/
         sendInvitations(emails) {
             const jwtToken = localStorage.getItem('token');
             console.log('JWT Token:', jwtToken);

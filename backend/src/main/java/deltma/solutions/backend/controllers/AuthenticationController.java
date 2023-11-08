@@ -60,10 +60,4 @@ public class AuthenticationController {
                     .body("Error sending invitations: " + e.getMessage());
         }
     }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String email) {
-        userService.resetPasswordAndSendEmail(email);
-        return ResponseEntity.ok("New password sent successfully.");
-    }
 }

@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EmailService {
@@ -13,21 +14,23 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendInvitation(String email, String invitationLink) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("noreply@deltmasolutions.com");
-            message.setTo(email);
-            message.setSubject("Invitation to Register");
-            message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
-                    + invitationLink);
+    public void sendInvitation(Set<String> emails, String invitationLink) {
+        for (String email : emails) {
+            try {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom("noreply@deltmasolutions.com");
+                message.setTo(email);
+                message.setSubject("Invitation to Register");
+                message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
+                        + invitationLink);
 
-            javaMailSender.send(message);
+                javaMailSender.send(message);
 
-            System.out.println("Invitation sent to: " + email);
-        } catch (Exception e) {
-            System.err.println("Error sending invitation to: " + email);
-            e.printStackTrace(); // Handle or log the error
+                System.out.println("Invitation sent to: " + email);
+            } catch (Exception e) {
+                System.err.println("Error sending invitation to: " + email);
+                e.printStackTrace(); // Handle or log the error
+            }
         }
     }
 

@@ -17,7 +17,6 @@ public class TemporaryUserService {
     private final EmailService emailService;
     private final ValidatorService validatorService;
 
-
     public TemporaryUserService(UserRepository userRepository, TemporaryUserRepository temporaryUserRepository, EmailService emailService, ValidatorService validatorService) {
         this.userRepository = userRepository;
         this.temporaryUserRepository = temporaryUserRepository;
@@ -27,29 +26,24 @@ public class TemporaryUserService {
 
     public void validateAndSendInvitations(Set<String> validEmails) {
         Set<String> validatedEmails = validatorService.validateEmails(validEmails); // Validate all emails
-        Set<String> associatedEmails = isEmailAssociated(validatedEmails); // Check email associations
 
-        for (String email : associatedEmails) {
-            validatorService.validateEmail(email); // Validate individual email
+        for (String email : validatedEmails) {
+            if (!isEmailAssociated(email)) {
+                UUID uuid = UUID.randomUUID();
+                TemporaryUser temporaryUser = new TemporaryUser(email, uuid.toString());
+                temporaryUserRepository.save(temporaryUser);
 
-            UUID uuid = UUID.randomUUID();
-            TemporaryUser temporaryUser = new TemporaryUser(email, uuid.toString());
-            temporaryUserRepository.save(temporaryUser);
-
-            String invitationLink = generateInvitationLink(uuid);
-            emailService.sendInvitation(email, invitationLink);
-        }
-    }
-    public Set<String> isEmailAssociated(Set<String> emails) {
-        Set<String> associatedEmails = new HashSet<>();
-        for (String email : emails) {
-            Optional<User> userOptional = userRepository.findByEmail(email);
-            Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
-            if (userOptional.isPresent() || tempUserOptional.isPresent()) {
-                associatedEmails.add(email);
+                String invitationLink = generateInvitationLink(uuid);
+                emailService.sendInvitation(Set.of(email), invitationLink);
             }
         }
-        return associatedEmails;
+    }
+
+
+    public boolean isEmailAssociated(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
+        return userOptional.isPresent() || tempUserOptional.isPresent();
     }
 
     private String generateInvitationLink(UUID uuid) {
@@ -72,7 +66,4 @@ public class TemporaryUserService {
             temporaryUserRepository.delete(temporaryUser);
         });
     }
-
 }
-
-

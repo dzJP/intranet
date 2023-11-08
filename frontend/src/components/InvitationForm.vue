@@ -42,30 +42,7 @@ export default {
             } else {
                 console.error('No valid emails to send invitations.');
             }
-        },/*
-        checkEmailsAssociation(emails) {
-            const jwtToken = localStorage.getItem('token');
-            axios
-                .post('http://localhost:8080/api/v1/checkEmail', emails, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${jwtToken}`
-                    }
-                })
-                .then(response => {
-                    console.log('Emails checked successfully:', response.data);
-
-                    const notAssociatedEmails = response.data.filter(result => result.includes('not associated'));
-                    if (notAssociatedEmails.length === emails.length) {
-                        this.sendInvitations(emails);
-                    } else {
-                        console.error('Some emails are associated with existing users.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error checking emails:', error);
-                });
-        },*/
+        },
         sendInvitations(emails) {
             const jwtToken = localStorage.getItem('token');
             console.log('JWT Token:', jwtToken);

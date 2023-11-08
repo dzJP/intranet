@@ -6,13 +6,14 @@ import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.dto.TemporaryUserDTO;
 import deltma.solutions.backend.services.AuthenticationService;
 import deltma.solutions.backend.services.TemporaryUserService;
+import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /** Responsible for managing HTTP requests associated with user authentication. **/
 @RestController
@@ -22,6 +23,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final TemporaryUserService temporaryUserService;
+    private final UserService userService;
 
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
@@ -48,16 +50,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/send-invitations")
-    public ResponseEntity<String> sendInvitations(@RequestBody List<String> emails) {
-        for (String email : emails) {
-            boolean isAssociated = temporaryUserService.isEmailAssociated(email);
-            if (isAssociated) {
-                throw new RuntimeException("Email " + email + " is associated with an existing user.");
-            }
-        }
-
+    public ResponseEntity<String> sendInvitations(@RequestBody Set<String> emails) {
         try {
-            temporaryUserService.inviteAndSaveTemporaryUsers(emails);
+            temporaryUserService.validateAndSendInvitations(emails);
             return ResponseEntity.ok("Invitations sent successfully!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,4 +61,9 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String email) {
+        userService.resetPasswordAndSendEmail(email);
+        return ResponseEntity.ok("New password sent successfully.");
+    }
 }

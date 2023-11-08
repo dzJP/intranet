@@ -61,7 +61,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/register", "/api/v1/signin", "/api/v1/register/{uuid}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/register", "/api/v1/signin", "/api/v1/register/{uuid}", "/api/v1/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/test/**").permitAll()
                         .anyRequest().authenticated()
                 )

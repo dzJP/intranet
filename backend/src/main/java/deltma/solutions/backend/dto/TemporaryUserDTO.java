@@ -1,20 +1,17 @@
 package deltma.solutions.backend.dto;
 
-
 import lombok.Data;
-
-import java.util.UUID;
+import java.util.Set;
 
 @Data
 public class TemporaryUserDTO {
 
-    private String email;
+    private Set<String> emails;
     private String uuid;
 
-    public TemporaryUserDTO(String email, String uuid) {
-        this.email = email;
+    public TemporaryUserDTO(Set<String> emails, String uuid) {
+        this.emails = emails;
         this.uuid = uuid;
     }
-
 }
 

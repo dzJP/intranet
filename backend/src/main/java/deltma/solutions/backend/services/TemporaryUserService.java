@@ -7,9 +7,7 @@ import deltma.solutions.backend.repositories.TemporaryUserRepository;
 import deltma.solutions.backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TemporaryUserService {
@@ -17,22 +15,41 @@ public class TemporaryUserService {
     private final UserRepository userRepository;
     private final TemporaryUserRepository temporaryUserRepository;
     private final EmailService emailService;
+    private final ValidatorService validatorService;
 
-    public TemporaryUserService(UserRepository userRepository, TemporaryUserRepository temporaryUserRepository, EmailService emailService) {
+
+    public TemporaryUserService(UserRepository userRepository, TemporaryUserRepository temporaryUserRepository, EmailService emailService, ValidatorService validatorService) {
         this.userRepository = userRepository;
         this.temporaryUserRepository = temporaryUserRepository;
         this.emailService = emailService;
+        this.validatorService = validatorService;
     }
 
-    public void inviteAndSaveTemporaryUsers(List<String> emails) {
-        for (String email : emails) {
+    public void validateAndSendInvitations(Set<String> validEmails) {
+        Set<String> validatedEmails = validatorService.validateEmails(validEmails); // Validate all emails
+        Set<String> associatedEmails = isEmailAssociated(validatedEmails); // Check email associations
+
+        for (String email : associatedEmails) {
+            validatorService.validateEmail(email); // Validate individual email
+
             UUID uuid = UUID.randomUUID();
             TemporaryUser temporaryUser = new TemporaryUser(email, uuid.toString());
             temporaryUserRepository.save(temporaryUser);
 
             String invitationLink = generateInvitationLink(uuid);
-            emailService.sendInvitation(List.of(email), invitationLink);
+            emailService.sendInvitation(email, invitationLink);
         }
+    }
+    public Set<String> isEmailAssociated(Set<String> emails) {
+        Set<String> associatedEmails = new HashSet<>();
+        for (String email : emails) {
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
+            if (userOptional.isPresent() || tempUserOptional.isPresent()) {
+                associatedEmails.add(email);
+            }
+        }
+        return associatedEmails;
     }
 
     private String generateInvitationLink(UUID uuid) {
@@ -42,18 +59,12 @@ public class TemporaryUserService {
     public Optional<TemporaryUserDTO> findTempUserByUuid(String uuid) {
         Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByUuid(uuid);
         return temporaryUserOptional.map(temporaryUser ->
-                new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
+                new TemporaryUserDTO(Collections.singleton(temporaryUser.getEmail()), temporaryUser.getUuid()));
     }
 
     public Optional<TemporaryUserDTO> findTempUserByEmail(String email) {
         Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByEmail(email);
-        return temporaryUserOptional.map(temporaryUser -> new TemporaryUserDTO(temporaryUser.getEmail(), temporaryUser.getUuid()));
-    }
-
-    public boolean isEmailAssociated(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
-        return userOptional.isPresent() || tempUserOptional.isPresent();
+        return temporaryUserOptional.map(temporaryUser -> new TemporaryUserDTO(Collections.singleton(temporaryUser.getEmail()), temporaryUser.getUuid()));
     }
 
     public void deleteTemporaryUserByEmail(String email) {

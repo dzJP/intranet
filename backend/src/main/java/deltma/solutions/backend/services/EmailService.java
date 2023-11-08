@@ -13,23 +13,38 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendInvitation(List<String> emails, String invitationLink) {
-        for (String email : emails) {
-            try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom("noreply@deltmasolutions.com");
-                message.setTo(email);
-                message.setSubject("Invitation to Register");
-                message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
-                        + invitationLink);
+    public void sendInvitation(String email, String invitationLink) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("noreply@deltmasolutions.com");
+            message.setTo(email);
+            message.setSubject("Invitation to Register");
+            message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
+                    + invitationLink);
 
-                javaMailSender.send(message);
+            javaMailSender.send(message);
 
-                System.out.println("Invitation sent to: " + email);
-            } catch (Exception e) {
-                System.err.println("Error sending invitation to: " + email);
-                e.printStackTrace(); // Handle or log the error
-            }
+            System.out.println("Invitation sent to: " + email);
+        } catch (Exception e) {
+            System.err.println("Error sending invitation to: " + email);
+            e.printStackTrace(); // Handle or log the error
+        }
+    }
+
+    public void sendNewPassword(String email, String newPassword) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("noreply@deltmasolutions.com");
+            message.setTo(email);
+            message.setSubject("New Password");
+            message.setText("Hello!\n\nYour new password is: " + newPassword);
+
+            javaMailSender.send(message);
+
+            System.out.println("New password sent to: " + email);
+        } catch (Exception e) {
+            System.err.println("Error sending new password to: " + email);
+            e.printStackTrace(); // Handle or log the error
         }
     }
 }

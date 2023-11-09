@@ -4,7 +4,7 @@
         <form @submit.prevent="onSubmit">
             <div class="form-group mb-3">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" v-model="email" />
+                <input type="email" class="form-control" id="email" name="email" v-model="email" />
             </div>
             <button type="submit" class="btn btn-primary">Återställ lösenord</button>
         </form>
@@ -23,14 +23,13 @@ export default {
     },
     methods: {
         onSubmit() {
-            axios.post('http://localhost:8080/api/v1/reset-password', {
-                email: this.email
-            })
+            const formData = new FormData();
+            formData.append('email', this.email);
+
+            axios.post('http://localhost:8080/api/v1/reset-password', formData)
                 .then(() => {
-                    console.log('Password reset link sent successfully');
                 })
                 .catch(error => {
-                    console.error('Error sending password reset link:', error);
                 });
         },
     },

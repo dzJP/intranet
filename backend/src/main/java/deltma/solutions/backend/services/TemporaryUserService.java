@@ -39,7 +39,6 @@ public class TemporaryUserService {
         }
     }
 
-
     public boolean isEmailAssociated(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         Optional<TemporaryUser> tempUserOptional = temporaryUserRepository.findByEmail(email);
@@ -66,4 +65,5 @@ public class TemporaryUserService {
             temporaryUserRepository.delete(temporaryUser);
         });
     }
+
 }

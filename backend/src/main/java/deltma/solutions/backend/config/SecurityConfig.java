@@ -61,11 +61,19 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/register", "/api/v1/signin", "/api/v1/register/{uuid}", "/api/v1/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/test/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/register",
+                                "/api/v1/signin",
+                                "/api/v1/register/{uuid}",
+                                "/api/v1/reset-password").permitAll()
+                        .requestMatchers(HttpMethod.GET ,
+                                "/api/v1/profile",
+                                "/api/v1/test/**",
+                                "/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -74,8 +82,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8081"));
-        configuration.setAllowedMethods(List.of("GET", "POST"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-type", "X-CSRF-Token"));
+        configuration.setAllowedMethods(List.of("GET", "POST","PUT"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-CSRF-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

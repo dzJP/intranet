@@ -1,10 +1,14 @@
 package deltma.solutions.backend.services;
 
+import deltma.solutions.backend.dto.PhoneNumberUpdateDTO;
 import deltma.solutions.backend.dto.SignUpRequest;
+import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.Role;
 import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,18 +38,9 @@ public class UserService {
         };
     }
 
-    public void validateUser(SignUpRequest request) {
-        validatorService.validateEmail(request.getEmail());
-        validatorService.validateName(request.getFirstName());
-        validatorService.validateName(request.getLastName());
-        validatorService.validatePassword(request.getPassword());
-        validatorService.validatePhoneNumber(request.getPhoneNumber());
-    }
-
     // Create a new User object using builder pattern with provided details.
     public User createAndSaveUser(SignUpRequest request) {
-
-        validateUser(request);
+        validatorService.validateUser(request);
 
         var user = User.builder()
                 .email(request.getEmail())
@@ -67,6 +62,28 @@ public class UserService {
 
     public User save(User newUser) {
         return userRepository.save(newUser);
+    }
+
+    public UserProfileDTO getUserProfileByEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new UserProfileDTO(user.getEmail(), user.getFirstName()
+                , user.getLastName(), user.getPhoneNumber());
+    }
+
+    public void updatePhoneNumber(PhoneNumberUpdateDTO request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPhoneNumber(request.getPhoneNumber());
+        userRepository.save(user);
     }
 
     public boolean isEmailAssociatedWithUser(String email) {

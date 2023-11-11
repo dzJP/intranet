@@ -1,9 +1,6 @@
 package deltma.solutions.backend.controllers;
 
-import deltma.solutions.backend.dto.JwtAuthenticationResponse;
-import deltma.solutions.backend.dto.SignInRequest;
-import deltma.solutions.backend.dto.SignUpRequest;
-import deltma.solutions.backend.dto.TemporaryUserDTO;
+import deltma.solutions.backend.dto.*;
 import deltma.solutions.backend.services.AuthenticationService;
 import deltma.solutions.backend.services.TemporaryUserService;
 import deltma.solutions.backend.services.UserService;
@@ -37,14 +34,12 @@ public class AuthenticationController {
 
     @GetMapping("/register/{uuid}")
     public ResponseEntity<?> registerUser(@PathVariable String uuid) {
-        // Retrieve the temporary user using the UUID
         Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
 
         if (temporaryUserDTOOptional.isPresent()) {
             TemporaryUserDTO temporaryUserDTO = temporaryUserDTOOptional.get();
             return ResponseEntity.ok(temporaryUserDTO);
         } else {
-            // Handle the case where the UUID is not valid
             return ResponseEntity.notFound().build();
         }
     }
@@ -60,4 +55,29 @@ public class AuthenticationController {
                     .body("Error sending invitations: " + e.getMessage());
         }
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+        try {
+            UserProfileDTO userProfileDTO = userService.getUserProfileByEmail();
+            return ResponseEntity.ok(userProfileDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving user profile: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/profile/update-phone-number")
+    public ResponseEntity<?> updatePhoneNumber(@RequestBody PhoneNumberUpdateDTO request) {
+        try {
+            userService.updatePhoneNumber(request);
+            return ResponseEntity.ok("Phone number updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating phone number: " + e.getMessage());
+        }
+    }
+
 }

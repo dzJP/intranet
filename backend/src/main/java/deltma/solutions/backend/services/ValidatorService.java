@@ -1,7 +1,7 @@
 package deltma.solutions.backend.services;
 
+import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.models.Role;
-import deltma.solutions.backend.models.User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -10,13 +10,14 @@ import java.util.Set;
 @Service
 public class ValidatorService {
 
-
-
-    public void validateUser(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User object cannot be null");
-        }
+    public void validateUser(SignUpRequest request) {
+        validateEmail(request.getEmail());
+        validateName(request.getFirstName());
+        validateName(request.getLastName());
+        validatePassword(request.getPassword());
+        validatePhoneNumber(request.getPhoneNumber());
     }
+
     // Validate email format
     public void validateEmail(String email) {
         if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {

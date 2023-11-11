@@ -11,9 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -25,15 +22,19 @@ public class AuthenticationService {
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        // Check if a temporary user with the given email exists in the repository
         if (temporaryUserService.isEmailAssociated(request.getEmail())) {
-            User newUser = userService.createAndSaveUser(request);
 
-            temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
+            if (!userService.isEmailAssociatedWithUser(request.getEmail())) {
+                User newUser = userService.createAndSaveUser(request);
 
-            return JwtAuthenticationResponse.builder()
-                    .token(userService.generateJwtToken(newUser))
-                    .build();
+                temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
+
+                return JwtAuthenticationResponse.builder()
+                        .token(userService.generateJwtToken(newUser))
+                        .build();
+            } else {
+                throw new IllegalArgumentException("Email already associated with a user");
+            }
         } else {
             throw new IllegalArgumentException("Email does not exist in temporary user database");
         }

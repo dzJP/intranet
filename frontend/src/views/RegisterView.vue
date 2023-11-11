@@ -1,4 +1,3 @@
-
 <template>
     <RegistrationForm />
 </template>

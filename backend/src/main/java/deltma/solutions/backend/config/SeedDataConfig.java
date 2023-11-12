@@ -26,7 +26,7 @@ public class SeedDataConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-// PLACE THESE IN UserService
+//TODO: place these in UserService
         User admin1 = User
                 .builder()
                 .email("admin1@admin.com")
@@ -54,6 +54,21 @@ public class SeedDataConfig implements CommandLineRunner {
 
         userService.save(user1);
         log.debug("created User user - {}", user1);
+
+
+        // this is a test to check the reset/generatenew/sendnewpassword process(remove later)
+        User Jakob = User
+                .builder()
+                .email("jakob.pietrzyk@deltmasolutions.com")
+                .firstName("Jakob")
+                .lastName("Pietrzyk")
+                .password(passwordEncoder.encode("password"))
+                .phoneNumber("0763291108")
+                .role(Role.ROLE_ADMIN)
+                .isActive(true)
+                .build();
+
+        userService.save(Jakob);
 
     }
 }

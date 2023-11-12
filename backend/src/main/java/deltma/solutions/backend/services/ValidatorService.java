@@ -31,7 +31,6 @@ public class ValidatorService {
 
     public Set<String> validateEmails(Set<String> emails) {
         Set<String> validEmails = new HashSet<>();
-
         for (String email : emails) {
             if (isValidEmail(email)) {
                 validEmails.add(email);

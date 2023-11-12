@@ -4,6 +4,7 @@ import deltma.solutions.backend.dto.*;
 import deltma.solutions.backend.services.AuthenticationService;
 import deltma.solutions.backend.services.TemporaryUserService;
 import deltma.solutions.backend.services.UserService;
+import deltma.solutions.backend.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
+    private final PasswordGenerator passwordGenerator;
 
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
@@ -53,6 +55,20 @@ public class AuthenticationController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error sending invitations: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String email) {
+        try {
+            // Reset the user's password and send the new password via email
+            userService.resetUserPassword(email);
+
+            return ResponseEntity.ok("New password sent successfully.");
+        } catch (Exception e) {
+            // Handle any exceptions that may occur (e.g., user not found, email sending failed, etc.)
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error resetting password.");
         }
     }
 

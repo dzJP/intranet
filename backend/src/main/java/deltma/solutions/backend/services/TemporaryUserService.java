@@ -25,10 +25,14 @@ public class TemporaryUserService {
     }
 
     public void validateAndSendInvitations(Set<String> validEmails) {
-        Set<String> validatedEmails = validatorService.validateEmails(validEmails); // Validate all emails
+        Set<String> validatedEmails = validatorService.validateEmails(validEmails);
 
         for (String email : validatedEmails) {
-            if (!isEmailAssociated(email)) {
+            Optional<TemporaryUserDTO> existingTempUserOptional = findTempUserByEmail(email);
+
+            if (existingTempUserOptional.isEmpty()) {
+                // If the email is not associated with any temporary user,
+                // generate a new UUID, create a temporary user, and send an invitation.
                 UUID uuid = UUID.randomUUID();
                 TemporaryUser temporaryUser = new TemporaryUser(email, uuid.toString());
                 temporaryUserRepository.save(temporaryUser);
@@ -61,9 +65,7 @@ public class TemporaryUserService {
     }
 
     public void deleteTemporaryUserByEmail(String email) {
-        temporaryUserRepository.findByEmail(email).ifPresent(temporaryUser -> {
-            temporaryUserRepository.delete(temporaryUser);
-        });
+        temporaryUserRepository.findByEmail(email).ifPresent(temporaryUserRepository::delete);
     }
 
 }

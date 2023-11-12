@@ -10,6 +10,7 @@
                         <input v-model="emails[index]" type="email" />
                     </div>
                     <button @click.prevent="addEmail">Add Another Email</button>
+                    <button @click.prevent="removeLastEmail" v-if="emails.length > 1">Remove Last Email</button>
                     <button type="submit">Send Invitations</button>
                 </form>
             </div>
@@ -33,7 +34,6 @@ export default {
             this.isPopupVisible = !this.isPopupVisible;
         },
         inviteUsers() {
-            console.log('inviteUsers method called');
             const validEmails = this.emails.filter(email => email.trim() !== '');
             console.log('Valid emails:', validEmails);
 
@@ -59,7 +59,7 @@ export default {
                     }
                 })
                 .then(response => {
-                    console.log('Invitations sent successfully!', response.data);
+                    console.log(response.data);
                     this.togglePopup();
                 })
                 .catch(error => {
@@ -68,6 +68,11 @@ export default {
         },
         addEmail() {
             this.emails.push('');
+        },
+        removeLastEmail() {
+            if (this.emails.length > 1) {
+                this.emails.pop();
+            }
         },
     },
 };
@@ -82,5 +87,30 @@ export default {
     background: white;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content {
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="email"] {
+    padding: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 </style>

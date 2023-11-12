@@ -8,6 +8,7 @@ import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.UserRepository;
 import deltma.solutions.backend.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +27,7 @@ import java.util.Optional;
  **/
 @Service
 @RequiredArgsConstructor
-public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+public class UserService implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -44,6 +44,51 @@ public class UserService {
                         new UsernameNotFoundException("Username not found"));
             }
         };
+    }
+
+    public void createDefaultUsers() {
+        // Existing logic from SeedDataConfig
+        User admin1 = User
+                .builder()
+                .email("admin1@admin.com")
+                .firstName("admin1")
+                .lastName("admin1")
+                .password(passwordEncoder.encode("password"))
+                .phoneNumber("123456789")
+                .role(Role.ROLE_ADMIN)
+                .isActive(true)
+                .build();
+
+        save(admin1);
+        System.out.println("created ADMIN user " + admin1);
+
+        User user1 = User
+                .builder()
+                .email("user1@user.com")
+                .firstName("user1")
+                .lastName("user1")
+                .password(passwordEncoder.encode("password"))
+                .phoneNumber("123456789")
+                .role(Role.ROLE_USER)
+                .isActive(true)
+                .build();
+
+        save(user1);
+        System.out.println("created USER user " + user1);
+
+        // test remove later
+//        User testuser = User
+//                .builder()
+//                .email("jakob.pietrzyk@deltmasolutions.com")
+//                .firstName("testuser")
+//                .lastName("testuser")
+//                .password(passwordEncoder.encode("password"))
+//                .phoneNumber("1234567890")
+//                .role(Role.ROLE_ADMIN)
+//                .isActive(true)
+//                .build();
+//
+//        save(testuser);
     }
 
     // Create a new User object using builder pattern with provided details.
@@ -94,13 +139,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean isEmailAssociatedWithUser(String email) {
+    public boolean isEmailAssociatedWithUser(String email)   {
         return userRepository.findByEmail(email).isPresent();
     }
 
     public void resetUserPassword(String userEmail) {
-        log.debug("Resetting password for user: {}", userEmail);
-
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
 
         if (userOptional.isPresent()) {
@@ -121,4 +164,8 @@ public class UserService {
         emailService.sendNewPassword(user.getEmail(), newPassword);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        createDefaultUsers();
+    }
 }

@@ -36,13 +36,21 @@ public class AuthenticationController {
 
     @GetMapping("/register/{uuid}")
     public ResponseEntity<?> registerUser(@PathVariable String uuid) {
-        Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
+        try {
+            // Validate emails, create temporary users, and send invitations if necessary
+            temporaryUserService.validateAndSendInvitations(Set.of(uuid));
 
-        if (temporaryUserDTOOptional.isPresent()) {
-            TemporaryUserDTO temporaryUserDTO = temporaryUserDTOOptional.get();
-            return ResponseEntity.ok(temporaryUserDTO);
-        } else {
-            return ResponseEntity.notFound().build();
+            // Attempt to find the temporary user by UUID
+            Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
+
+            // Return a response based on whether the temporary user was found
+            return temporaryUserDTOOptional
+                    .map(ResponseEntity::ok)  // If found, return OK with the user details
+                    .orElseGet(() -> ResponseEntity.notFound().build());  // If not found, return Not Found
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user.");
         }
     }
 

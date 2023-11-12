@@ -15,24 +15,26 @@ public class EmailService {
     private JavaMailSender javaMailSender;
 
     public void sendInvitation(Set<String> emails, String invitationLink) {
-        for (String email : emails) {
-            try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom("noreply@deltmasolutions.com");
-                message.setTo(email);
-                message.setSubject("Invitation to Register");
-                message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
-                        + invitationLink);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("noreply@deltmasolutions.com");
 
-                javaMailSender.send(message);
+            String firstEmail = emails.iterator().next();
+            message.setTo(firstEmail);
 
-                System.out.println("Invitation sent to: " + email);
-            } catch (Exception e) {
-                System.err.println("Error sending invitation to: " + email);
-                e.printStackTrace(); // Handle or log the error
-            }
+            message.setSubject("Invitation to Register");
+            message.setText("Hello!\n\nYou are invited to register on our platform. Use the following link to register: "
+                    + invitationLink);
+
+            javaMailSender.send(message);
+
+            System.out.println("Invitation sent to: " + firstEmail);
+        } catch (Exception e) {
+            System.err.println("Error sending invitation.");
+            e.printStackTrace();
         }
     }
+
 
     public void sendNewPassword(String email, String newPassword) {
         try {
@@ -47,7 +49,7 @@ public class EmailService {
             System.out.println("New password sent to: " + email);
         } catch (Exception e) {
             System.err.println("Error sending new password to: " + email);
-            e.printStackTrace(); // Handle or log the error
+            e.printStackTrace();
         }
     }
 }

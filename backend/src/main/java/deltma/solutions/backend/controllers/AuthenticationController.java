@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -92,6 +93,7 @@ public class AuthenticationController {
         }
     }
 
+
     @PutMapping("/profile/update-phone-number")
     public ResponseEntity<?> updatePhoneNumber(@RequestBody PhoneNumberUpdateDTO request) {
         try {
@@ -101,6 +103,29 @@ public class AuthenticationController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating phone number: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        try {
+            UserProfileDTO userProfileDTO = userService.getUserProfileByUsername(username);
+            return ResponseEntity.ok(userProfileDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving user profile by username: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/colleagues")
+    public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
+        try {
+            List<UserProfileDTO> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
     }
 

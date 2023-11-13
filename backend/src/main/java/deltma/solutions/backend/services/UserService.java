@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -128,6 +130,20 @@ public class UserService implements CommandLineRunner {
                 , user.getLastName(), user.getPhoneNumber());
     }
 
+    public UserProfileDTO getUserProfileByUsername(String username) {
+        // Validation using the ValidatorService
+        if (validatorService.isValidEmail(username)) {
+            // Retrieve the user profile
+            User user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            return new UserProfileDTO(user.getEmail(), user.getFirstName(),
+                    user.getLastName(), user.getPhoneNumber());
+        } else {
+            return null;
+        }
+    }
+
     public void updatePhoneNumber(PhoneNumberUpdateDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
@@ -162,6 +178,12 @@ public class UserService implements CommandLineRunner {
         userRepository.save(user);
 
         emailService.sendNewPassword(user.getEmail(), newPassword);
+    }
+
+    public List<UserProfileDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber()))
+                .collect(Collectors.toList());
     }
 
     @Override

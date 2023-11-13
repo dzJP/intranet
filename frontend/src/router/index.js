@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import UserProfileView from '../views/UserProfileView.vue';
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -18,6 +19,11 @@ const routes = [
 		path: '/profile',
 		name: 'profile',
 		component: () => import('../views/ProfileView.vue')
+	},
+	{
+		path: '/user/:username',
+		name: 'user-profile',
+		component: UserProfileView,
 	},
 	{
 		path: '/colleagues',

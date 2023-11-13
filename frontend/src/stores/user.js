@@ -46,9 +46,9 @@ export const useUserStore = defineStore({
           console.log('Phone number updated successfully:', response.data);
         } catch (error) {
           console.error('Error updating phone number:', error);
-          throw error; 
+          throw error;
         }
-      },  
+      },
     logout() {
         // Clear user data on logout
         this.email = '';

@@ -1,4 +1,3 @@
-// auth.js
 import { defineStore } from 'pinia';
 import router from '@/router';
 import axios from 'axios';
@@ -28,8 +27,8 @@ export const useAuthStore = defineStore({
           }
         );
 
-		console.log(response.status);
-		console.log(response.data.token);
+        console.log(response.status);
+        console.log(response.data.token);
 
         if (response.status === 200) {
           const token = response.data.token;

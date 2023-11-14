@@ -96,6 +96,50 @@ export const useUserStore = defineStore({
                 throw error;
             }
         },
+
+        async deactivateUser(user) {
+            try {
+              const response = await axios.patch(
+                `http://localhost:8080/api/v1/admin/deactivate-user/${user.email}`,
+                null, 
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  },
+                }
+              );
+      
+              console.log('User deactivated successfully:', response.data);
+      
+              
+              await this.getAllUsers();
+            } catch (error) {
+              console.error('Error deactivating user:', error);
+              throw error;
+            }
+          },
+
+          async activateUser(user) {
+            try {
+              const response = await axios.patch(
+                `http://localhost:8080/api/v1/admin/activate-user/${user.email}`,
+                null, 
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  },
+                }
+              );
+      
+              console.log('User activated successfully:', response.data);
+      
+              await this.getAllUsers();
+            } catch (error) {
+              console.error('Error activating user:', error);
+              throw error;
+            }
+          },
+
         logout() {
             // Clear user data on logout
             this.email = '';

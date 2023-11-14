@@ -187,7 +187,7 @@ public class UserService implements CommandLineRunner {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         validatorService.validateUserProfile(request);
-        
+
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -198,6 +198,25 @@ public class UserService implements CommandLineRunner {
 
     public void deleteUser(String email) {
         userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
+    }
+
+
+    public void deactivateUser(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setIsActive(false);
+            userRepository.save(user);
+        }
+    }
+
+    public void activateUser(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setIsActive(true);
+            userRepository.save(user);
+        }
     }
 
     @Override

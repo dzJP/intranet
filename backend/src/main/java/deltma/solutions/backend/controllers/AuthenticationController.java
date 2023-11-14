@@ -161,4 +161,26 @@ public class AuthenticationController {
         }
     }
 
+    @PatchMapping("/admin/deactivate-user/{email}")
+    public ResponseEntity<?> deactivateUser(@PathVariable String email) {
+        try {
+            userService.deactivateUser(email);
+            return ResponseEntity.ok("User deactivated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deactivating user: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/admin/activate-user/{email}")
+    public ResponseEntity<?> activateUser(@PathVariable String email) {
+        try {
+            userService.activateUser(email);
+            return ResponseEntity.ok("User activated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error activating user: " + e.getMessage());
+        }
+    }
+
 }

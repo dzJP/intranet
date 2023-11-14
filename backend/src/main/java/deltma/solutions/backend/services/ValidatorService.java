@@ -1,6 +1,7 @@
 package deltma.solutions.backend.services;
 
 import deltma.solutions.backend.dto.SignUpRequest;
+import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.Role;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,17 @@ public class ValidatorService {
 
     public void validateUser(SignUpRequest request) {
         validateEmail(request.getEmail());
-        validateName(request.getFirstName());
-        validateName(request.getLastName());
+        validateFirstName(request.getFirstName());
+        validateLastName(request.getLastName());
         validatePassword(request.getPassword());
         validatePhoneNumber(request.getPhoneNumber());
+    }
+
+    public void validateUserProfile(UserProfileDTO userProfileDTO) {
+        validateEmail(userProfileDTO.getEmail());
+        validateFirstName(userProfileDTO.getFirstName());
+        validateLastName(userProfileDTO.getLastName());
+        validatePhoneNumber(userProfileDTO.getPhoneNumber());
     }
 
     // Validate email format
@@ -39,8 +47,14 @@ public class ValidatorService {
         return validEmails;
     }
     // Validate so name contains only alphabetic characters
-    public void validateName(String name) {
-        if (!name.matches("^[a-zA-Z]+$") || name.length() < 2 || name.length() > 30) {
+    public void validateFirstName(String firstName) {
+        if (!firstName.matches("^[a-zA-Z]+$") || firstName.length() < 2 || firstName.length() > 30) {
+            throw new IllegalArgumentException("Invalid name format");
+        }
+    }
+
+    public void validateLastName(String lastName) {
+        if (!lastName.matches("^[a-zA-Z]+$") || lastName.length() < 2 || lastName.length() > 30) {
             throw new IllegalArgumentException("Invalid name format");
         }
     }

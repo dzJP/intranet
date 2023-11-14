@@ -4,7 +4,6 @@ import deltma.solutions.backend.dto.*;
 import deltma.solutions.backend.services.AuthenticationService;
 import deltma.solutions.backend.services.TemporaryUserService;
 import deltma.solutions.backend.services.UserService;
-import deltma.solutions.backend.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
-    private final PasswordGenerator passwordGenerator;
 
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
@@ -95,7 +93,7 @@ public class AuthenticationController {
 
 
     @PutMapping("/profile/update-phone-number")
-    public ResponseEntity<?> updatePhoneNumber(@RequestBody PhoneNumberUpdateDTO request) {
+    public ResponseEntity<?> updatePhoneNumber(@RequestBody UserProfileDTO request) {
         try {
             userService.updatePhoneNumber(request);
             return ResponseEntity.ok("Phone number updated successfully!");
@@ -126,6 +124,40 @@ public class AuthenticationController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<?> getUsers() {
+        try {
+            List<UserProfileDTO> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving users: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/admin/edit-user/{email}")
+    public ResponseEntity<?> editUser(@PathVariable String email, @RequestBody UserProfileDTO request) {
+        try {
+            userService.editUser(email,request);
+            return ResponseEntity.ok("User successfully edited");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error editing user: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/admin/delete-user/{email}")
+    public ResponseEntity<?> deleteUser(@PathVariable String email) {
+        try {
+            userService.deleteUser(email);
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting user: " + e.getMessage());
         }
     }
 

@@ -1,7 +1,5 @@
 package deltma.solutions.backend;
 
-import deltma.solutions.backend.models.Role;
-import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.services.ValidatorService;
 import org.junit.jupiter.api.Test;
 
@@ -71,13 +69,13 @@ public class ValidatorServiceTest {
     @Test
     public void testInvalidNameShort() {
         String invalidName = "A";
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateName(invalidName));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateFirstName(invalidName));
         assertEquals("Invalid name format", exception.getMessage());
     }
 
     @Test void testInvalidNameLongerThan32() {
         String invalidName = "AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD";
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateName(invalidName));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateFirstName(invalidName));
     }
 
     // Phone Number validation tests

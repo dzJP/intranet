@@ -1,6 +1,5 @@
 package deltma.solutions.backend.services;
 
-import deltma.solutions.backend.dto.PhoneNumberUpdateDTO;
 import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.Role;
@@ -16,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,12 +46,11 @@ public class UserService implements CommandLineRunner {
     }
 
     public void createDefaultUsers() {
-        // Existing logic from SeedDataConfig
         User admin1 = User
                 .builder()
                 .email("admin1@admin.com")
-                .firstName("admin1")
-                .lastName("admin1")
+                .firstName("admin")
+                .lastName("admin")
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_ADMIN)
@@ -67,8 +63,8 @@ public class UserService implements CommandLineRunner {
         User user1 = User
                 .builder()
                 .email("user1@user.com")
-                .firstName("user1")
-                .lastName("user1")
+                .firstName("user")
+                .lastName("user")
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_USER)
@@ -121,9 +117,9 @@ public class UserService implements CommandLineRunner {
 
     public UserProfileDTO getUserProfileByEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
+        String email = authentication.getName();
 
-        User user = userRepository.findByEmail(userEmail)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return new UserProfileDTO(user.getEmail(), user.getFirstName()
@@ -144,7 +140,7 @@ public class UserService implements CommandLineRunner {
         }
     }
 
-    public void updatePhoneNumber(PhoneNumberUpdateDTO request) {
+    public void updatePhoneNumber(UserProfileDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
@@ -186,8 +182,27 @@ public class UserService implements CommandLineRunner {
                 .collect(Collectors.toList());
     }
 
+    public void editUser(String email, UserProfileDTO request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        validatorService.validateUserProfile(request);
+        
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhoneNumber(request.getPhoneNumber());
+
+        userRepository.save(user);
+    }
+
+    public void deleteUser(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
+    }
+
     @Override
     public void run(String... args) throws Exception {
         createDefaultUsers();
     }
+
 }

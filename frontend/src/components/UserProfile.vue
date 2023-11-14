@@ -53,12 +53,10 @@
 <script>
 import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
-
 export default {
     setup() {
         const userStore = useUserStore();
         const editedPhoneNumber = ref(userStore.phoneNumber);
-
         // Fetch user profile data from API
         const getUserProfile = async () => {
             try {
@@ -68,7 +66,6 @@ export default {
                 console.error('Error fetching user profile:', error);
             }
         };
-
         // Update phone number
         const updatePhoneNumber = async () => {
             try {
@@ -77,11 +74,9 @@ export default {
                 console.error('Error updating phone number:', error);
             }
         };
-
         onMounted(() => {
             getUserProfile();
         });
-
         return {
             user: userStore,
             editedPhoneNumber,

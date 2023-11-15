@@ -126,11 +126,11 @@ public class UserService implements CommandLineRunner {
                 , user.getLastName(), user.getPhoneNumber());
     }
 
-    public UserProfileDTO getUserProfileByUsername(String username) {
+    public UserProfileDTO getUserProfileByUsername(String email) {
         // Validation using the ValidatorService
-        if (validatorService.isValidEmail(username)) {
+        if (validatorService.isValidEmail(email)) {
             // Retrieve the user profile
-            User user = userRepository.findByEmail(username)
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             return new UserProfileDTO(user.getEmail(), user.getFirstName(),

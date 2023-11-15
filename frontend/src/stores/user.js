@@ -139,7 +139,17 @@ export const useUserStore = defineStore({
               throw error;
             }
           },
-
+          searchUsers(query) {
+            if (!query) {
+                return this.users;
+            } else {
+                return this.users.filter(
+                    (user) =>
+                        user.firstName.toLowerCase().includes(query.toLowerCase()) ||
+                        user.lastName.toLowerCase().includes(query.toLowerCase())
+                );
+            }
+          },
         logout() {
             // Clear user data on logout
             this.email = '';

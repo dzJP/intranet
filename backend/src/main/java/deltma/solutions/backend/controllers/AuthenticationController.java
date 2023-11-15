@@ -104,10 +104,10 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/user/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+    @GetMapping("/user/{email}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String email) {
         try {
-            UserProfileDTO userProfileDTO = userService.getUserProfileByUsername(username);
+            UserProfileDTO userProfileDTO = userService.getUserProfileByUsername(email);
             return ResponseEntity.ok(userProfileDTO);
         } catch (Exception e) {
             e.printStackTrace();

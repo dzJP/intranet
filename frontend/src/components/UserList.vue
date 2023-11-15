@@ -4,7 +4,7 @@
         <input v-model="searchQuery" placeholder="Search by name" class="search-input" />
         <ul class="user-list">
             <li v-for="user in filteredUsers" :key="user.email" class="user-item">
-                <router-link :to="`/user/${user.username || user.email}`" class="user-link">
+                <router-link :to="`/user/${user.email}`" class="user-link">
                     {{ user.firstName }} {{ user.lastName }}
                 </router-link>
             </li>

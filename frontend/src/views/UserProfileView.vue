@@ -33,9 +33,9 @@ export default {
         const userDetails = ref(null);
         const route = useRoute();
 
-        const fetchUserProfile = async (username) => {
+        const fetchUserProfile = async (email) => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/user/${username}`, {
+                const response = await axios.get(`http://localhost:8080/api/v1/user/${email}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -51,8 +51,8 @@ export default {
 
         onMounted(() => {
             // Extract the username from the route parameters
-            const username = route.params.username;
-            fetchUserProfile(username);
+            const email = route.params.email;
+            fetchUserProfile(email);
         });
 
         return {

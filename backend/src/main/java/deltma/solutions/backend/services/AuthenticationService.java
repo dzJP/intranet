@@ -4,7 +4,6 @@ import deltma.solutions.backend.dto.JwtAuthenticationResponse;
 import deltma.solutions.backend.dto.SignInRequest;
 import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.models.Role;
-import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,20 +21,16 @@ public class AuthenticationService {
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        if (temporaryUserService.isEmailAssociated(request.getEmail())) {
 
-            if (!userService.isEmailAssociatedWithUser(request.getEmail())) {
-                User newUser = userService.createAndSaveUser(request);
+        checkIfEmailIsInTemporaryUserDatabase(request.getEmail());
 
-                temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
+        return JwtAuthenticationResponse.builder()
+                .token(userService.generateJwtToken(userService.createAndSaveUser(request)))
+                .build();
+    }
 
-                return JwtAuthenticationResponse.builder()
-                        .token(userService.generateJwtToken(newUser))
-                        .build();
-            } else {
-                throw new IllegalArgumentException("Email already associated with a user");
-            }
-        } else {
+    public void checkIfEmailIsInTemporaryUserDatabase(String email) {
+        if (!temporaryUserService.isEmailAssociated(email)) {
             throw new IllegalArgumentException("Email does not exist in temporary user database");
         }
     }

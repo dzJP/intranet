@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,7 +38,8 @@ public class AuthenticationController {
     public ResponseEntity<?> registerUser(@PathVariable String uuid) {
         try {
             // Validate emails, create temporary users, and send invitations if necessary
-            temporaryUserService.validateAndSendInvitations(Set.of(uuid));
+            TemporaryUserDTO temporaryUserDTO = new TemporaryUserDTO(Collections.singleton(uuid), uuid);
+            temporaryUserService.validateAndSendInvitations(temporaryUserDTO);
 
             // Attempt to find the temporary user by UUID
             Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
@@ -54,9 +56,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/send-invitations")
-    public ResponseEntity<String> sendInvitations(@RequestBody Set<String> emails) {
+    public ResponseEntity<String> sendInvitations(@RequestBody Set<String> emails, TemporaryUserDTO temporaryUserDTO) {
         try {
-            temporaryUserService.validateAndSendInvitations(emails);
+            temporaryUserService.validateAndSendInvitations(new TemporaryUserDTO(emails, temporaryUserDTO.getUuid()));
             return ResponseEntity.ok("Invitations sent successfully!");
         } catch (Exception e) {
             e.printStackTrace();

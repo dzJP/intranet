@@ -34,6 +34,7 @@ public class UserService implements CommandLineRunner {
     private final ValidatorService validatorService;
     private final EmailService emailService;
     private final PasswordGenerator passwordGenerator;
+    private final TemporaryUserService temporaryUserService;
 
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
@@ -103,6 +104,8 @@ public class UserService implements CommandLineRunner {
                 .isActive(true)
                 .build();
 
+        temporaryUserService.deleteTemporaryUserByEmail(request.getEmail());
+
         return userRepository.save(user);
     }
 
@@ -149,10 +152,6 @@ public class UserService implements CommandLineRunner {
 
         user.setPhoneNumber(request.getPhoneNumber());
         userRepository.save(user);
-    }
-
-    public boolean isEmailAssociatedWithUser(String email)   {
-        return userRepository.findByEmail(email).isPresent();
     }
 
     public void resetUserPassword(String userEmail) {

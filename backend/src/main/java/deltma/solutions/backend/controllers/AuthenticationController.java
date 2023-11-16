@@ -42,13 +42,10 @@ public class AuthenticationController {
             temporaryUserService.validateAndSendInvitations(temporaryUserDTO);
 
             // Attempt to find the temporary user by UUID
-            Optional<TemporaryUserDTO> temporaryUserDTOOptional = temporaryUserService.findTempUserByUuid(uuid);
+            TemporaryUserDTO foundUser = temporaryUserService.findTempUserByUuid(uuid);
 
-            // Return a response based on whether the temporary user was found
-            return temporaryUserDTOOptional
-                    .map(ResponseEntity::ok)  // If found, return OK with the user details
-                    .orElseGet(() -> ResponseEntity.notFound().build());  // If not found, return Not Found
-
+            // Return a response, whether found or not
+            return foundUser != null ? ResponseEntity.ok(foundUser) : ResponseEntity.notFound().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error registering user.");
@@ -92,7 +89,6 @@ public class AuthenticationController {
                     .body("Error retrieving user profile: " + e.getMessage());
         }
     }
-
 
     @PutMapping("/profile/update-phone-number")
     public ResponseEntity<?> updatePhoneNumber(@RequestBody UserProfileDTO request) {

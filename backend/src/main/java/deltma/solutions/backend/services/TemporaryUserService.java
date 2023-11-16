@@ -23,8 +23,7 @@ public class TemporaryUserService {
         this.validatorService = validatorService;
     }
 
-    public void validateAndSendInvitations (TemporaryUserDTO temporaryUserDTO) {
-
+    public void validateAndSendInvitations(TemporaryUserDTO temporaryUserDTO) {
         Set<String> validatedEmails = validatorService.validateEmails(temporaryUserDTO.getEmails());
 
         for (String email : validatedEmails) {
@@ -39,21 +38,29 @@ public class TemporaryUserService {
     }
 
     public boolean isEmailAssociated(String email) {
-        return temporaryUserRepository.findByEmail(email).isPresent();
+        return temporaryUserRepository.findByEmail(email) != null;
     }
 
     private String generateInvitationLink(UUID uuid) {
         return "http://localhost:8081/register/" + uuid;
     }
 
-    public Optional<TemporaryUserDTO> findTempUserByUuid(String uuid) {
-        Optional<TemporaryUser> temporaryUserOptional = temporaryUserRepository.findByUuid(uuid);
-        return temporaryUserOptional.map(temporaryUser ->
-                new TemporaryUserDTO(Collections.singleton(temporaryUser.getEmail()), temporaryUser.getUuid()));
+    public TemporaryUserDTO findTempUserByUuid(String uuid) {
+        TemporaryUser temporaryUser = temporaryUserRepository.findByUuid(uuid);
+        if (temporaryUser != null) {
+            return new TemporaryUserDTO(Collections.singleton(temporaryUser.getEmail()), temporaryUser.getUuid());
+        } else {
+            throw new IllegalArgumentException("User not found with UUID: " + uuid);
+        }
     }
 
     public void deleteTemporaryUserByEmail(String email) {
-        temporaryUserRepository.findByEmail(email).ifPresent(temporaryUserRepository::delete);
+        TemporaryUser temporaryUser = temporaryUserRepository.findByEmail(email);
+        if (temporaryUser != null) {
+            temporaryUserRepository.delete(temporaryUser);
+        } else {
+            throw new IllegalArgumentException("User not found with email: " + email);
+        }
     }
 
 }

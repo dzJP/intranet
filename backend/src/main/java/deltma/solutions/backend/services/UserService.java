@@ -40,8 +40,12 @@ public class UserService implements CommandLineRunner {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByEmail(username).orElseThrow(() ->
-                        new UsernameNotFoundException("Username not found"));
+                User user = userRepository.findByEmail(username);
+                if (user != null) {
+                    return user;
+                } else {
+                    throw new UsernameNotFoundException("Username not found");
+                }
             }
         };
     }
@@ -76,18 +80,18 @@ public class UserService implements CommandLineRunner {
         System.out.println("created USER user " + user1);
 
         // test remove later
-//        User testuser = User
-//                .builder()
-//                .email("jakob.pietrzyk@deltmasolutions.com")
-//                .firstName("testuser")
-//                .lastName("testuser")
-//                .password(passwordEncoder.encode("password"))
-//                .phoneNumber("1234567890")
-//                .role(Role.ROLE_ADMIN)
-//                .isActive(true)
-//                .build();
-//
-//        save(testuser);
+        User testuser = User
+                .builder()
+                .email("jakob.pietrzyk@deltmasolutions.com")
+                .firstName("testuser")
+                .lastName("testuser")
+                .password(passwordEncoder.encode("password"))
+                .phoneNumber("1234567890")
+                .role(Role.ROLE_ADMIN)
+                .isActive(true)
+                .build();
+
+        save(testuser);
     }
 
     // Create a new User object using builder pattern with provided details.
@@ -122,22 +126,28 @@ public class UserService implements CommandLineRunner {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email);
 
-        return new UserProfileDTO(user.getEmail(), user.getFirstName()
-                , user.getLastName(), user.getPhoneNumber());
+        if (user != null) {
+            return new UserProfileDTO(user.getEmail(), user.getFirstName(),
+                    user.getLastName(), user.getPhoneNumber());
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 
     public UserProfileDTO getUserProfileByUsername(String email) {
         // Validation using the ValidatorService
         if (validatorService.isValidEmail(email)) {
             // Retrieve the user profile
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepository.findByEmail(email);
 
-            return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                    user.getLastName(), user.getPhoneNumber());
+            if (user != null) {
+                return new UserProfileDTO(user.getEmail(), user.getFirstName(),
+                        user.getLastName(), user.getPhoneNumber());
+            } else {
+                throw new RuntimeException("User not found");
+            }
         } else {
             return null;
         }
@@ -147,24 +157,25 @@ public class UserService implements CommandLineRunner {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(userEmail);
 
-        user.setPhoneNumber(request.getPhoneNumber());
-        userRepository.save(user);
+        if (user != null) {
+            user.setPhoneNumber(request.getPhoneNumber());
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 
-    public void resetUserPassword(String userEmail) {
-        Optional<User> userOptional = userRepository.findByEmail(userEmail);
 
-        if (userOptional.isPresent()) {
-            //emailService.sendPasswordResetLink(userEmail);
-            User user = userOptional.get();
+    public void resetUserPassword(String userEmail) {
+        User user = userRepository.findByEmail(userEmail);
+
+        if (user != null) {
             String newPassword = passwordGenerator.generateRandomPassword();
             changeUserPassword(user, newPassword);
         } else {
             System.out.println("Email is not associated with a user");
-
         }
     }
 
@@ -182,39 +193,48 @@ public class UserService implements CommandLineRunner {
     }
 
     public void editUser(String email, UserProfileDTO request) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            validatorService.validateUserProfile(request);
 
-        validatorService.validateUserProfile(request);
+            user.setEmail(request.getEmail());
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setPhoneNumber(request.getPhoneNumber());
 
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setPhoneNumber(request.getPhoneNumber());
-
-        userRepository.save(user);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 
     public void deleteUser(String email) {
-        userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            userRepository.delete(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
     }
 
 
     public void deactivateUser(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
             user.setIsActive(false);
             userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
         }
     }
 
     public void activateUser(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
             user.setIsActive(true);
             userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
         }
     }
 

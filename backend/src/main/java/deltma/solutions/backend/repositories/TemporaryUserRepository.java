@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface TemporaryUserRepository extends JpaRepository<TemporaryUser, String> {
-    Optional<TemporaryUser> findByUuid(String uuid);
-    Optional<TemporaryUser> findByEmail(String email);
+    TemporaryUser findByUuid(String uuid);
+    TemporaryUser findByEmail(String email);
 }
 

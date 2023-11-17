@@ -7,6 +7,7 @@ import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class AdminController {
 
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<UserProfileDTO>> getUsers() {
         try {
@@ -30,6 +32,7 @@ public class AdminController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/send-invitations")
     public ResponseEntity<String> sendInvitations(@RequestBody Set<String> emails, TemporaryUserDTO temporaryUserDTO) {
         try {
@@ -42,6 +45,7 @@ public class AdminController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/edit-user/{email}")
     public ResponseEntity<String> editUser(@PathVariable String email, @RequestBody UserProfileDTO request) {
         try {
@@ -53,6 +57,7 @@ public class AdminController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-user/{email}")
     public ResponseEntity<?> deleteUser(@PathVariable String email) {
         try {
@@ -64,6 +69,7 @@ public class AdminController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/deactivate-user/{email}")
     public ResponseEntity<?> deactivateUser(@PathVariable String email) {
         try {
@@ -75,6 +81,7 @@ public class AdminController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/activate-user/{email}")
     public ResponseEntity<?> activateUser(@PathVariable String email) {
         try {

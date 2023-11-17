@@ -3,6 +3,7 @@ package deltma.solutions.backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void sendInvitation(String email, String invitationLink) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -29,7 +31,7 @@ public class EmailService {
         }
     }
 
-
+//    @PreAuthorize("hasRole('ADMIN')")
     public void sendNewPassword(String email, String newPassword) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

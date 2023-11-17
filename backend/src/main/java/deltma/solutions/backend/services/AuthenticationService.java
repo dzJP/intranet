@@ -23,17 +23,13 @@ public class AuthenticationService {
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
 
-        checkIfEmailIsInTemporaryUserDatabase(request.getEmail());
+        if (temporaryUserService.isEmailAssociated(request.getEmail())) {
+            throw new IllegalArgumentException("Email does not exist in temporary user database");
+        }
 
         return JwtAuthenticationResponse.builder()
                 .token(userService.generateJwtToken(userService.createAndSaveUser(request)))
                 .build();
-    }
-
-    public void checkIfEmailIsInTemporaryUserDatabase(String email) {
-        if (!temporaryUserService.isEmailAssociated(email)) {
-            throw new IllegalArgumentException("Email does not exist in temporary user database");
-        }
     }
 
     // SignInRequest is used to authenticate an existing user.

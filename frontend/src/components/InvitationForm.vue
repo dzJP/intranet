@@ -51,7 +51,7 @@ export default {
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
             axios
-                .post('http://localhost:8080/api/v1/send-invitations', emails, {
+                .post('http://localhost:8080/api/v1/admin/send-invitations', emails, {
                     headers: {
                         [csrfHeader]: csrfToken,
                         'Content-Type': 'application/json',

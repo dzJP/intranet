@@ -25,11 +25,13 @@ public class AuthenticationController {
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
         return authenticationService.signin(request);
     }
 
+    @PreAuthorize("@temporaryUserService.isCurrentUserTemporaryUser(authentication.name)")
     @PostMapping("/register")
     public JwtAuthenticationResponse signup(@RequestBody SignUpRequest request) {
         return authenticationService.signup(request);

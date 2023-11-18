@@ -58,4 +58,7 @@ public class TemporaryUserService {
         }
     }
 
+    public boolean isCurrentUserTemporaryUser(String email) {
+        return email != null && isEmailAssociated(email);
+    }
 }

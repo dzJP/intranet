@@ -1,5 +1,6 @@
 package deltma.solutions.backend.controllers;
 
+import deltma.solutions.backend.dto.ChangePasswordDTO;
 import deltma.solutions.backend.dto.TemporaryUserDTO;
 import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.services.TemporaryUserService;
@@ -90,6 +91,18 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error activating user: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/change-password/{email}")
+    public ResponseEntity<?> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO request) {
+        try {
+            userService.changePassword(email, request);
+            return ResponseEntity.ok("User password changed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error changing user password: " + e.getMessage());
         }
     }
 

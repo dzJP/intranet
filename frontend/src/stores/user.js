@@ -150,6 +150,28 @@ export const useUserStore = defineStore({
                 );
             }
           },
+          async changePassword(user,currentPassword, newPassword) {
+            try {
+                const response = await axios.patch(
+                    `http://localhost:8080/api/v1/admin/change-password/${user.email}`,
+                    {
+                        currentPassword,
+                        newPassword,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                    }
+                );
+
+                console.log('Password changed successfully:', response.data);
+                return response.data;
+            } catch (error) {
+                console.error('Error changing password:', error);
+                throw error;
+            }
+        },
         logout() {
             // Clear user data on logout
             this.email = '';

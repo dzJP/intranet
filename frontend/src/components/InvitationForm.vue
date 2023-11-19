@@ -26,7 +26,7 @@ export default {
     data() {
         return {
             isPopupVisible: false,
-            emails: ['', ''], // Initial array with 2 empty strings for 2 fields (or more)
+            emails: [''], // Initial array with  empty strings for 1 fields (or more)
         };
     },
     methods: {

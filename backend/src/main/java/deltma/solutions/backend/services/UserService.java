@@ -1,5 +1,6 @@
 package deltma.solutions.backend.services;
 
+import deltma.solutions.backend.dto.ChangePasswordDTO;
 import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.Role;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 
 /**
+ /**
  * User authentication
  **/
 @Service
@@ -167,23 +169,32 @@ public class UserService implements CommandLineRunner {
         }
     }
 
-
     public void resetUserPassword(String userEmail) {
         User user = userRepository.findByEmail(userEmail);
 
         if (user != null) {
             String newPassword = passwordGenerator.generateRandomPassword();
-            changeUserPassword(user, newPassword);
+            setNewPassword(user, newPassword);
+            emailService.sendNewPassword(user.getEmail(), newPassword);
         } else {
             System.out.println("Email is not associated with a user");
         }
     }
 
-    private void changeUserPassword(User user, String newPassword) {
+    public void changePassword(String email, ChangePasswordDTO request) {
+        User user = userRepository.findByEmail(email);
+
+        if (user != null && passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            setNewPassword(user, request.getNewPassword());
+            System.out.println("User password changed successfully");
+        } else {
+            throw new IllegalArgumentException("User not found or invalid current password");
+        }
+    }
+
+    private void setNewPassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-
-        emailService.sendNewPassword(user.getEmail(), newPassword);
     }
 
     public List<UserProfileDTO> getAllUsers() {

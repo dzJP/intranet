@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -132,7 +131,7 @@ public class UserService implements CommandLineRunner {
 
         if (user != null) {
             return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                    user.getLastName(), user.getPhoneNumber());
+                    user.getLastName(), user.getPhoneNumber(), user.getRole());
         } else {
             throw new IllegalArgumentException("User not found");
         }
@@ -146,7 +145,7 @@ public class UserService implements CommandLineRunner {
 
             if (user != null) {
                 return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                        user.getLastName(), user.getPhoneNumber());
+                        user.getLastName(), user.getPhoneNumber(), user.getRole());
             } else {
                 throw new RuntimeException("User not found");
             }
@@ -199,7 +198,7 @@ public class UserService implements CommandLineRunner {
 
     public List<UserProfileDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber()))
+                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getRole()))
                 .collect(Collectors.toList());
     }
 
@@ -212,6 +211,7 @@ public class UserService implements CommandLineRunner {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setPhoneNumber(request.getPhoneNumber());
+            user.setRole(request.getRole());
 
             userRepository.save(user);
         } else {

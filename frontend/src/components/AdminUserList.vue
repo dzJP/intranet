@@ -17,6 +17,7 @@
         <td><input v-model="user.firstName" :disabled="!user.editMode"></td>
         <td><input v-model="user.lastName" :disabled="!user.editMode"></td>
         <td><input v-model="user.phoneNumber" :disabled="!user.editMode"></td>
+        <td><input v-model="user.role" :disabled="!user.editMode"></td>
         <td>
           <router-link :to="`/user/${user.email}`">
             <button class="btn btn-primary">
@@ -92,6 +93,7 @@ export default {
       userStore.setFirstName(user.firstName);
       userStore.setLastName(user.lastName);
       userStore.setPhoneNumber(user.phoneNumber);
+      userStore.setRole(user.role);
     };
 
     const deleteUser = async (user) => {
@@ -123,7 +125,7 @@ export default {
 
     const filteredUsers = computed(() => {
       const allUsers = userStore.searchUsers(searchQuery.value);
-      return allUsers.slice(0, displayedUsersCount.value); // Display only the specified number of users
+      return allUsers.slice(0, displayedUsersCount.value);
     });
 
     const setUserPassword = (user, password) => {
@@ -143,7 +145,7 @@ const changePassword = async (user) => {
 };
 
 const loadMoreUsers = () => {
-      displayedUsersCount.value += 10; // Load 10 more users
+      displayedUsersCount.value += 10; 
     };
 
     onMounted(() => {

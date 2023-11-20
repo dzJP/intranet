@@ -1,6 +1,7 @@
 package deltma.solutions.backend.dto;
 
 
+import deltma.solutions.backend.models.Role;
 import lombok.*;
 
 @Data
@@ -12,4 +13,5 @@ public class UserProfileDTO {
     String firstName;
     String lastName;
     String phoneNumber;
+    Role role;
 }

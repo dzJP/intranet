@@ -1,63 +1,65 @@
 <template>
-    <div v-if="userDetails" class="profile-details">
-        <div>
-            <h6 class="mb-0">First Name</h6>
-            <p class="text-secondary">{{ userDetails.firstName }}</p>
-        </div>
-        <div>
-            <h6 class="mb-0">Last Name</h6>
-            <p class="text-secondary">{{ userDetails.lastName }}</p>
-        </div>
-        <div>
-            <h6 class="mb-0">Email</h6>
-            <p class="text-secondary">{{ userDetails.email }}</p>
-        </div>
-        <div>
-            <h6 class="mb-0">Phone Number</h6>
-            <p class="text-secondary">{{ userDetails.phoneNumber }}</p>
+    <div class="user-profile">
+        <h2>User Profile Page</h2>
+
+        <div v-if="user" class="profile-details">
+            <div>
+                <h6 class="mb-0">First Name</h6>
+                <p class="text-secondary">{{ user.firstName }}</p>
+            </div>
+            <div>
+                <h6 class="mb-0">Last Name</h6>
+                <p class="text-secondary">{{ user.lastName }}</p>
+            </div>
+            <div>
+                <h6 class="mb-0">Email</h6>
+                <p class="text-secondary">{{ user.email }}</p>
+            </div>
+            <div>
+                <h6 class="mb-0">Phone Number</h6>
+                <p class="text-secondary">{{ user.phoneNumber }}</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import {  ref, onMounted } from 'vue';
+import { fetchUserProfile } from '@/stores/user';
+import { useRoute } from 'vue-router';
 
 export default {
-    props: {
-        email: String,
-    },
-    setup(props) {
+    setup() {
         const userDetails = ref(null);
+        const route = useRoute();
 
-        const fetchUserProfile = async () => {
+        const fetchUserProfileData = async (email) => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/user/${props.email}`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-
-                console.log('User details response:', response.data);
-
-                userDetails.value = response.data;
+                const userData = await fetchUserProfile(email);
+                userDetails.value = userData;
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
         };
 
         onMounted(() => {
-            fetchUserProfile();
+            const email = route.params.email;
+            fetchUserProfileData(email);
         });
 
         return {
-            userDetails,
+            user: userDetails,
         };
     },
 };
 </script>
 
 <style scoped>
+.user-profile {
+    max-width: 600px;
+    margin: auto;
+}
+
 .profile-details {
     background-color: #f4f4f4;
     padding: 20px;

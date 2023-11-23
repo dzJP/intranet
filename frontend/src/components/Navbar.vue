@@ -1,17 +1,3 @@
-<script>
-import { useAuthStore } from '@/stores/auth';
-
-export default {
-    name: 'nav-bar',
-    methods: {
-        logout() {
-            const auth = useAuthStore();
-            auth.logout();
-        },
-    },
-};
-</script>
-
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -32,3 +18,17 @@ export default {
         </div>
     </nav>
 </template>
+
+<script>
+import { useAuthStore } from '@/stores/auth';
+
+export default {
+    name: 'nav-bar',
+    methods: {
+        logout() {
+            const auth = useAuthStore();
+            auth.logout();
+        },
+    },
+};
+</script>

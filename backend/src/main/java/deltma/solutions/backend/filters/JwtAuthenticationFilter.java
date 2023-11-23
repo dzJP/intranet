@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("JwtAuthenticationFilter intercepting request...");
         // Extracts the Authorization header from the HTTP request.
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
@@ -48,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         // Extracts the JWT token from the Authorization header.
         jwt = authHeader.substring(7);
-        log.debug("JWT - {}", jwt.toString()); // logs JWT for debugging purposes
+        System.out.println("JWT: " + jwt);
 
         // Extracts the user's email from the JWT.
         userEmail = jwtService.extractUserName(jwt);
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Checks if the JWT token is valid for the user.
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                log.debug("User - {}", userDetails);// logs user details for debugging purposes.
+                System.out.println("User: " + userDetails);// logs user details for debugging purposes.
 
                 // Sets up the user's authentication details in the security context.
                 SecurityContext context = SecurityContextHolder.createEmptyContext();

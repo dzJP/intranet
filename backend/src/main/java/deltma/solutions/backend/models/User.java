@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    boolean isActive = false;
+    Boolean isActive = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -66,7 +66,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isActive;
+        return isActive;
     }
 
 }

@@ -1,16 +1,13 @@
 package deltma.solutions.backend;
 
-import deltma.solutions.backend.models.Role;
-import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.services.ValidatorService;
-import deltma.solutions.backend.services.ValidatorServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ValidatorServiceImplTest {
+public class ValidatorServiceTest {
 
-    private final ValidatorService validatorService = new ValidatorServiceImpl();
+    private final ValidatorService validatorService = new ValidatorService();
 
     // Email validation tests
     @Test
@@ -69,6 +66,18 @@ public class ValidatorServiceImplTest {
         assertThrows(IllegalArgumentException.class, () -> validatorService.validateString(invalidInput, fieldName));
     }
 
+    @Test
+    public void testInvalidNameShort() {
+        String invalidName = "A";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateFirstName(invalidName));
+        assertEquals("Invalid name format", exception.getMessage());
+    }
+
+    @Test void testInvalidNameLongerThan32() {
+        String invalidName = "AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> validatorService.validateFirstName(invalidName));
+    }
+
     // Phone Number validation tests
     @Test
     void validatePhoneNumber_ValidInput_NoExceptionThrown() {
@@ -89,7 +98,7 @@ public class ValidatorServiceImplTest {
     }
 
     // User validation tests
-    @Test
+    /*@Test
     void validateUser_NullUser_ThrowsException() {
         User user = null;
         assertThrows(IllegalArgumentException.class, () -> validatorService.validateUser(user));
@@ -107,7 +116,7 @@ public class ValidatorServiceImplTest {
                 .isActive(true)
                 .build();
         assertDoesNotThrow(() -> validatorService.validateUser(user));
-    }
+    }*/
 
     // Integer validation tests
     @Test

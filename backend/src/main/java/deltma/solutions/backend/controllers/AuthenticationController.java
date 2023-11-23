@@ -3,29 +3,108 @@ package deltma.solutions.backend.controllers;
 import deltma.solutions.backend.dto.JwtAuthenticationResponse;
 import deltma.solutions.backend.dto.SignInRequest;
 import deltma.solutions.backend.dto.SignUpRequest;
+import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.services.AuthenticationService;
+import deltma.solutions.backend.services.TemporaryUserService;
+import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /** Responsible for managing HTTP requests associated with user authentication. **/
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final TemporaryUserService temporaryUserService;
+    private final UserService userService;
 
-    @PostMapping("/signup")
-    public JwtAuthenticationResponse signup(@RequestBody SignUpRequest request) {
-        return authenticationService.signup(request);
-    }
-
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
         return authenticationService.signin(request);
     }
+
+    @PreAuthorize("@temporaryUserService.isCurrentUserTemporaryUser(authentication.name)")
+    @PostMapping("/register")
+    public JwtAuthenticationResponse signup(@RequestBody SignUpRequest request) {
+        return authenticationService.signup(request);
+    }
+
+    @PreAuthorize("@temporaryUserService.isEmailAssociated(#request.email)")
+    @GetMapping("/register/{uuid}")
+    public ResponseEntity<?> registerUser(@PathVariable String uuid) {
+        try {
+            return ResponseEntity.ok(temporaryUserService.findTempUserByUuid(uuid));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error registering user.");
+        }
+    }
+
+//    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String email) {
+        try {
+            userService.resetUserPassword(email);
+            return ResponseEntity.ok("New password sent successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error resetting password.");
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileDTO> getProfile() {
+        try {
+            return ResponseEntity.ok(userService.getUserProfileByEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PutMapping("/profile/update-phone-number")
+    public ResponseEntity<String> updatePhoneNumber(@RequestBody UserProfileDTO request) {
+        try {
+            userService.updatePhoneNumber(request);
+            return ResponseEntity.ok("Phone number updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error updating phone number: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @GetMapping("/colleagues")
+    public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
+        try {
+            return ResponseEntity.ok(userService.getAllUsers());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @GetMapping("/user/{email}")
+    public ResponseEntity<UserProfileDTO> getUserByUsername(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(userService.getUserProfileByUsername(email));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 }

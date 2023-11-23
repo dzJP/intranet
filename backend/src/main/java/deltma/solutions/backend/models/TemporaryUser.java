@@ -1,10 +1,10 @@
 package deltma.solutions.backend.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -13,13 +13,15 @@ public class TemporaryUser {
 
     @Id
     @Column(name = "email", nullable = false, unique = true)
-    String email;
+    private String email;
 
-    UUID uuid;
+    @Column(name = "uuid", nullable = false)
+    private String uuid;
 
-    public TemporaryUser(String email) {
+    public TemporaryUser(String email, String uuid) {
         this.email = email;
-        this.uuid = UUID.randomUUID();
+        this.uuid = uuid;
     }
 
 }
+

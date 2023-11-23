@@ -1,3 +1,17 @@
 <template>
-<h1>This is the admin page</h1>
+    <h1>Admin page</h1>
+    <InvitationForm />
+    <AdminUserList />
 </template>
+
+<script>
+import InvitationForm from '../components/InvitationForm.vue';
+import AdminUserList from '../components/AdminUserList.vue';
+
+export default {
+    components: {
+        InvitationForm,
+        AdminUserList,
+    },
+};
+</script>

@@ -9,7 +9,6 @@ import deltma.solutions.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,31 +16,20 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+    private final TemporaryUserService temporaryUserService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     // SignUpRequest is used to create a new user account.
     public JwtAuthenticationResponse signup(SignUpRequest request) {
 
-        // Create a new User object using builder pattern with provided details.
-        var user = User.builder()
-                .email(request.getEmail())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .password(passwordEncoder.encode(request.getPassword())) // Encode the password.
-                .phoneNumber(request.getPhoneNumber())
-                .role(Role.ROLE_USER) // Assign a role to the user (e.g., ROLE_USER).
+        if (temporaryUserService.isEmailAssociated(request.getEmail())) {
+            throw new IllegalArgumentException("Email does not exist in temporary user database");
+        }
+
+        return JwtAuthenticationResponse.builder()
+                .token(userService.generateJwtToken(userService.createAndSaveUser(request)))
                 .build();
-
-        // Save the user using the UserService and get the saved user with assigned ID.
-        user = userService.save(user);
-
-        // Generate a JWT token for the newly registered user.
-        var jwt = jwtService.generateToken(user);
-
-        // Return a JwtAuthenticationResponse containing the generated token.
-        return JwtAuthenticationResponse.builder().token(jwt).build();
     }
 
     // SignInRequest is used to authenticate an existing user.
@@ -51,24 +39,24 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         // Retrieve the user from the UserRepository based on the provided email.
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+        User user = userRepository.findByEmail(request.getEmail());
 
-        // Generate a JWT token for the authenticated user.
-        var jwt = jwtService.generateToken(user);
+        if (user != null) {
+            // Generate a JWT token for the authenticated user.
+            String jwt = jwtService.generateToken(user);
 
-        // Retrieve the user's role from the User entity.
-        Role role = user.getRole();
-        System.out.println(role.toString());
+            // Retrieve the user's role from the User entity.
+            Role role = user.getRole();
+            System.out.println(role.toString());
 
-        // Return a JwtAuthenticationResponse containing the generated token.
-        return JwtAuthenticationResponse
-                .builder()
-                .token(jwt)
-                .role(role.toString())
-                .build();
+            // Return a JwtAuthenticationResponse containing the generated token.
+            return JwtAuthenticationResponse.builder()
+                    .token(jwt)
+                    .role(role.toString())
+                    .build();
+        } else {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
     }
-
-
 
 }

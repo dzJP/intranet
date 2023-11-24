@@ -19,20 +19,17 @@ public class TimeRegisterService {
     private TimeRegisterRepository timeRegisterRepository;
 
     public void registerTime(TimeRegisterRequestDTO timeRegisterRequestDTO) {
-        // Retrieve the user based on the email
         User user = userRepository.findByEmail(timeRegisterRequestDTO.getEmail());
 
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
 
-        // Create a TimeRegister entity from the DTO
         TimeRegister timeRegister = new TimeRegister();
-        timeRegister.setHoursWorked(timeRegisterRequestDTO.getHoursWorked());
+        timeRegister.setWorkHours(timeRegisterRequestDTO.getWorkHours());
         timeRegister.setDate(timeRegisterRequestDTO.getDate());
         timeRegister.setUser(user);
 
-        // Save the TimeRegister entity
         timeRegisterRepository.save(timeRegister);
     }
 }

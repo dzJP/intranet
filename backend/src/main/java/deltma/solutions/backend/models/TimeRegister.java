@@ -19,7 +19,7 @@ public class TimeRegister {
     private Long id;
 
     @Column(nullable = false)
-    private double hoursWorked;
+    private String workHours;
 
     @Column(nullable = false)
     private LocalDate date;
@@ -28,8 +28,8 @@ public class TimeRegister {
     @JoinColumn(name = "user_email", nullable = false)
     private User user;
 
-    public TimeRegister(Double hoursWorked, LocalDate date, User user) {
-        this.hoursWorked = hoursWorked;
+    public TimeRegister(String workHours, LocalDate date, User user) {
+        this.workHours = workHours;
         this.date = date;
         this.user = user;
     }
@@ -42,12 +42,12 @@ public class TimeRegister {
         this.id = id;
     }
 
-    public double getHoursWorked() {
-        return hoursWorked;
+    public String getWorkHours() {
+        return workHours;
     }
 
-    public void setHoursWorked(double hoursWorked) {
-        this.hoursWorked = hoursWorked;
+    public void setWorkHours(String workHours) {
+        this.workHours = workHours;
     }
 
     public LocalDate getDate() {

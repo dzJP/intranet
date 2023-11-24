@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -37,6 +38,12 @@ public class User implements UserDetails {
     Role role;
 
     Boolean isActive = false;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<TimeRegister> timeRegisters;
+//
+//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+//    private Set<MonthlyTimeRegister> monthlyTimeRegisters;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

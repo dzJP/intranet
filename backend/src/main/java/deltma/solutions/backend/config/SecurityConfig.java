@@ -65,8 +65,9 @@ public class SecurityConfig {
                                 "/api/v1/register",
                                 "/api/v1/signin",
                                 "/api/v1/register/{uuid}",
-                                "/api/v1/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.GET ,
+                                "/api/v1/reset-password",
+                                "/api/v1/register-time").permitAll()
+                        .requestMatchers(HttpMethod.GET,
                                 "/api/v1/profile",
                                 "/api/v1/test/**",
                                 "/api/v1/**").permitAll()

@@ -39,11 +39,11 @@ public class User implements UserDetails {
 
     Boolean isActive = false;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<TimeRegister> timeRegisters;
-//
-//    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//    private Set<MonthlyTimeRegister> monthlyTimeRegisters;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TimeRegister> timeRegisters;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<MonthlyTimeRegister> monthlyTimeRegisters;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

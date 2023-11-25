@@ -10,7 +10,7 @@ export default {
         UserProfileDetails,
     },
 };
-</script> 
+</script>
 
 <style scoped>
 </style>

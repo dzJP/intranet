@@ -1,16 +1,12 @@
 package deltma.solutions.backend.controllers;
 
 import deltma.solutions.backend.dto.TimeRegisterRequestDTO;
-import deltma.solutions.backend.models.TimeRegister;
-import deltma.solutions.backend.repositories.TimeRegisterRepository;
 import deltma.solutions.backend.services.TimeRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1")

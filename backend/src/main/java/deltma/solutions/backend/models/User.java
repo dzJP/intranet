@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -39,6 +38,7 @@ public class User implements UserDetails {
 
     Boolean isActive = false;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TimeRegister> timeRegisters;
 

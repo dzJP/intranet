@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 public class TimeRegisterController {
@@ -19,14 +21,23 @@ public class TimeRegisterController {
     @PostMapping("/register-time")
     public ResponseEntity<String> registerTime(@RequestBody TimeRegisterRequestDTO timeRegisterRequestDTO) {
         try {
-            System.out.println("Received request to register time: " + timeRegisterRequestDTO);
-
             timeRegisterService.registerTime(timeRegisterRequestDTO);
             return ResponseEntity.ok("Time registered successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error registering time " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @GetMapping("/time-registrations")
+    public ResponseEntity<List<TimeRegisterRequestDTO>> getFormerRegistrationsThisMonthForAllUsers() {
+        try {
+            return ResponseEntity.ok(timeRegisterService.getFormerRegistrationsThisMonthForAllUsers());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

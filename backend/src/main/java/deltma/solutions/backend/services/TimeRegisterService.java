@@ -5,9 +5,12 @@ import deltma.solutions.backend.models.TimeRegister;
 import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.TimeRegisterRepository;
 import deltma.solutions.backend.repositories.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TimeRegisterService {
@@ -17,6 +20,11 @@ public class TimeRegisterService {
 
     @Autowired
     private TimeRegisterRepository timeRegisterRepository;
+
+    public TimeRegisterService(UserRepository userRepository, TimeRegisterRepository timeRegisterRepository) {
+        this.userRepository = userRepository;
+        this.timeRegisterRepository = timeRegisterRepository;
+    }
 
     public void registerTime(TimeRegisterRequestDTO timeRegisterRequestDTO) {
         User user = userRepository.findByEmail(timeRegisterRequestDTO.getEmail());
@@ -32,9 +40,20 @@ public class TimeRegisterService {
 
         timeRegisterRepository.save(timeRegister);
     }
+
+    public List<TimeRegisterRequestDTO> getFormerRegistrationsThisMonthForAllUsers() {
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+        int currentMonth = currentDate.getMonthValue();
+
+        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByDateYearAndDateMonth(currentYear, currentMonth);
+
+        return timeRegistrations.stream()
+                .map(timeRegister -> new TimeRegisterRequestDTO(
+                        timeRegister.getWorkHours(),
+                        timeRegister.getDate(),
+                        timeRegister.getUser().getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
 }
-
-
-
-
-

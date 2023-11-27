@@ -56,4 +56,17 @@ public class TimeRegisterService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public Integer getTotalTimeForCurrentMonth() {
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+        int currentMonth = currentDate.getMonthValue();
+
+        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByDateYearAndDateMonth(currentYear, currentMonth);
+
+        return timeRegistrations.stream()
+                .mapToInt(timeRegister -> Integer.parseInt(timeRegister.getWorkHours()))
+                .sum();
+    }
+
 }

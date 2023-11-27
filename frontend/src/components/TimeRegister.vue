@@ -25,6 +25,15 @@
 		<div v-else>
 			<p>No time registrations found.</p>
 		</div>
+
+		<div v-if="totalTime !== null">
+			<h3>Total Time This Month</h3>
+			<p>Total work hours for this month: {{ totalTime }} hours</p>
+		</div>
+		<div v-else>
+			<p>Loading total time...</p>
+		</div>
+
 	</div>
 </template>
 
@@ -39,6 +48,7 @@ export default {
 			workHours: "",
 			date: "",
 			timeRegistrations: [],
+			totalTime: null,
 		};
 	},
 	methods: {
@@ -67,7 +77,8 @@ export default {
 
 				console.log("Registration successful:", response.data);
 
-				this.getTimeRegistrations();
+				await this.getTimeRegistrations();
+				await this.getTotalTimeForCurrentMonth();
 			} catch (error) {
 				console.error("Error registering time:", error.response || error.message);
 			}
@@ -93,9 +104,27 @@ export default {
 				console.error("Error fetching time registrations:", error.response || error.message);
 			}
 		},
+		async getTotalTimeForCurrentMonth() {
+			try {
+				const auth = useAuthStore();
+				const token = auth.token;
+
+				const response = await axios.get("http://localhost:8080/api/v1/total-time-this-month", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				console.log("Total time for this month:", response.data);
+				this.totalTime = response.data;
+			} catch (error) {
+				console.error("Error fetching total time for this month:", error.response || error.message);
+			}
+		},
 	},
 	mounted() {
 		this.getTimeRegistrations();
+		this.getTotalTimeForCurrentMonth();
 	},
 };
 </script>

@@ -40,4 +40,14 @@ public class TimeRegisterController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/total-time-this-month")
+    public ResponseEntity<Integer> getTotalTimeForCurrentMonth() {
+        try {
+            return ResponseEntity.ok(timeRegisterService.getTotalTimeForCurrentMonth());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 }

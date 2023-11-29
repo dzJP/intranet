@@ -38,7 +38,7 @@ export const useTimeStore = defineStore({
         console.log("Registration successful:", response.data);
 
         await this.getTimeRegistrations();
-        await this.getTotalTimeForCurrentMonth();
+        await this.getTotalTimeForCurrentMonth(auth.user);
 
         this.email = '';
         this.workHours = '';
@@ -79,16 +79,13 @@ export const useTimeStore = defineStore({
         );
       }
     },
-    async getTotalTimeForCurrentMonth() {
+    async getTotalTimeForCurrentMonth(userEmail) {
       try {
-        const auth = useAuthStore();
-        const token = auth.token;
-
         const response = await axios.get(
           "http://localhost:8080/api/v1/total-time-this-month",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
+            params: {
+              userEmail,
             },
           }
         );
@@ -104,6 +101,7 @@ export const useTimeStore = defineStore({
     },
     async clearTimeRegistrations() {
       this.timeRegistrations = [];
+      this.totalTime = null;
     },
   },
 });

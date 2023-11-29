@@ -44,7 +44,9 @@ export const useAuthStore = defineStore({
 
           const timeStore = useTimeStore();
           timeStore.clearTimeRegistrations();
-          timeStore.getTimeRegistrations();
+          
+          await timeStore.getTimeRegistrations();
+          await timeStore.getTotalTimeForCurrentMonth(this.user);
 
           if (role === "ROLE_ADMIN") {
             if (this.role === "ROLE_ADMIN") {

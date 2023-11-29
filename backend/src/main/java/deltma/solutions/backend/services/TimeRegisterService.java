@@ -58,12 +58,12 @@ public class TimeRegisterService {
     }
 
     // TODO fix total hours per user
-    public Integer getTotalTimeForCurrentMonth() {
+    public Integer getTotalTimeForCurrentMonth(String userEmail) {
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
         int currentMonth = currentDate.getMonthValue();
 
-        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByDateYearAndDateMonth(currentYear, currentMonth);
+        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByUserEmailAndDateYearAndDateMonth(userEmail, currentYear, currentMonth);
 
         return timeRegistrations.stream()
                 .mapToInt(timeRegister -> Integer.parseInt(timeRegister.getWorkHours()))

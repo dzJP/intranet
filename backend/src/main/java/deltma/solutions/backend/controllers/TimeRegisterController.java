@@ -42,9 +42,9 @@ public class TimeRegisterController {
     }
 
     @GetMapping("/total-time-this-month")
-    public ResponseEntity<Integer> getTotalTimeForCurrentMonth() {
+    public ResponseEntity<Integer> getTotalTimeForCurrentMonth(@RequestParam String userEmail) {
         try {
-            return ResponseEntity.ok(timeRegisterService.getTotalTimeForCurrentMonth());
+            return ResponseEntity.ok(timeRegisterService.getTotalTimeForCurrentMonth(userEmail));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

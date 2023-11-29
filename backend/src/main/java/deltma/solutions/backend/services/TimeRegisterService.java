@@ -41,12 +41,12 @@ public class TimeRegisterService {
         timeRegisterRepository.save(timeRegister);
     }
 
-    public List<TimeRegisterRequestDTO> getFormerRegistrationsThisMonthForAllUsers() {
+    public List<TimeRegisterRequestDTO> getFormerRegistrationsThisMonthForAllUsers(String email) {
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
         int currentMonth = currentDate.getMonthValue();
 
-        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByDateYearAndDateMonth(currentYear, currentMonth);
+        List<TimeRegister> timeRegistrations = timeRegisterRepository.findByUserEmailAndDateYearAndDateMonth(email, currentYear, currentMonth);
 
         return timeRegistrations.stream()
                 .map(timeRegister -> new TimeRegisterRequestDTO(
@@ -57,6 +57,7 @@ public class TimeRegisterService {
                 .collect(Collectors.toList());
     }
 
+    // TODO fix total hours per user
     public Integer getTotalTimeForCurrentMonth() {
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();

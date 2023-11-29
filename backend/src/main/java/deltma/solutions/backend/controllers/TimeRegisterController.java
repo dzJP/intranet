@@ -32,9 +32,9 @@ public class TimeRegisterController {
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/time-registrations")
-    public ResponseEntity<List<TimeRegisterRequestDTO>> getFormerRegistrationsThisMonthForAllUsers() {
+    public ResponseEntity<List<TimeRegisterRequestDTO>> getFormerRegistrationsThisMonthForAllUsers(@RequestParam String email) {
         try {
-            return ResponseEntity.ok(timeRegisterService.getFormerRegistrationsThisMonthForAllUsers());
+            return ResponseEntity.ok(timeRegisterService.getFormerRegistrationsThisMonthForAllUsers(email));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

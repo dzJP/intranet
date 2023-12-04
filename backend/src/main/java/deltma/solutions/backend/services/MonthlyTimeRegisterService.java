@@ -7,12 +7,12 @@ import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.MonthlyTimeRegisterRepository;
 import deltma.solutions.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,53 +28,20 @@ public class MonthlyTimeRegisterService {
     private List<MonthlyTimeDTO> monthlyTimeList = new ArrayList<>();
 
     @Transactional
-    public List<MonthlyTimeDTO> getTotalTimeForLastYear(User user, int selectedMonth) {
+    public List<MonthlyTimeDTO> getTotalTimeForLastYear(String userEmail, int selectedMonth) {
         try {
-            System.out.println("User Email: " + user.getEmail());
+            System.out.println("User Email: " + userEmail);
 
-            // Get the current month
-            int currentMonth = LocalDate.now().getMonthValue();
-            // Get the current year
-            int currentYear = LocalDate.now().getYear();
-
-            // Calculate the starting month for the last 12 months
-            int startMonth = currentMonth - 11;
-            int startYear = currentYear;
-
-            if (startMonth <= 0) {
-                startMonth += 12;
-                startYear--;
+            User user = userRepository.findByEmail(userEmail);
+            if (user == null) {
+                // Handle the case where the user is not found
+                return Collections.emptyList();
             }
 
-            System.out.println("Start Month: " + startMonth);
-            System.out.println("Start Year: " + startYear);
+            System.out.println("User roles: " + user.getRole());
 
-            // Use the repository method to get monthly time registers for the last 12 months
-            List<MonthlyTimeRegister> monthlyTimeRegisters = new ArrayList<>();
-            for (int i = 0; i < 12; i++) {
-                int targetMonth = startMonth + i;
-                int targetYear = startYear;
-
-                if (targetMonth > 12) {
-                    targetMonth -= 12;
-                    targetYear++;
-                }
-
-                List<MonthlyTimeRegister> registersForMonth =
-                        monthlyTimeRegisterRepository.findByUserAndYearAndMonth(user, targetYear, targetMonth);
-
-                if (!registersForMonth.isEmpty()) {
-                    monthlyTimeRegisters.addAll(registersForMonth);
-                }
-            }
-
-            System.out.println("Found monthly time registers: " + monthlyTimeRegisters.size());
-
-            for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
-                System.out.println("Monthly Time Register: " + monthlyTimeRegister);
-            }
-
-            List<MonthlyTimeDTO> totalTimeList = calculateTotalTimeForLastYear(monthlyTimeRegisters, selectedMonth);
+            // Delegate the logic to calculate total time for the last year to another method
+            List<MonthlyTimeDTO> totalTimeList = calculateTotalTimeForLastYear(user, selectedMonth);
 
             for (MonthlyTimeDTO monthlyTimeDTO : totalTimeList) {
                 System.out.println("Total Time DTO: " + monthlyTimeDTO);
@@ -87,10 +54,7 @@ public class MonthlyTimeRegisterService {
         }
     }
 
-//    @Transactional
-//    @Scheduled(fixedRate = 60000) // Run every 60 seconds
-//    @Scheduled(cron = "0 0 1 1 * ?") // Execute at midnight on the first day of each month
-    public void calculateMonthlyTime() {
+    public void calculateMonthlyTimeForAllUsers() {
         try {
             System.out.println("Calculating monthly time for all users...");
 
@@ -180,8 +144,12 @@ public class MonthlyTimeRegisterService {
         return monthlyTimeRegisters;
     }
 
-    private List<MonthlyTimeDTO> calculateTotalTimeForLastYear(List<MonthlyTimeRegister> monthlyTimeRegisters, int selectedMonth) {
+    private List<MonthlyTimeDTO> calculateTotalTimeForLastYear(User user, int selectedMonth) {
         List<MonthlyTimeDTO> monthlyTimeList = new ArrayList<>();
+
+        // Use the service method to get total work hours for the last year
+        List<MonthlyTimeRegister> monthlyTimeRegisters = getFormerMonths(user, selectedMonth);
+
         for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
             // Only include entries up to the selected month
             if (monthlyTimeRegister.getMonth() <= selectedMonth) {
@@ -197,7 +165,16 @@ public class MonthlyTimeRegisterService {
         return monthlyTimeList;
     }
 
-    //    @Transactional
+    @Transactional
+    public void resetMonthlyTimeForAllUsers(List<User> users) {
+        for (User user : users) {
+            System.out.println("Resetting monthly time for user: " + user.getEmail());
+            monthlyTimeRegisterRepository.deleteByUser(user);
+        }
+    }
+}
+
+//    @Transactional
 ////    @Scheduled(cron = "0 0 1 1 * ?") // Execute at midnight on the first day of each month
 //    @Scheduled(fixedRate = 50000) // Run every 50 seconds
 //    public void insertMonthlyTimeForAllUsers() {
@@ -226,4 +203,4 @@ public class MonthlyTimeRegisterService {
 //            e.printStackTrace();
 //        }
 //    }
-}
+

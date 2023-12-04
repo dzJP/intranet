@@ -36,8 +36,4 @@ public class MonthlyTimeRegister {
         this.user = user;
     }
 
-//    @Scheduled(cron = "0 0 1 * *") // Execute at midnight on the first day of each month
-//    public void calculateTotalTime() {
-//        // add logic later
-//    }
 }

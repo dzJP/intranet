@@ -16,4 +16,12 @@ public class TimeRegisterRequestDTO {
         this.email = email;
 
     }
+
+    public int getMonth() {
+        return date.getMonthValue();
+    }
+
+    public int getYear() {
+        return date.getYear();
+    }
 }

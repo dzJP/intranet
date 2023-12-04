@@ -13,7 +13,7 @@
 			<h3>Time Registrations:</h3>
 			<ul>
 				<li v-for="registration in timeRegistrations" :key="registration.id">
-					{{ registration.date }} - {{ registration.workHours }} hours
+					{{ registration.date }} - {{ registration.totalTime }} hours
 					({{ registration.email }})
 				</li>
 			</ul>
@@ -21,7 +21,9 @@
 		<div v-else>
 			<p>No time registrations found for {{ monthName(selectedMonth) }}.</p>
 		</div>
-		<button @click="resetTotalTime">Reset Total Time</button>
+
+		<button @click="calculateMonthlyTime">Calculate Monthly Time</button>
+		<button @click="resetMonthlyTime">Reset Monthly Time</button>
 	</div>
 </template>
 
@@ -32,14 +34,12 @@ import { useAuthStore } from "@/stores/auth";
 export default {
 	data() {
 		return {
-			selectedMonth: new Date().getMonth() + 1, // Default to the current month
+			selectedMonth: new Date().getMonth() + 1,
 			timeRegistrations: [],
-			totalTime: null, // Initialize totalTime
 			months: [
 				"January", "February", "March", "April", "May", "June",
 				"July", "August", "September", "October", "November", "December"
 			],
-			userEmail: '', // Add userEmail property
 		};
 	},
 	methods: {
@@ -47,9 +47,6 @@ export default {
 			try {
 				const auth = useAuthStore();
 				const token = auth.token;
-
-				console.log("Token:", token);
-				console.log("Selected Month:", this.selectedMonth);
 
 				const response = await axios.get("http://localhost:8080/api/v1/totals-last-year", {
 					headers: {
@@ -65,69 +62,69 @@ export default {
 				const responseData = response.data;
 
 				if (Array.isArray(responseData) && responseData.length > 0) {
-					this.timeRegistrations = responseData;
+					// Clear the timeRegistrations array and then push the new data
+					this.timeRegistrations.splice(0, this.timeRegistrations.length, ...responseData);
 				} else {
 					console.log("No data found for the selected month.");
 					this.timeRegistrations = [];
 				}
 			} catch (error) {
 				console.error("Error fetching monthly totals:", error.response || error.message);
-				this.timeRegistrations = []; // Reset to empty in case of an error
+				this.timeRegistrations = [];
 			}
 		},
-
-
 		monthName(month) {
 			return this.months[month - 1];
 		},
-		async getTotalTimeForCurrentMonth() {
+		async calculateMonthlyTime() {
 			try {
 				const auth = useAuthStore();
 				const token = auth.token;
-				console.log("JWT Token:", token);
 
-				const userEmail = this.getUserEmail();
-
-				const response = await axios.get("http://localhost:8080/api/v1/total-time-this-month", {
+				// Make a request to the backend endpoint that triggers the monthly time calculation
+				await axios.post("http://localhost:8080/api/v1/calculate-monthly-time", null, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
-					params: {
-						userEmail: userEmail,
-					},
 				});
 
-				console.log("Total time for this month:", response.data);
-				this.totalTime = response.data;
+				console.log("Monthly time calculation triggered. Waiting for backend...");
+
+				// Wait for a few seconds (adjust the duration as needed)
+				await new Promise(resolve => setTimeout(resolve, 5000));
+
+				// Fetch the updated monthly totals after the calculation
+				await this.fetchMonthlyTotals();
 			} catch (error) {
-				console.error("Error fetching total time for this month:", error.response || error.message);
+				console.error("Error triggering monthly time calculation:", error.response || error.message);
 			}
 		},
-		getUserEmail() {
-			return this.userEmail;
-		},
-		async resetTotalTime() {
+		async resetMonthlyTime() {
 			try {
 				const auth = useAuthStore();
 				const token = auth.token;
 
-				await axios.post("http://localhost:8080/api/v1/reset-total-time", null, {
+				// Make a request to the backend endpoint that resets monthly time
+				await axios.post("http://localhost:8080/api/v1/reset-monthly-time", null, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
 				});
 
-				console.log("Total time reset successfully.");
+				console.log("Monthly time reset triggered. Waiting for backend...");
+
+				// Wait for a few seconds (adjust the duration as needed)
+				await new Promise(resolve => setTimeout(resolve, 5000));
+
+				// Fetch the updated monthly totals after the reset
 				await this.fetchMonthlyTotals();
-				await this.getTotalTimeForCurrentMonth();
 			} catch (error) {
-				console.error("Error resetting total time:", error.response || error.message);
+				console.error("Error triggering monthly time reset:", error.response || error.message);
 			}
 		},
 	},
 	mounted() {
 		this.fetchMonthlyTotals();
-		this.getTotalTimeForCurrentMonth();
 	},
 };
 </script>

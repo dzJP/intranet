@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useAuthStore } from "./auth";
 
 export const useUserStore = defineStore({
   id: "user",
@@ -13,9 +14,15 @@ export const useUserStore = defineStore({
   actions: {
     async getUserDetails() {
       try {
+        const auth = useAuthStore();
+				const token = auth.token;
+
           const response = await axios.get('http://localhost:8080/api/v1/profile', {
               headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  Authorization: `Bearer ${token}`,
+              },
+              params: {
+                  email: auth.user,
               },
           });
 

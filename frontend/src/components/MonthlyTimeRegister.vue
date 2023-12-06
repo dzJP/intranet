@@ -22,8 +22,9 @@
 			<p>No time registrations found for {{ monthName(selectedMonth) }}.</p>
 		</div>
 
-		<button @click="calculateMonthlyTime">Calculate Monthly Time</button>
-		<button @click="resetMonthlyTime">Reset Monthly Time</button>
+		<!-- <button @click="calculateMonthlyTime">Calculate Monthly Time</button> -->
+		<!-- <button @click="resetMonthlyTime">Reset Monthly Time</button> -->
+		<button @click="saveAndResetMonthlyTime">Save and reset</button>
 	</div>
 </template>
 
@@ -54,6 +55,7 @@ export default {
 					},
 					params: {
 						month: this.selectedMonth,
+						userEmail: auth.user,
 					},
 				});
 
@@ -120,6 +122,27 @@ export default {
 				await this.fetchMonthlyTotals();
 			} catch (error) {
 				console.error("Error triggering monthly time reset:", error.response || error.message);
+			}
+		},
+		// For testing only 
+		async saveAndResetMonthlyTime() {
+			try {
+				const auth = useAuthStore();
+				const token = auth.token;
+
+				// Make a request to the backend endpoint that resets monthly time
+				await axios.post("http://localhost:8080/api/v1/save-and-reset-monthly-time", null, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				console.log("Monthly time save and reset triggered. Waiting for backend...");
+
+				// Fetch the updated monthly totals after the reset
+				await this.fetchMonthlyTotals();
+			} catch (error) {
+				console.error("Error triggering monthly time save and reset:", error.response || error.message);
 			}
 		},
 	},

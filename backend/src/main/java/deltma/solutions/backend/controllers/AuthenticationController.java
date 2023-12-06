@@ -59,9 +59,9 @@ public class AuthenticationController {
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDTO> getProfile() {
+    public ResponseEntity<UserProfileDTO> getProfile(@RequestParam String email) {
         try {
-            return ResponseEntity.ok(userService.getUserProfileByEmail());
+            return ResponseEntity.ok(userService.getUserProfileByUsername(email));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

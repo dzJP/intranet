@@ -7,10 +7,10 @@ import java.time.LocalDate;
 public class TimeRegisterRequestDTO {
 
     private String email;
-    private String workHours;
+    private Integer workHours;
     private LocalDate date;
 
-    public TimeRegisterRequestDTO(String workHours, LocalDate date, String email) {
+    public TimeRegisterRequestDTO(Integer workHours, LocalDate date, String email) {
         this.workHours = workHours;
         this.date = date;
         this.email = email;

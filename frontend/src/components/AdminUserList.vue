@@ -1,7 +1,6 @@
 <template>
-  <search-bar @search="updateSearchQuery" />
-  
-  <div class="card userlist mx-auto">
+  <div class="card userlist">
+    <search-bar @search="updateSearchQuery" />
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table mb-0">
@@ -227,13 +226,14 @@ export default {
 <style scoped>
 .card {
   background-color: #fff;
-  border-color: #e5e5e5;
+  /* border-color: #e5e5e5; */
+  border: none;
 }
 
 .userlist {
   align-items: center;
   margin: 10px auto;
-  width: 50%;
+  width: 800px;
 }
 
 .table td,

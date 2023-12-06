@@ -12,7 +12,6 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void sendInvitation(String email, String invitationLink) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -31,7 +30,6 @@ public class EmailService {
         }
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
     public void sendNewPassword(String email, String newPassword) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

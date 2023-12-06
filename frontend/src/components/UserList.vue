@@ -1,7 +1,6 @@
 <template>
     <div class="user-list-container">
-        <h2>All Users</h2>
-        <input v-model="searchQuery" placeholder="Search by name" class="search-input" />
+        <SearchBar @search="updateSearchQuery" />
         <ul class="user-list">
             <li v-for="user in filteredUsers" :key="user.email" class="user-item">
                 <router-link :to="`/user/${user.email}`" class="user-link">
@@ -10,25 +9,53 @@
             </li>
         </ul>
     </div>
+
+    <div class="mx-auto">
+        <button class="btn btn-primary" @click="loadMoreUsers" v-if="filteredUsers.length >= 10">
+            Load More
+        </button>
+    </div>
 </template>
+
+<script>
+import { ref, computed } from 'vue';
+import { useUserStore } from '@/stores/user';
+import SearchBar from '@/components/SearchBar.vue';
+
+export default {
+    setup() {
+        const userStore = useUserStore();
+        const searchQuery = ref('');
+        const displayedUsersCount = ref(10);
+
+        const filteredUsers = computed(() => {
+            const allUsers = userStore.searchUsers(searchQuery.value);
+            return allUsers.slice(0, displayedUsersCount.value);
+        });
+
+        const updateSearchQuery = (value) => {
+            searchQuery.value = value;
+        };
+
+        const loadMoreUsers = () => {
+            displayedUsersCount.value += 10;
+        };
+        return {
+            searchQuery,
+            filteredUsers,
+            updateSearchQuery,
+            loadMoreUsers,
+            user: useUserStore,
+        };
+    },
+    components: { SearchBar }
+};
+</script>
 
 <style scoped>
 .user-list-container {
     max-width: 600px;
     margin: auto;
-}
-
-h2 {
-    color: #333;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
 }
 
 .user-list {
@@ -58,63 +85,3 @@ h2 {
     background-color: #f0f0f0;
 }
 </style>
-
-<script>
-import { ref, onMounted, computed, watch } from 'vue';
-import axios from 'axios';
-
-export default {
-    props: {
-        apiUrl: {
-            type: String,
-            required: true,
-        },
-    },
-    setup(props) {
-        const users = ref([]);
-        const searchQuery = ref('');
-
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(props.apiUrl, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-
-                users.value = response.data;
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        onMounted(() => {
-            fetchUsers();
-        });
-
-        // Derive filtered users based on searchQuery
-        const filteredUsers = computed(() => {
-            if (!searchQuery.value) {
-                return users.value;
-            } else {
-                // Case-insensitive search by first name or last name
-                return users.value.filter(
-                    (user) =>
-                        user.firstName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                        user.lastName.toLowerCase().includes(searchQuery.value.toLowerCase())
-                );
-            }
-        });
-
-        // Watcher to trigger refetch when apiUrl changes
-        watch(() => props.apiUrl, () => {
-            fetchUsers();
-        });
-
-        return {
-            searchQuery,
-            filteredUsers,
-        };
-    },
-};
-</script>

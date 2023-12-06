@@ -1,9 +1,18 @@
 <template>
-	<h1>This is the home page</h1>
+	<h1>Landing page</h1>
+	<TimeRegister />
+	<MonthlyTimeRegister />
 </template>
 
 <script>
+import MonthlyTimeRegister from '@/components/MonthlyTimeRegister.vue';
+import TimeRegister from '@/components/TimeRegister.vue';
+
 export default {
-	name: 'HomeView'
+	name: 'HomeView',
+	components: {
+    TimeRegister,
+    MonthlyTimeRegister
+}
 }
 </script>

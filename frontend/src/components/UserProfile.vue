@@ -63,7 +63,7 @@ export default {
                 await userStore.getUserDetails();
                 editedPhoneNumber.value = userStore.phoneNumber;
             } catch (error) {
-                console.error('Error fetching user profile:', error);
+                console.error('Error fetching user details:', error.response || error.message);
             }
         };
         // Update phone number

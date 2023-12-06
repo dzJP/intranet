@@ -19,23 +19,9 @@ export default {
 </script>
 
 <style scoped>
-.search-container {
-  position: relative;
-  width: 100%;
-  max-width: 300px;
-}
-
-.search-icon {
-  margin-left: 10px;
-  top: 50%;
-  left: 10px;
-  color: #888;
-  z-index: 1;
-}
-
 .search-input {
-  margin-left: 10px;
-  max-width: 250px;
+  margin-bottom: 10px;
+  width: 600px;
   padding: 10px 30px 10px 40px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -45,6 +31,13 @@ export default {
   background-position: 10px center;
   background-size: 20px;
   padding-left: 40px; 
+}
+.search-icon {
+  margin-left: 10px;
+  top: 50%;
+  left: 10px;
+  color: #888;
+  z-index: 1;
 }
 
 </style>

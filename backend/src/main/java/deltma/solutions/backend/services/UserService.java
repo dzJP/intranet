@@ -123,24 +123,9 @@ public class UserService implements CommandLineRunner {
         return userRepository.save(newUser);
     }
 
-    public UserProfileDTO getUserProfileByEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-
-        User user = userRepository.findByEmail(email);
-
-        if (user != null) {
-            return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                    user.getLastName(), user.getPhoneNumber(), user.getRole());
-        } else {
-            throw new IllegalArgumentException("User not found");
-        }
-    }
-
     public UserProfileDTO getUserProfileByUsername(String email) {
-        // Validation using the ValidatorService
+
         if (validatorService.isValidEmail(email)) {
-            // Retrieve the user profile
             User user = userRepository.findByEmail(email);
 
             if (user != null) {

@@ -25,19 +25,16 @@ public class AuthenticationController {
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
 
-    @PreAuthorize("isAnonymous()")
     @PostMapping("/signin")
     public JwtAuthenticationResponse signin(@RequestBody SignInRequest request) {
         return authenticationService.signin(request);
     }
 
-    @PreAuthorize("@temporaryUserService.isCurrentUserTemporaryUser(authentication.name)")
     @PostMapping("/register")
     public JwtAuthenticationResponse signup(@RequestBody SignUpRequest request) {
         return authenticationService.signup(request);
     }
 
-    @PreAuthorize("@temporaryUserService.isEmailAssociated(#request.email)")
     @GetMapping("/register/{uuid}")
     public ResponseEntity<?> registerUser(@PathVariable String uuid) {
         try {
@@ -49,7 +46,6 @@ public class AuthenticationController {
         }
     }
 
-//    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String email) {
         try {
@@ -63,9 +59,9 @@ public class AuthenticationController {
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/profile")
-    public ResponseEntity<UserProfileDTO> getProfile() {
+    public ResponseEntity<UserProfileDTO> getProfile(@RequestParam String email) {
         try {
-            return ResponseEntity.ok(userService.getUserProfileByEmail());
+            return ResponseEntity.ok(userService.getUserProfileByUsername(email));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

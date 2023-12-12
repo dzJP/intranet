@@ -1,9 +1,7 @@
 package deltma.solutions.backend.controllers;
 
 import deltma.solutions.backend.dto.NewsDTO;
-import deltma.solutions.backend.dto.TimeRegisterRequestDTO;
 import deltma.solutions.backend.services.NewsService;
-import deltma.solutions.backend.services.TimeRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +36,18 @@ public class NewsController {
         // Assume newsService is a service class that fetches news articles
         List<NewsDTO> newsList = newsService.getNews();
         return ResponseEntity.ok(newsList);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/latest-news")
+    public ResponseEntity<List<NewsDTO>> getLatestNews() {
+        try {
+            List<NewsDTO> latestNews = newsService.getLatestNews();
+            return ResponseEntity.ok(latestNews);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
     }
 }

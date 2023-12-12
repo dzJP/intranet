@@ -1,5 +1,6 @@
 package deltma.solutions.backend.dto;
 
+import deltma.solutions.backend.models.News;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,10 @@ public class NewsDTO {
     private Date date;
     private Date deadline;
 
+    public NewsDTO(News news) {
+        this.subject = news.getSubject();
+        this.message = news.getMessage();
+        this.date = news.getDate();
+        this.deadline = news.getDeadline();
+    }
 }

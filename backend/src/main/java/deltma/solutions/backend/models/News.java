@@ -12,12 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "news") // Specifies the table name in the database
+@Table(name = "news")
 public class News {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Primary key, generated automatically
+    private Long id;
 
     @Column(name = "subject")
     private String subject;

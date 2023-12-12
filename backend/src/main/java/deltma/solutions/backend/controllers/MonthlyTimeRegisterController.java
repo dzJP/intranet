@@ -1,7 +1,6 @@
 package deltma.solutions.backend.controllers;
 
 import deltma.solutions.backend.dto.MonthlyTimeDTO;
-import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.services.MonthlyTimeRegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

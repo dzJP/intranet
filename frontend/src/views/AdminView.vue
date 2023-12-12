@@ -16,7 +16,7 @@ export default {
     components: {
         InvitationForm,
         AdminUserList,
-        NewsForm
+        NewsForm,
     },
 };
 </script>

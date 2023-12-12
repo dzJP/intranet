@@ -2,7 +2,6 @@ package deltma.solutions.backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Data
 @Builder

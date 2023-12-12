@@ -43,4 +43,12 @@ public class NewsService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<NewsDTO> getLatestNews() {
+        List<NewsDTO> latestNews = newsRepository.findTopNByOrderByDateDesc().stream()
+                .map(NewsDTO::new)
+                .collect(Collectors.toList());
+        return latestNews;
+    }
+
 }

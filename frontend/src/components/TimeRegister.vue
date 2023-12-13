@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div>
 		<h2>Register time</h2>
 		<label for="workHours">Work Hours:</label>
@@ -43,4 +43,4 @@ export default {
 
 	},
 };
-</script>
+</script> -->

@@ -23,7 +23,7 @@ public class MonthlyTimeRegisterController {
     public ResponseEntity<List<MonthlyTimeDTO>> getMonthlyTotalsForLastYear(
             @RequestParam String userEmail, @RequestParam int month) {
         try {
-            return ResponseEntity.ok(monthlyTimeRegisterService.calculateTotalTimeForLastYear(userEmail, month));
+            return ResponseEntity.ok(monthlyTimeRegisterService.getMonthlyTotalsForLastYear(userEmail, month));
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error in getMonthlyTotalsForLastYear: " + e.getMessage());
@@ -31,30 +31,18 @@ public class MonthlyTimeRegisterController {
         }
     }
 
-    @PostMapping("/calculate-monthly-time")
-    public ResponseEntity<String> calculateMonthlyTime() {
-        try {
-            monthlyTimeRegisterService.calculateMonthlyTimeForAllUsers();
-            return ResponseEntity.ok("Monthly time calculation completed.");
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            System.out.println("Error in calculateMonthlyTime: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    @PostMapping("/reset-monthly-time")
-    public ResponseEntity<String> resetMonthlyTime(int currentYear, int currentMonth) {
-        try {
-            monthlyTimeRegisterService.resetMonthlyTimeForAllUsers(currentYear, currentMonth);
-            return ResponseEntity.ok("Monthly time reset completed.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error in resetMonthlyTime: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+//    @PostMapping("/calculate-monthly-time")
+//    public ResponseEntity<String> calculateMonthlyTime() {
+//        try {
+//            monthlyTimeRegisterService.saveAndResetMonthlyTime();
+//            return ResponseEntity.ok("Monthly time calculation completed.");
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//            System.out.println("Error in calculateMonthlyTime: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
 
     // For testing only
     @PostMapping("/save-and-reset-monthly-time")

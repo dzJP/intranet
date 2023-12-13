@@ -1,18 +1,20 @@
 <template>
-	<h1>Landing page</h1>
-	<TimeRegister />
-	<MonthlyTimeRegister />
+	<Calender />
+	<!-- <TimeRegister /> -->
+	<!-- <MonthlyTimeRegister /> -->
 </template>
 
 <script>
-import MonthlyTimeRegister from '@/components/MonthlyTimeRegister.vue';
-import TimeRegister from '@/components/TimeRegister.vue';
+// import MonthlyTimeRegister from '@/components/MonthlyTimeRegister.vue';
+// import TimeRegister from '@/components/TimeRegister.vue';
+import Calender from '@/components/CalenderView.vue';
 
 export default {
 	name: 'HomeView',
 	components: {
-    TimeRegister,
-    MonthlyTimeRegister
+    // TimeRegister,
+    // MonthlyTimeRegister,
+	Calender
 }
 }
 </script>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div>
 		<h2>Monthly Time Overview</h2>
 
@@ -22,8 +22,6 @@
 			<p>No time registrations found for {{ monthName(selectedMonth) }}.</p>
 		</div>
 
-		<!-- <button @click="calculateMonthlyTime">Calculate Monthly Time</button> -->
-		<!-- <button @click="resetMonthlyTime">Reset Monthly Time</button> -->
 		<button @click="saveAndResetMonthlyTime">Save and reset</button>
 	</div>
 </template>
@@ -152,4 +150,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped></style> -->

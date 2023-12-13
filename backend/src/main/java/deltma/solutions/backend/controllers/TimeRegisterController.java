@@ -50,4 +50,16 @@ public class TimeRegisterController {
         }
     }
 
+    //    @PostMapping("/reset-monthly-time")
+//    public ResponseEntity<String> resetMonthlyTime(int currentYear, int currentMonth) {
+//        try {
+//            monthlyTimeRegisterService.resetMonthlyTimeForAllUsers(currentYear, currentMonth);
+//            return ResponseEntity.ok("Monthly time reset completed.");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("Error in resetMonthlyTime: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+
 }

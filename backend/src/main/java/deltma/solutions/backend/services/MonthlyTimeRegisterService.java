@@ -27,54 +27,22 @@ public class MonthlyTimeRegisterService {
     @Autowired
     private UserRepository userRepository;
 
-    public void calculateMonthlyTimeForAllUsers() {
-        LocalDate currentDate = LocalDate.now();
-        int currentMonth = currentDate.getMonthValue();
-        int currentYear = currentDate.getYear();
-
-        List<User> users = userRepository.findAll();
-
-        for (User user : users) {
-            List<TimeRegister> timeRegistrations = timeRegisterRepository.findByUserEmailAndDateYearAndDateMonth(
-                    user.getEmail(), currentYear, currentMonth);
-
-            int totalTimeForUser = timeRegistrations.stream()
-                    .mapToInt(TimeRegister::getWorkHours)
-                    .sum();
-
-            MonthlyTimeRegister monthlyTimeRegister = monthlyTimeRegisterRepository
-                    .findByUserAndYearAndMonth(user, currentYear, currentMonth);
-
-            if (monthlyTimeRegister == null) {
-                monthlyTimeRegister = new MonthlyTimeRegister(0, currentYear, currentMonth, user);
-            }
-
-            monthlyTimeRegister.setTotalTime(totalTimeForUser);
-            monthlyTimeRegisterRepository.save(monthlyTimeRegister);
-        }
-    }
-
-    private List<MonthlyTimeRegister> getFormerMonths(User user, int selectedMonth) {
-        LocalDate currentDate = LocalDate.now();
-        int currentYear = currentDate.getYear();
-        List<MonthlyTimeRegister> monthlyTimeRegisters =
-                monthlyTimeRegisterRepository.findAllByUserAndYearAndMonth(user, currentYear, selectedMonth);
-
-        System.out.println("Querying for user " + user.getEmail() +
-                " and year " + currentYear + " and month " + selectedMonth);
-
-        return monthlyTimeRegisters;
-    }
-
-    public List<MonthlyTimeDTO> calculateTotalTimeForLastYear(String email, int selectedMonth) {
+    public List<MonthlyTimeDTO> getMonthlyTotalsForLastYear(String email, int selectedMonth) {
         List<MonthlyTimeDTO> monthlyTimeList = new ArrayList<>();
         User user = userRepository.findByEmail(email);
 
-        List<MonthlyTimeRegister> monthlyTimeRegisters = getFormerMonths(user, selectedMonth);
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
 
-        for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
+        for (int year = currentYear - 1; year <= currentYear; year++) {
+            List<MonthlyTimeRegister> monthlyTimeRegisters =
+                    monthlyTimeRegisterRepository.findAllByUserAndYearAndMonth(user, year, selectedMonth);
 
-            if (monthlyTimeRegister.getMonth() <= selectedMonth) {
+            for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
+                if (year == currentYear && monthlyTimeRegister.getMonth() > selectedMonth) {
+                    continue; // Skip future months of the current year
+                }
+
                 int totalTimeForMonth = monthlyTimeRegister.getTotalTime();
                 MonthlyTimeDTO monthlyTimeDTO = new MonthlyTimeDTO(
                         monthlyTimeRegister.getYear(),
@@ -87,35 +55,69 @@ public class MonthlyTimeRegisterService {
         return monthlyTimeList;
     }
 
-    public void resetMonthlyTimeForAllUsers(int currentYear, int currentMonth) {
-        int nextMonth = currentMonth % 12 + 1;
-        int nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
-
+    private void saveMonthlyTimeRegisters(int year, int month) {
         List<User> users = userRepository.findAll();
 
         for (User user : users) {
-            MonthlyTimeRegister nextMonthRecord = monthlyTimeRegisterRepository
-                    .findByUserAndYearAndMonth(user, nextYear, nextMonth);
+            List<TimeRegister> timeRegistrations = timeRegisterRepository.findByUserEmailAndDateYearAndDateMonth(
+                    user.getEmail(), year, month);
 
-            if (nextMonthRecord != null) {
-                nextMonthRecord.setTotalTime(0);
-            } else {
-                nextMonthRecord = new MonthlyTimeRegister(0, nextYear, nextMonth, user);
+            int totalTimeForUser = timeRegistrations.stream()
+                    .mapToInt(TimeRegister::getWorkHours)
+                    .sum();
+
+            MonthlyTimeRegister monthlyTimeRegister = monthlyTimeRegisterRepository
+                    .findByUserAndYearAndMonth(user, year, month);
+
+            if (monthlyTimeRegister == null) {
+                monthlyTimeRegister = new MonthlyTimeRegister(0, year, month, user);
             }
 
-            monthlyTimeRegisterRepository.save(nextMonthRecord);
+            monthlyTimeRegister.setTotalTime(totalTimeForUser);
+            monthlyTimeRegisterRepository.save(monthlyTimeRegister);
         }
     }
 
-    @Scheduled(cron = "0 0 0 L * ?")
+    @Scheduled(cron = "0 0 0 10 * ?")
     public void saveAndResetMonthlyTime() {
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
         int currentMonth = currentDate.getMonthValue();
+        saveMonthlyTimeRegisters(currentYear, currentMonth);
 
-        calculateMonthlyTimeForAllUsers();
-        resetMonthlyTimeForAllUsers(currentYear, currentMonth);
+        LocalDate lastMonth = currentDate.minusMonths(1);
+        int lastMonthYear = lastMonth.getYear();
+        int lastMonthValue = lastMonth.getMonthValue();
+        saveMonthlyTimeRegisters(lastMonthYear, lastMonthValue);
+
+        int twoMonthAgoYear = lastMonth.getYear();
+        int twoMonthsAgo = lastMonth.getMonthValue() - 1;
+        saveMonthlyTimeRegisters(twoMonthAgoYear, twoMonthsAgo);
+
+        // Reset and save for the next month
+//        resetMonthlyTimeForAllUsers(currentYear, currentMonth);
     }
+
+
+    //    public void resetMonthlyTimeForAllUsers(int currentYear, int currentMonth) {
+//        int nextMonth = currentMonth % 12 + 1;
+//        int nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
+//
+//        List<User> users = userRepository.findAll();
+//
+//        for (User user : users) {
+//            MonthlyTimeRegister nextMonthRecord = monthlyTimeRegisterRepository
+//                    .findByUserAndYearAndMonth(user, nextYear, nextMonth);
+//
+//            if (nextMonthRecord != null) {
+//                nextMonthRecord.setTotalTime(0);
+//            } else {
+//                nextMonthRecord = new MonthlyTimeRegister(0, nextYear, nextMonth, user);
+//            }
+//
+//            monthlyTimeRegisterRepository.save(nextMonthRecord);
+//        }
+//    }
 
 }
 

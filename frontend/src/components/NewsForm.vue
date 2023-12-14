@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { useAuthStore } from "@/stores/auth";
+import { createNews } from "@/stores/news";
 
 export default {
     data() {
@@ -42,45 +42,11 @@ export default {
         },
 
         async submitForm() {
-            const auth = useAuthStore();
-            const token = auth.token;
-
-            // Define common fetch options
-            const fetchOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(this.news),
-            };
-
             try {
-                const response = await fetch('http://localhost:8080/api/v1/create-news', fetchOptions);
-
-                if (response.ok) {
-                    // Check if the response is JSON
-                    if (response.headers.get('content-type')?.includes('application/json')) {
-                        try {
-                            // Parse JSON response
-                            const createdNews = await response.json();
-                            this.$emit('newsCreated', createdNews);
-                        } catch (jsonError) {
-                            console.error('Error parsing JSON response:', jsonError);
-                        }
-                    } else {
-                        // Log non-JSON response
-                        console.warn('Received non-JSON response:', response);
-                    }
-
-                    this.closeForm();
-                } else {
-                    // Handle non-OK response
-                    const errorText = await response.text();
-                    console.error('Error creating news article:', response.status, response.statusText, errorText);
-                }
+                const createdNews = await createNews(this.news);
+                this.$emit('newsCreated', createdNews);
+                this.closeForm();
             } catch (error) {
-                // Log any general error during form submission
                 console.error('Error creating news article:', error);
             }
         },

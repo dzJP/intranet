@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { useAuthStore } from "@/stores/auth";
+import { fetchNews } from "@/stores/news";
 
 export default {
     data() {
@@ -43,27 +43,15 @@ export default {
         async openPopup() {
             try {
                 this.loading = true;
-                const auth = useAuthStore();
-                const token = auth.token;
-
-                const response = await fetch("http://localhost:8080/api/v1/get-news", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (response.ok) {
-                    this.newsList = await response.json();
-                    this.showPopup = true;
-                } else {
-                    console.error("Error fetching news articles. Status:", response.status);
-                }
+                this.newsList = await fetchNews();
+                this.showPopup = true;
             } catch (error) {
-                console.error("Error fetching news articles:", error);
+                console.error("Error opening news popup:", error);
             } finally {
                 this.loading = false;
             }
         },
+
         closePopup() {
             this.showPopup = false;
         },
@@ -71,15 +59,14 @@ export default {
         navigate(offset) {
             this.currentIndex += offset;
         },
+
         formatDate(date) {
             if (!date) {
                 return 'N/A';
             }
 
-            // parse the date
             const parsedDate = new Date(date);
 
-            // Check if the parsed date is valid
             if (parsedDate instanceof Date && !isNaN(parsedDate)) {
                 return parsedDate.toLocaleDateString();
             } else {

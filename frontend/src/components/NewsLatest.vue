@@ -25,8 +25,7 @@
 
 <script>
 import { defineComponent, onMounted, ref, computed } from 'vue';
-import axios from 'axios';
-import { useAuthStore } from '@/stores/auth.js';
+import { fetchLatestNews } from '@/stores/news.js';
 
 export default defineComponent({
     setup() {
@@ -35,25 +34,12 @@ export default defineComponent({
         const currentIndex = ref(0);
         const showAllNews = ref(false);
 
-        const fetchLatestNews = async () => {
+        const fetchNewsData = async () => {
             try {
-                const auth = useAuthStore();
-                const token = auth.token;
-
-                console.log('Fetching latest news...');
                 loading.value = true;
-
-                const response = await axios.get('http://localhost:8080/api/v1/get-news', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                console.log('Latest news response:', response.data);
-
-                newsList.value = response.data;
+                newsList.value = await fetchLatestNews();
             } catch (error) {
-                console.error('Error fetching latest news:', error);
+                console.error('Error fetching news data:', error);
             } finally {
                 loading.value = false;
             }
@@ -74,9 +60,9 @@ export default defineComponent({
             showAllNews.value = !showAllNews.value;
         };
 
-        // Call fetchLatestNews when the component is mounted
+        // Call fetchNewsData when the component is mounted
         onMounted(() => {
-            fetchLatestNews();
+            fetchNewsData();
         });
 
         // Expose the refs and functions to the template

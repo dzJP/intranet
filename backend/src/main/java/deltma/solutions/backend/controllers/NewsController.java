@@ -2,6 +2,8 @@ package deltma.solutions.backend.controllers;
 
 import deltma.solutions.backend.dto.NewsDTO;
 import deltma.solutions.backend.services.NewsService;
+import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,16 +40,42 @@ public class NewsController {
         return ResponseEntity.ok(newsList);
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping("/latest-news")
+//    public ResponseEntity<NewsDTO> getLatestNews() {
+//        try {
+//            NewsDTO latestNews = newsService.getLatestNews();
+//            return ResponseEntity.ok(latestNews);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(null);
+//        }
+//    }
+
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/latest-news")
-    public ResponseEntity<List<NewsDTO>> getLatestNews() {
+    @DeleteMapping("/delete-news")
+    public ResponseEntity<?> deleteNewsArticle(@RequestParam Long id) {
         try {
-            List<NewsDTO> latestNews = newsService.getLatestNews();
-            return ResponseEntity.ok(latestNews);
+            newsService.deleteNewsById(id);
+            return ResponseEntity.ok("News article deleted successfully");
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error deleting news article: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/edit-news/{id}")
+    public ResponseEntity<?> editNews(@PathVariable Long id, @Valid @RequestBody NewsDTO request) {
+        try {
+            Long editedNewsId = newsService.editNews(id, request);
+            return ResponseEntity.ok().body(editedNewsId);
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null);
+                    .body("Error editing news article: " + e.getMessage());
         }
     }
 }

@@ -1,77 +1,98 @@
-import { useAuthStore } from "@/stores/auth";
+import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 
-export async function createNews(news) {
-    try {
-        const auth = useAuthStore();
-        const token = auth.token;
+export const useNewsStore = defineStore({
+    id: 'news',
+    state: () => ({
+        newsList: [],
+    }),
+    actions: {
+        async getAllNews() {
+            try {
+                const authStore = useAuthStore();
+                const token = authStore.token;
 
-        const fetchOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(news),
-        };
+                const response = await axios.get('http://localhost:8080/api/v1/get-news', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-        const response = await fetch('http://localhost:8080/api/v1/create-news', fetchOptions);
-
-        if (response.ok) {
-            if (response.headers.get('content-type')?.includes('application/json')) {
-                return await response.json();
-            } else {
-                console.warn('Received non-JSON response:', response);
+                this.newsList = response.data;
+                return response;
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                throw error;
             }
-        } else {
-            const errorText = await response.text();
-            throw new Error(`Error creating news article: ${response.status} ${response.statusText} ${errorText}`);
-        }
-    } catch (error) {
-        console.error('Error creating news article:', error);
-        throw error;
-    }
-}
-export async function fetchNews() {
-    try {
-        const auth = useAuthStore();
-        const token = auth.token;
+        },
+        
+        async createNews(newsData) {
+            try {
+                const authStore = useAuthStore();
+                const token = authStore.token;
 
-        const response = await fetch("http://localhost:8080/api/v1/get-news", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+                const response = await axios.post('http://localhost:8080/api/v1/create-news', newsData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.error("Error fetching news articles. Status:", response.status);
-            throw new Error(`Error fetching news articles. Status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error("Error fetching news articles:", error);
-        throw error;
-    }
-}
-export async function fetchLatestNews() {
-    try {
-        const auth = useAuthStore();
-        const token = auth.token;
+                return response;
+            } catch (error) {
+                console.error('Error creating news:', error);
+                throw error;
+            }
+        },
 
-        console.log('Fetching latest news...');
+        async deleteNews(newsId) {
+            try {
+                if (!newsId) {
+                    console.error('Invalid newsId:', newsId);
+                    return;
+                }
 
-        const response = await axios.get('http://localhost:8080/api/v1/get-news', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+                const authStore = useAuthStore();
+                const token = authStore.token;
 
-        console.log('Latest news response:', response.data);
+                const response = await axios.delete(`http://localhost:8080/api/v1/delete-news`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    params: {
+                        id: newsId
+                    },
+                });
 
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching latest news:', error);
-        throw error;
-    }
+                console.log('Delete news response:', response);
+
+                return response;
+            } catch (error) {
+                console.error('Error deleting news:', error);
+                throw error;
+            }
+        },
+
+        async updateNews(newsData) {
+            try {
+                const authStore = useAuthStore();
+                const token = authStore.token;
+
+                const response = await axios.put(`http://localhost:8080/api/v1/edit-news/${newsData.id}`, newsData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                return response;
+            } catch (error) {
+                console.error('Error updating news:', error);
+                throw error;
+            }
+        },
+    },
+});
+
+export function setupNewsStore() {
+    return useNewsStore();
 }

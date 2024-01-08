@@ -14,12 +14,14 @@ import java.util.Date;
 @NoArgsConstructor
 public class NewsDTO {
 
+    private Long id;
     private String subject;
     private String message;
     private Date date;
     private Date deadline;
 
     public NewsDTO(News news) {
+        this.id = news.getId();
         this.subject = news.getSubject();
         this.message = news.getMessage();
         this.date = news.getDate();

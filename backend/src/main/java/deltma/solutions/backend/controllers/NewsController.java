@@ -40,19 +40,6 @@ public class NewsController {
         return ResponseEntity.ok(newsList);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping("/latest-news")
-//    public ResponseEntity<NewsDTO> getLatestNews() {
-//        try {
-//            NewsDTO latestNews = newsService.getLatestNews();
-//            return ResponseEntity.ok(latestNews);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(null);
-//        }
-//    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-news")
     public ResponseEntity<?> deleteNewsArticle(@RequestParam Long id) {

@@ -8,18 +8,21 @@
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                Actions
-                            </th>
+                                Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="news in newsList" :key="news.id">
-                            <td>{{ news.subject }}</td>
-                            <td>{{ news.message }}</td>
+                        <tr v-if="currentNews" :key="currentNews.id">
+                            <td>{{ currentNews.subject }}</td>
+                            <td>{{ currentNews.message }}</td>
                             <td>
-                                <button class="btn btn-edit" @click="editNews(news)">Edit</button>
-                                <button class="btn btn-delete" @click="deleteNews(news)">Delete (ID: {{ news.id }})</button>
+                                <button class="btn btn-edit" @click="editNews(currentNews)">Edit</button>
+                                <button class="btn btn-delete" @click="deleteNews(currentNews)">Delete (ID: {{
+                                    currentNews.id }})</button>
                             </td>
+                        </tr>
+                        <tr v-else>
+                            <td colspan="3">No news available</td>
                         </tr>
                     </tbody>
                 </table>
@@ -27,6 +30,8 @@
         </div>
 
         <div class="card-body px-0 pt-0 pb-2">
+            <button @click="navigate(-1)" :disabled="currentIndex === 0">Previous</button>
+            <button @click="navigate(1)" :disabled="currentIndex === newsList.length - 1">Next</button>
             <form @submit.prevent="createNews">
                 <label>Subject</label>
                 <input v-model="newNews.subject" type="text" required>
@@ -56,16 +61,21 @@ import { useNewsStore } from '@/stores/news';
 export default {
     setup() {
         const newsStore = useNewsStore();
-        const newsList = ref([]);
+        const currentNews = ref(null);
         const newNews = ref({ subject: '', message: '' });
         const editingNews = ref({ id: null, subject: '', message: '' });
         const isEditing = ref(false);
+        const currentIndex = ref(0);
+        const newsList = ref([]);
 
         const getNews = async () => {
             try {
                 const response = await newsStore.getAllNews();
                 console.log('Fetched news data:', response.data);
+
                 newsList.value = response.data.map(news => ({ ...news, id: news.id || null }));
+                currentIndex.value = 0;
+                currentNews.value = newsList.value.length > 0 ? { ...newsList.value[0] } : null;
             } catch (error) {
                 console.error('Error fetching news:', error);
             }
@@ -76,7 +86,6 @@ export default {
                 const createdNews = await newsStore.createNews(newNews.value);
 
                 console.log("text", createdNews.data);
-                // Ensure that the id property is set for the newly created news item
                 newNews.value = { subject: '', message: '', id: createdNews?.id || null };
                 getNews();
             } catch (error) {
@@ -85,7 +94,6 @@ export default {
         };
 
         const deleteNews = async (news) => {
-
             console.log(news.id);
             try {
                 const newsId = news.id;
@@ -103,7 +111,6 @@ export default {
             isEditing.value = true;
         };
 
-
         const updateNews = async () => {
             try {
                 await newsStore.updateNews(editingNews.value);
@@ -118,13 +125,27 @@ export default {
             isEditing.value = false;
         };
 
-        onMounted(() => {
-            getNews();
+        const navigate = (step) => {
+            console.log('Before Navigation - currentIndex:', currentIndex.value, 'newsList:', [...newsList.value]);
+
+            const newIndex = currentIndex.value + step;
+
+            if (newIndex >= 0 && newIndex < newsList.value.length) {
+                currentIndex.value = newIndex;
+                currentNews.value = { ...newsList.value[newIndex], id: newsList.value[newIndex].id || null };
+            }
+
+            console.log('After Navigation - currentIndex:', currentIndex.value, 'newsList:', [...newsList.value]);
+        };
+
+        onMounted(async () => {
+            await getNews();
+            currentIndex.value = 0;
         });
-        console.log("asd", newsList);
 
         return {
             newsList,
+            currentNews,
             newNews,
             createNews,
             deleteNews,
@@ -133,10 +154,21 @@ export default {
             editNews,
             updateNews,
             cancelEdit,
+            navigate,
+            getNews,
+            currentIndex
         };
     },
 };
 </script>
+
+<style scoped>
+.edit-window {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+</style>
 
 <style scoped>
 .edit-window {

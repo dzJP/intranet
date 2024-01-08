@@ -50,16 +50,6 @@ public class NewsService {
                 .collect(Collectors.toList());
     }
 
-//    public NewsDTO getLatestNews() {
-//        List<NewsDTO> latestNews = newsRepository.findTop1ByOrderByDateDesc().stream()
-//                .map(NewsDTO::new)
-//                .collect(Collectors.toList());
-//
-//        // Check if there is any news available
-//        return latestNews.isEmpty() ? null : latestNews.get(0);
-//    }
-
-
     public void deleteNewsById(Long id) {
         News news = newsRepository.findNewsById(id);
         if(news != null) {

@@ -71,8 +71,8 @@ public class NewsService {
         // Update the existing news with the new data
         existingNews.setSubject(newsDTO.getSubject());
         existingNews.setMessage(newsDTO.getMessage());
-//        existingNews.setDate(newsDTO.getDate());
-//        existingNews.setDeadline(newsDTO.getDeadline());
+        existingNews.setDate(newsDTO.getDate());
+        existingNews.setDeadline(newsDTO.getDeadline());
 
         // Save the updated news
         News updatedNews = newsRepository.save(existingNews);

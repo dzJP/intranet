@@ -32,7 +32,6 @@ public class NewsController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-news")
     public ResponseEntity<List<NewsDTO>> getNews() {
         // Assume newsService is a service class that fetches news articles

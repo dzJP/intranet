@@ -8,6 +8,23 @@ export const useNewsStore = defineStore({
         newsList: [],
     }),
     actions: {
+        async createNews(newsData) {
+            try {
+                const authStore = useAuthStore();
+                const token = authStore.token;
+
+                const response = await axios.post('http://localhost:8080/api/v1/create-news', newsData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                return response;
+            } catch (error) {
+                console.error('Error creating news:', error);
+                throw error;
+            }
+        },
         async getAllNews() {
             try {
                 const authStore = useAuthStore();
@@ -26,25 +43,6 @@ export const useNewsStore = defineStore({
                 throw error;
             }
         },
-        
-        async createNews(newsData) {
-            try {
-                const authStore = useAuthStore();
-                const token = authStore.token;
-
-                const response = await axios.post('http://localhost:8080/api/v1/create-news', newsData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                return response;
-            } catch (error) {
-                console.error('Error creating news:', error);
-                throw error;
-            }
-        },
-
         async deleteNews(newsId) {
             try {
                 if (!newsId) {

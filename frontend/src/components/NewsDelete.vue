@@ -6,10 +6,8 @@
     </div>
 </template>
 
-
 <script>
 import { useNewsStore } from '@/stores/news';
-
 
 export default {
     props: {
@@ -27,8 +25,7 @@ export default {
                 console.log('Deleting news with ID:', newsId);
                 await newsStore.deleteNews(newsId);
 
-                // Emit an event to notify the parent component about the deletion
-                // You can pass additional data if needed
+                // emit an event to notify the parent component about the deletion
                 emit('news-deleted', newsId);
             } catch (error) {
                 console.error('Error deleting news:', error);

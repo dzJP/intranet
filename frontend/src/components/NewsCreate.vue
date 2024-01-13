@@ -50,7 +50,7 @@ export default {
     },
 };
 </script>
-  
+
 <style scoped>
 .card-body.news {
     margin-top: 20px;
@@ -89,4 +89,3 @@ export default {
     width: 15%;
 }
 </style>
-  

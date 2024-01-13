@@ -18,12 +18,12 @@ export default {
             const newIndex = this.currentIndex + step;
 
             if (newIndex >= 0 && newIndex < this.newsListLength) {
-                this.updateIndex(newIndex); // Call the 'updateIndex' method from the parent
+                this.updateIndex(newIndex); // call 'updateIndex' method from parent component
             } else if (newIndex >= this.newsListLength) {
-                // If we reached the end, loop back to the first news
+                // If reached the end, loop back to first entry
                 this.updateIndex(0);
             } else if (newIndex < 0) {
-                // If we reached the beginning, loop to the last news
+                // If reached beginning, loop to the last entry
                 this.updateIndex(this.newsListLength - 1);
             }
         },

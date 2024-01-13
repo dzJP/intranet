@@ -11,12 +11,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="newsItem in newsList" :key="newsItem ? newsItem.id : null">
+                    <tr v-for="newsItem in newsList" :key="newsItem?.id ">
                         <td>{{ newsItem ? newsItem.subject || '' : '' }}</td>
                         <td>{{ newsItem ? newsItem.message || '' : '' }}</td>
                         <td>
-                            <button @click="editNewsItem(newsItem)">Edit</button>
-                            <button @click="deleteNewsItem(newsItem)">Delete</button>
+                            <button @click="$emit('edit-news', newsItem)">Edit</button>
+                            <NewsDelete :newsItem="newsItem" @news-deleted="handleNewsDeleted" @get-news="getNews" />
                         </td>
                     </tr>
                 </tbody>
@@ -26,22 +26,27 @@
 </template>
 
 <script>
+import NewsDelete from '@/components/NewsDelete.vue';
+
 export default {
     props: {
         newsList: Array,
-        editNews: Function,
-        deleteNews: Function,
+    },
+    components: {
+        NewsDelete,
     },
     methods: {
-        editNewsItem(newsItem) {
-            if (newsItem && newsItem.id !== null) {
-                this.$emit('edit-news', newsItem);
+        async updateNews(newsItem) {
+            try {
+                console.log('Updated news:', newsItem);
+                this.$emit('update-news', newsItem);
+            } catch (error) {
+                console.error('Error updating news:', error);
             }
         },
-        deleteNewsItem(newsItem) {
-            if (newsItem && newsItem.id !== null) {
-                this.$emit('delete-news', newsItem);
-            }
+        handleNewsDeleted(deletedNewsId) {
+            console.log('News deleted with ID:', deletedNewsId);
+            this.$emit('get-news');
         },
     },
 };

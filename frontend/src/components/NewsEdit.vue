@@ -30,7 +30,7 @@ export default {
     watch: {
         editingNews: {
             handler(newVal) {
-                // Update editedNews when editingNews prop changes
+                // update editedNews when editingNews prop changes
                 this.editedNews = { ...newVal };
             },
             deep: true,
@@ -38,9 +38,15 @@ export default {
     },
     methods: {
         submitForm() {
-            // Emit the updated news data
+            // form validation
+            if (!this.editedNews.subject || !this.editedNews.message) {
+                console.error('Please fill out all required fields.');
+                return;
+            }
+
+            // emit updated news data
             console.log('Submitting form with updated news:', this.editedNews);
-            this.$emit('update-news', { ...this.editedNews });
+            this.$emit('edit-submit', { ...this.editedNews });
         },
         cancelEdit() {
             console.log('Cancelling edit');

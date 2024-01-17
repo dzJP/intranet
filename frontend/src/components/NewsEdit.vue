@@ -11,8 +11,6 @@
             <button type="submit" class="btn btn-primary">Update News</button>
             <button @click="cancelEdit" class="btn btn-secondary">Cancel</button>
         </form>
-        <!-- console.log -->
-        <div>{{ editedNews }}</div>
     </div>
 </template>
 
@@ -30,7 +28,7 @@ export default {
     watch: {
         editingNews: {
             handler(newVal) {
-                // update editedNews when editingNews prop changes
+                // Update editedNews when editingNews prop changes
                 this.editedNews = { ...newVal };
             },
             deep: true,
@@ -38,15 +36,8 @@ export default {
     },
     methods: {
         submitForm() {
-            // form validation
-            if (!this.editedNews.subject || !this.editedNews.message) {
-                console.error('Please fill out all required fields.');
-                return;
-            }
-
-            // emit updated news data
             console.log('Submitting form with updated news:', this.editedNews);
-            this.$emit('edit-submit', { ...this.editedNews });
+            this.$emit('update-news', { ...this.editedNews });
         },
         cancelEdit() {
             console.log('Cancelling edit');

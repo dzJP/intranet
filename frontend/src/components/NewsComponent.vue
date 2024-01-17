@@ -1,10 +1,13 @@
 <template>
     <div class="card news-list">
-        <NewsList :newsList="showAllNews ? newsList : [currentNews]" :currentNews="currentNews" @edit-news="editNewsItem" @get-news="getNews" />
+        <NewsList :newsList="showAllNews ? newsList : [currentNews]" :currentNews="currentNews" @edit-news="editNewsItem"
+            @get-news="getNews" />
         <div class="card-body news px-0 pt-0 pb-2">
-            <NewsNavigation v-if="!showAllNews && newsList.length > 1" :currentIndex="currentIndex" :newsListLength="newsList.length" :updateIndex="updateCurrentIndex" />
-                <button @click="toggleShowAllNews"> {{ showAllNews ? 'View latest news' : 'View all news' }} </button>
-            <NewsEdit v-if="isEditing" :editingNews="editingNews" @update-news="handleUpdateNews" @cancel-edit="cancelEdit" />
+            <NewsNavigation v-if="!showAllNews && newsList.length > 1" :currentIndex="currentIndex"
+                :newsListLength="newsList.length" :updateIndex="updateCurrentIndex" />
+            <button @click="toggleShowAllNews"> {{ showAllNews ? 'View latest news' : 'View all news' }} </button>
+            <NewsEdit v-if="isEditing" :editingNews="editingNews" @update-news="handleUpdateNews"
+                @cancel-edit="cancelEdit" />
             <NewsDelete :newsItem="deletingNews" @news-deleted="handleNewsDeleted" @get-news="getNews" />
             <NewsCreate @news-created="handleNewsCreated" />
         </div>
@@ -53,14 +56,14 @@ export default {
             isEditing.value = true;
         };
 
-        const handleUpdateNews = async updatedNews => {
+        const handleUpdateNews = async (updatedNews) => {
             try {
                 console.log('Received updated news:', updatedNews);
                 await newsStore.updateNews(updatedNews);
                 isEditing.value = false;
 
                 // Update the newsList after the update
-                const updatedIndex = newsList.value.findIndex(news => news.id === updatedNews.id);
+                const updatedIndex = newsList.value.findIndex((news) => news.id === updatedNews.id);
                 if (updatedIndex !== -1) {
                     newsList.value[updatedIndex] = { ...updatedNews };
                 }
@@ -71,6 +74,7 @@ export default {
                 console.error('Error updating news:', error);
             }
         };
+
 
         const cancelEdit = () => {
             isEditing.value = false;
@@ -89,7 +93,7 @@ export default {
                 currentNews.value = newsList.value.length > 0 ? { ...newsList.value[0] } : null;
             }
         };
-        
+
         onMounted(async () => {
             try {
                 await getNews();

@@ -6,6 +6,7 @@ export const useNewsStore = defineStore({
     id: 'news',
     state: () => ({
         newsList: [],
+        editingNews: null,
     }),
     actions: {
         async createNews(newsData) {
@@ -81,6 +82,7 @@ export const useNewsStore = defineStore({
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                
 
                 return response;
             } catch (error) {
@@ -88,6 +90,9 @@ export const useNewsStore = defineStore({
                 throw error;
             }
         },
+        setEditingNews(newsItem) {
+            this.editingNews = newsItem;
+        }
     },
 });
 

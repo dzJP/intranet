@@ -42,6 +42,8 @@ export default {
             try {
                 const createdNews = await newsStore.createNews(newNews.value);
                 console.log('Created news:', createdNews.data);
+                
+                await newsStore.getAllNews();
 
                 emit('news-created');
                 newNews.value = { subject: '', message: '', date: '', deadline: '' };

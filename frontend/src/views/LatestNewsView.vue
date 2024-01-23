@@ -2,7 +2,6 @@
     <div>
         <h1>Latest news</h1>
         <NewsList />
-
     </div>
 </template>
 

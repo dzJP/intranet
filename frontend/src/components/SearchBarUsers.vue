@@ -30,7 +30,7 @@ export default {
   background-repeat: no-repeat;
   background-position: 10px center;
   background-size: 20px;
-  padding-left: 40px; 
+  padding-left: 40px;
 }
 .search-icon {
   margin-left: 10px;

@@ -1,6 +1,5 @@
 <template>
     <div>
-        <SearchBarNews @search="handleSearch" />
         <div v-if="isFormVisible" class="edit-form">
             <form @submit.prevent="submitForm">
                 <label>Subject</label>
@@ -26,17 +25,16 @@
         </div>
     </div>
 </template>
+
 <script>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useNewsStore } from '@/stores/news';
-import SearchBarNews from '@/components/SearchBarNews.vue';
 
 export default {
-    components: {
-        SearchBarNews,
+    props:  {
+        searchQuery: String,
     },
-
-    setup() {
+    setup(props) {
         const newsStore = useNewsStore();
         const isFormVisible = ref(false);
         const editedNews = ref({});
@@ -51,7 +49,9 @@ export default {
                     (newsItem) =>
                         newsItem.subject.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                         newsItem.message.toLowerCase().includes(searchQuery.value.toLowerCase())
+                        
                 );
+                
         });
 
         const editNewsItem = (newsItem) => {
@@ -68,9 +68,9 @@ export default {
             newsStore.getAllNews();
         });
 
-        // Watch for changes in searchQuery and update displayedNewsList accordingly
-        watch(searchQuery, () => {
-            // You can also fetch updated news based on the search query here if needed
+        watch(() => props.searchQuery, (newQuery) => {
+            console.log('New Search Query:', newQuery);
+            handleSearch(newQuery);
         });
 
         return {
@@ -84,7 +84,6 @@ export default {
     },
 };
 </script>
-
 
 <style scoped>
 .news-item {

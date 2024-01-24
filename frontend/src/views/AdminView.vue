@@ -3,9 +3,9 @@
         <h1>Admin page</h1>
         <InvitationForm />
         <NewsCreate />
-        <SearchBarNews @search="updateSearchQuery" />
+        <SearchBarNews :search-query="searchQuery" @search="updateSearchQuery" />
         <div class="edit-and-userlist-container">
-            <NewsList />
+            <NewsList :search-query="searchQuery" />
             <AdminUserList />
         </div>
     </div>
@@ -20,12 +20,22 @@ import SearchBarNews from '@/components/SearchBarNews.vue';
 
 export default {
     components: {
-    InvitationForm,
-    AdminUserList,
-    NewsCreate,
-    NewsList,
-    SearchBarNews
-},
+        InvitationForm,
+        AdminUserList,
+        NewsCreate,
+        NewsList,
+        SearchBarNews,
+    },
+    data() {
+        return {
+            searchQuery: '',
+        };
+    },
+    methods: {
+        updateSearchQuery(query) {
+            this.searchQuery = query;
+        },
+    },
 };
 </script>
 

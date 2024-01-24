@@ -1,5 +1,6 @@
 package deltma.solutions.backend.controllers;
 
+import deltma.solutions.backend.dto.CalendarMonthDTO;
 import deltma.solutions.backend.dto.TimeRegisterRequestDTO;
 import deltma.solutions.backend.services.TimeRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,10 @@ public class TimeRegisterController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/time-registrations")
-    public ResponseEntity<List<TimeRegisterRequestDTO>> getFormerRegistrationsThisMonthForAllUsers(@RequestParam String email) {
+    public ResponseEntity<List<TimeRegisterRequestDTO>> getTimeRegistrationsForSelectedMonth(CalendarMonthDTO calendarMonthDTO) {
         try {
-            return ResponseEntity.ok(timeRegisterService.getFormerRegistrationsThisMonthForAllUsers(email));
+            return ResponseEntity.ok(timeRegisterService.getTimeRegistrationsForSelectedMonth(calendarMonthDTO));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -42,24 +42,24 @@ public class TimeRegisterController {
     }
 
     @GetMapping("/total-time-this-month")
-    public ResponseEntity<Integer> getTotalTimeForCurrentMonth(@RequestParam String userEmail) {
+    public ResponseEntity<Integer> getTotalTimeForSelectedMonth(CalendarMonthDTO calendarMonthDTO) {
         try {
-            return ResponseEntity.ok(timeRegisterService.getTotalTimeForCurrentMonth(userEmail));
+            return ResponseEntity.ok(timeRegisterService.getTotalTimeForSelectedMonth(calendarMonthDTO));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    //    @PostMapping("/reset-monthly-time")
-//    public ResponseEntity<String> resetMonthlyTime(int currentYear, int currentMonth) {
-//        try {
-//            monthlyTimeRegisterService.resetMonthlyTimeForAllUsers(currentYear, currentMonth);
-//            return ResponseEntity.ok("Monthly time reset completed.");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("Error in resetMonthlyTime: " + e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
+    @DeleteMapping("/time-registrations/{id}")
+    public ResponseEntity<String> deleteTimeRegister(@PathVariable Long id) {
+        try {
+            timeRegisterService.deleteTimeRegister(id);
+            return ResponseEntity.ok("Time register deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error deleting time register " + e.getMessage());
+        }
+    }
 
 }

@@ -66,11 +66,18 @@ public class SecurityConfig {
                                 "/api/v1/signin",
                                 "/api/v1/register/{uuid}",
                                 "/api/v1/reset-password",
-                                "/api/v1/register-time").permitAll()
+                                "/api/v1/register-time",
+                                "/api/v1/projects").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/v1/profile",
+                                "/api/v1/projects",
                                 "/api/v1/test/**",
                                 "/api/v1/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,
+                        "/api/v1/projects/{id}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/v1/projects",
+                                "/api/v1/time-registrations/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

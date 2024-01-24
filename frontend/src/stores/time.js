@@ -12,7 +12,7 @@ export const useTimeStore = defineStore({
     totalTime: null,
   }),
   actions: {
-    async registerTime() {
+    async registerTime(projectId) {
       try {
         const auth = useAuthStore();
         const token = auth.token;
@@ -27,6 +27,7 @@ export const useTimeStore = defineStore({
             email: auth.user,
             workHours: this.workHours,
             date: this.date,
+            projectId: projectId,
           },
           {
             headers: {
@@ -35,10 +36,20 @@ export const useTimeStore = defineStore({
           }
         );
 
+        const newTimeRegistration = response.data;
+
+        this.timeRegistrations.push(newTimeRegistration);
+
+        // this.workHours = null;
+        // this.selectedProject = null; 
+
         console.log("Registration successful:", response.data);
 
-        await this.getTimeRegistrations();
-        await this.getTotalTimeForCurrentMonth(auth.user);
+        const year = this.date.split("-")[0];
+        const month = this.date.split("-")[1];
+
+        await this.getTimeRegistrationsForSelectedMonth(year, month);
+        await this.getTotalTimeForSelectedMonth(year, month);
 
         this.email = '';
         this.workHours = '';
@@ -52,10 +63,14 @@ export const useTimeStore = defineStore({
       }
     },
     
-    async getTimeRegistrations() {
+    async getTimeRegistrationsForSelectedMonth(year, month) {
       try {
         const auth = useAuthStore();
         const token = auth.token;
+
+        console.log("Email:", auth.user);
+        console.log("Year: ", year);
+        console.log("Month: ", month);
 
         const response = await axios.get(
           "http://localhost:8080/api/v1/time-registrations",
@@ -65,6 +80,8 @@ export const useTimeStore = defineStore({
             },
             params: {
               email: auth.user,
+              year,
+              month,
             },
           }
         );
@@ -79,13 +96,27 @@ export const useTimeStore = defineStore({
         );
       }
     },
-    async getTotalTimeForCurrentMonth(userEmail) {
+    async getTotalTimeForSelectedMonth(year, month) {
       try {
+        const auth = useAuthStore();
+        const token = auth.token;
+
+
+        console.log("Email:", auth.user);
+        console.log("Year: ", year);
+        console.log("Month: ", month);
+      
+
         const response = await axios.get(
           "http://localhost:8080/api/v1/total-time-this-month",
           {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
             params: {
-              userEmail,
+              email: auth.user,
+              year,
+              month
             },
           }
         );
@@ -99,6 +130,46 @@ export const useTimeStore = defineStore({
         );
       }
     },
+    
+    async deleteTimeRegistration(registrationId) {
+      try {
+        const auth = useAuthStore();
+        const token = auth.token;
+
+        console.log("Email:", auth.user);
+        console.log("ID:", registrationId);
+
+        const response = await axios.delete(
+          `http://localhost:8080/api/v1/time-registrations/${registrationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              email: auth.user,
+            },
+          }
+        );
+
+        console.log("Time registration deleted:", response.data);
+
+        this.timeRegistrations = this.timeRegistrations.filter(
+          (timeRegistration) => timeRegistration.id !== registrationId
+        );
+
+        const year = this.date.split("-")[0];
+        const month = this.date.split("-")[1];
+
+        await this.getTimeRegistrationsForSelectedMonth(year, month);
+        await this.getTotalTimeForSelectedMonth(year, month);
+      } catch (error) {
+        console.error(
+          "Error deleting time registration:",
+          error.response || error.message
+        );
+      }
+    },
+
     async clearTimeRegistrations() {
       this.timeRegistrations = [];
       this.totalTime = null;

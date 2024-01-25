@@ -36,10 +36,10 @@ public class ProjectController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Project> updateProject(@RequestBody ProjectDTO projectDTO) {
         try {
-            return ResponseEntity.ok(projectService.updateProject(id, projectDTO));
+            return ResponseEntity.ok(projectService.updateProject(projectDTO));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

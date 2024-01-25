@@ -5,7 +5,6 @@ export const useProjectStore = defineStore({
   id: "project",
   state: () => ({
     projects: [],
-    selectedProject: null,
   }),
   actions: {
     async getAllProjects() {
@@ -30,23 +29,16 @@ export const useProjectStore = defineStore({
       }
     },
 
-    async getProjectById(id) {
+    async updateProject(projectDTO) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/projects/${id}`);
-        this.selectedProject = response.data;
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching project by ID:', error);
-        throw error;
-      }
-    },
-
-    async updateProject(id, projectDTO) {
-      try {
-        const response = await axios.put(`http://localhost:8080/api/v1/projects/${id}`, projectDTO);
+        const response = await axios.put(`http://localhost:8080/api/v1/projects/update/${projectDTO.id}`, projectDTO);
         const updatedProject = response.data;
-        const index = this.projects.findIndex(project => project.id === id);
-        this.projects.splice(index, 1, updatedProject);
+
+        const index = this.projects.findIndex(project => project.id === updatedProject.id);
+        if (index !== -1) {
+          this.projects.splice(index, 1, updatedProject);
+        }
+
         return updatedProject;
       } catch (error) {
         console.error('Error updating project:', error);

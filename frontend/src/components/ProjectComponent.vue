@@ -19,16 +19,18 @@
       </div>
 
       <form v-if="isCreateFormVisible" @submit.prevent="createNewProject">
-        <label for="newProjectName">New Project Name:</label>
-        <input v-model="newProjectName" type="text" id="newProjectName" required />
-        <button type="submit" class="btn btn-primary">Create</button>
-      </form>
+          <label for="newProjectName">New Project Name:</label>
+          <input v-model="newProjectName" type="text" id="newProjectName" required />
+          <button type="submit" class="btn btn-primary">Create</button>
+          <button @click="hideCreateForm" type="button" class="btn btn-secondary">Cancel</button>
+        </form>
 
-      <form v-if="isUpdateFormVisible" @submit.prevent="updateExistingProject">
-        <label for="updatedProjectName">Updated Project Name:</label>
-        <input v-model="updatedProjectName" type="text" id="updatedProjectName" required />
-        <button type="submit" class="btn btn-primary">Update</button>
-      </form>
+        <form v-if="isUpdateFormVisible" @submit.prevent="updateExistingProject">
+          <label for="updatedProjectName">Updated Project Name:</label>
+          <input v-model="updatedProjectName" type="text" id="updatedProjectName" required />
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button @click="hideUpdateForm" type="button" class="btn btn-secondary">Cancel</button>
+        </form>
 
     </div>
   </div>
@@ -46,11 +48,20 @@ const isPopupVisible = ref(false);
 const isCreateFormVisible = ref(false);
 const isUpdateFormVisible = ref(false);
 const updatedProjectName = ref('');
-let updatingProjectId = null;
+let updatingProjectId = ref(null);
 
 
 const togglePopup = () => {
   isPopupVisible.value = !isPopupVisible.value;
+};
+
+const createNewProject = async () => {
+  try {
+    await createProject({ project: newProjectName.value });
+    hideCreateForm();
+  } catch (error) {
+    console.error('Error creating project:', error);
+  }
 };
 
 const showCreateForm = () => {
@@ -74,19 +85,17 @@ const hideUpdateForm = () => {
   updatingProjectId = null;
 };
 
-const createNewProject = async () => {
-  try {
-    await createProject({ project: newProjectName.value });
-    hideCreateForm();
-  } catch (error) {
-    console.error('Error creating project:', error);
-  }
-};
 
 const updateExistingProject = async () => {
   try {
-    await updateProject(updatingProjectId, { project: updatedProjectName.value });
+    const projectDTO = {
+      id: updatingProjectId,
+      project: updatedProjectName.value,
+    };
+
+    await updateProject(projectDTO);
     hideUpdateForm();
+    projects.value = await getAllProjects();
   } catch (error) {
     console.error('Error updating project:', error);
   }
@@ -112,6 +121,7 @@ onMounted(async () => {
 </script>
 
 <style>
+
 .project-popup {
   position: fixed;
   top: 35%;

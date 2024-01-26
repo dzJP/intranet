@@ -14,6 +14,7 @@
 
                 <button type="submit">Update News</button>
                 <button type="button" @click="deleteNewsItem">Delete News</button>
+                <button type="button" class="close-button" @click="closeForm">Close</button>
             </form>
         </div>
         <div>
@@ -39,7 +40,7 @@
         </div>
 
         <div v-if="selectedNewsItem" class="popup">
-            <button @click="closePopup">Close Popup</button>
+            <button @click="closePopup">Close</button>
             <button @click="navigate('previous')">Previous</button>
             <button @click="navigate('next')">Next</button>
             <div class="popup-content">
@@ -63,9 +64,10 @@ export default {
         allowEdit: {
             type: Boolean,
             default: true,
-        }
+        },
     },
     setup(props) {
+        // Reactive variables
         const newsStore = useNewsStore();
         const isFormVisible = ref(false);
         const editedNews = ref({});
@@ -75,6 +77,7 @@ export default {
         const selectedNewsItem = ref(null);
         const isNewsItemHovered = ref(null);
 
+        // Computed properties
         const displayedNewsList = computed(() => {
             return newsStore.newsList
                 .slice()
@@ -86,29 +89,21 @@ export default {
                 );
         });
 
-        const editNewsItem = (newsItem) => {
-            editedNews.value = { ...newsItem };
-            selectedNewsId.value = newsItem.id;
-            isFormVisible.value = !isFormVisible.value;
-        };
-
-        const handleSearch = (query) => {
-            searchQuery.value = query;
-        };
-
-        const formatDate = (dateTime) => new Date(dateTime)?.toLocaleDateString() || '';
-
+        // Lifecycle hook
         onMounted(() => {
             newsStore.getAllNews();
         });
 
+        // Methods
         const toggleShowAllNews = () => {
             showAllNews.value = !showAllNews.value;
         };
 
-        watch(() => props.searchQuery, (newQuery) => {
-            handleSearch(newQuery);
-        });
+        const formatDate = (dateTime) => new Date(dateTime)?.toLocaleDateString() || '';
+
+        const handleSearch = (query) => {
+            searchQuery.value = query;
+        };
 
         const highlightItem = (index) => {
             isNewsItemHovered.value = index;
@@ -120,6 +115,10 @@ export default {
 
         const openPopup = (newsItem) => {
             selectedNewsItem.value = newsItem;
+        };
+
+        const closePopup = () => {
+            selectedNewsItem.value = null;
         };
 
         const navigate = (direction) => {
@@ -137,9 +136,42 @@ export default {
             selectedNewsItem.value = displayedNewsList.value[newIndex];
         };
 
-        const closePopup = () => {
-            selectedNewsItem.value = null;
+        const closeForm = () => {
+            isFormVisible.value = false;
         };
+
+        const submitForm = async () => {
+            try {
+                console.log('Submitting form with updated news:', editedNews.value);
+
+                const response = await newsStore.updateNews(editedNews.value);
+
+                console.log('Update news response:', response);
+                await newsStore.getAllNews();
+                isFormVisible.value = false;
+            } catch (error) {
+                console.error('Error updating news:', error);
+            }
+        };
+
+        const deleteNewsItem = async () => {
+            if (selectedNewsId.value) {
+                await newsStore.deleteNews(selectedNewsId.value);
+                await newsStore.getAllNews();
+                isFormVisible.value = false;
+            }
+        };
+
+        const editNewsItem = (newsItem) => {
+            editedNews.value = { ...newsItem };
+            selectedNewsId.value = newsItem.id;
+            isFormVisible.value = !isFormVisible.value;
+        };
+
+        // Watchers
+        watch(() => props.searchQuery, (newQuery) => {
+            handleSearch(newQuery);
+        });
 
         watch(() => isFormVisible.value, () => {
             if (isFormVisible.value) {
@@ -147,6 +179,7 @@ export default {
             }
         });
 
+        // Return data and methods
         return {
             editedNews,
             selectedNewsId,
@@ -164,6 +197,9 @@ export default {
             closePopup,
             selectedNewsItem,
             navigate,
+            deleteNewsItem,
+            submitForm,
+            closeForm,
         };
     },
     components: {
@@ -171,6 +207,7 @@ export default {
     },
 };
 </script>
+
 
 <style scoped>
 .news-item {

@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 @Data
 @Builder
@@ -34,10 +32,10 @@ public class TimeRegister {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
 
-    public TimeRegister(Integer workHours, LocalDate date, User user,Project project) {
+    public TimeRegister(Integer workHours, LocalDate date, User user, Project project) {
         this.workHours = workHours;
         this.date = date;
         this.user = user;

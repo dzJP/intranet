@@ -5,6 +5,7 @@ import deltma.solutions.backend.models.Project;
 import deltma.solutions.backend.repositories.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,10 +37,37 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    @Transactional
     public void deleteProject(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found with ID: " + id));
+
+        project.getTimeRegisters().forEach(timeRegister -> timeRegister.setProject(null));
+
         projectRepository.delete(project);
+        System.out.println("Project deleted successfully");
+    }
+
+    @Transactional
+    public void inactivateProject(Long id) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found with ID: " + id));
+
+        project.setActive(false);
+
+        projectRepository.save(project);
+        System.out.println("Project inactivated successfully");
+    }
+
+    @Transactional
+    public void activateProject(Long id) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found with ID: " + id));
+
+        project.setActive(true);
+
+        projectRepository.save(project);
+        System.out.println("Project activated successfully");
     }
 
 }

@@ -45,6 +45,26 @@ public class ProjectController {
         }
     }
 
+    @PutMapping("/inactivate/{id}")
+    public ResponseEntity<Void> inactivateProject(@PathVariable Long id) {
+        try {
+            projectService.inactivateProject(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/activate/{id}")
+    public ResponseEntity<Project> activateProject(@PathVariable Long id) {
+        try {
+            projectService.activateProject(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping()
     public ResponseEntity<Void> deleteProject(@RequestParam Long id) {
         try {

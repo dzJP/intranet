@@ -46,6 +46,30 @@ export const useProjectStore = defineStore({
       }
     },
 
+    async inactivateProject(id) {
+      try {
+        await axios.put(`http://localhost:8080/api/v1/projects/inactivate/${id}`);
+        this.projects = this.projects.filter(project => project.id !== id); 
+        console.log('Project inactivated successfully');
+      } catch (error) {
+        console.error('Error inactivating project:', error);
+        throw error;
+      }
+    },
+
+    async activateProject(id) {
+      try {
+        await axios.put(`http://localhost:8080/api/v1/projects/activate/${id}`);
+        this.projects = this.projects.filter(project => project.id !== id);
+
+        console.log('Project activated successfully');
+      } catch (error) {
+        console.log('Error inactivating project:', error);
+        throw error;
+      }
+    },
+
+
     async deleteProject(id) {
       try {
         const response = await axios.delete('http://localhost:8080/api/v1/projects', 

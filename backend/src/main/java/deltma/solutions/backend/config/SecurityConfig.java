@@ -34,7 +34,9 @@ public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    /**  Configures and provides a custom AuthenticationProvider for user authentication */
+    /**
+     * Configures and provides a custom AuthenticationProvider for user authentication
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -43,18 +45,22 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    /** Creates an AuthenticationManager using the provided AuthenticationConfiguration. */
+    /**
+     * Creates an AuthenticationManager using the provided AuthenticationConfiguration.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    /** Configures the security filters and rules for handling HTTP requests. */
+    /**
+     * Configures the security filters and rules for handling HTTP requests.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource()) 
+                        .configurationSource(corsConfigurationSource())
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
@@ -74,7 +80,9 @@ public class SecurityConfig {
                                 "/api/v1/test/**",
                                 "/api/v1/**").permitAll()
                         .requestMatchers(HttpMethod.PUT,
-                        "/api/v1/projects/update/{id}").permitAll()
+                                "/api/v1/projects/update/{id}",
+                                "/api/v1/projects/inactivate/{id}",
+                                "/api/v1/projects/activate/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/v1/projects",
                                 "/api/v1/time-registrations/{id}").permitAll()
@@ -90,7 +98,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8081"));
-        configuration.setAllowedMethods(List.of("GET", "POST","PUT", "DELETE", "PATCH"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-CSRF-Token"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

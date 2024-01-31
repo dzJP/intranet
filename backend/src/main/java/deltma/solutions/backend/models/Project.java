@@ -22,8 +22,9 @@ public class Project {
     @Column(name = "project_id")
     private Long id;
 
-    @Column(nullable = false)
     private String project;
+
+    private boolean active;
 
     @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -31,6 +32,7 @@ public class Project {
 
     public Project(String project) {
         this.project = project;
+        this.active = true;
     }
 
     public void removeTimeRegister(TimeRegister timeRegister) {

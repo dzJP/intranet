@@ -10,6 +10,8 @@
         <li v-for="project in projects" :key="project.id">
           {{ project.project }}
           <button @click="() => showUpdateForm(project)" class="btn btn-edit">Edit</button>
+          <button v-if="project.active" @click="() => inactivateProject(project.id)" class="btn btn-edit">Inactivate</button>
+          <button v-else @click="() => activeProjects(project.id)" class="btn btn-primary">Activate</button>
           <button @click="() => deleteProject(project.id)" class="btn btn-delete">Delete</button>
         </li>
       </ul>
@@ -101,6 +103,24 @@ const updateExistingProject = async () => {
   }
 };
 
+const inactivateProject = async (id) => {
+  try {
+    await useProjectStore().inactivateProject(id);
+    projects.value = await getAllProjects();
+  } catch (error) {
+    console.error('Error inactivating project:', error);
+  }
+};
+
+const activeProjects = async (id) => {
+  try {
+    await useProjectStore().activateProject(id);
+    projects.value = await getAllProjects();
+  } catch (error) {
+    console.error('Error activating project', error);
+  }
+}
+
 const deleteProject = async (id) => {
   try {
     await useProjectStore().deleteProject(id);
@@ -146,6 +166,7 @@ onMounted(async () => {
 .btn-edit {
   color: #454444;
   border-color: #454444;
+  border: none;
 }
 
 .btn-edit:hover {
@@ -164,6 +185,5 @@ onMounted(async () => {
   list-style: none;
   padding: 0;
 }
-
 
 </style>

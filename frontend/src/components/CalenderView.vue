@@ -23,16 +23,16 @@
 
         <template #day-popover>
           <div class="day-popover">
-            <label>Registrera tid</label>
+            <label>Time</label>
             <input type="number" v-model="time.workHours">
-            <label>Projekt</label>
+            <label>Project</label>
             <select v-model="selectedProject">
               <option value="null" disabled>Select Project</option>
-              <option v-for="project in projects.projects" :key="project.id" :value="project.id">
+              <option v-for="project in activeProjects" :key="project.id" :value="project.id">
                 {{ project.project }}
               </option>
             </select>
-            <button @click="time.registerTime(selectedProject)" class="save-btn">Spara</button>
+            <button @click="time.registerTime(selectedProject)" class="save-btn">Save</button>
 
             <div v-if="selectedDateRegistrations.length > 0">
               <ul>
@@ -52,13 +52,13 @@
 
       <div class="time-container">
         <div v-if="time.totalTime !== null">
-          <p>Totalt arbetade timmar: <strong>{{ time.totalTime }} tim</strong></p>
+          <p>Total time worked: <strong>{{ time.totalTime }}h</strong></p>
         </div>
 
         <div v-if="time.timeRegistrations.length > 0">
           <ul>
             <li v-for="registration in time.timeRegistrations" :key="registration.id">
-              {{ registration.date }} - {{ registration.workHours }} tim
+              {{ registration.date }} - {{ registration.workHours }}h
             </li>
           </ul>
         </div>
@@ -78,6 +78,8 @@ import { useProjectStore } from '@/stores/project';
 
 const projects = useProjectStore();
 const selectedProject = ref(null);
+
+const activeProjects = computed(() => projects.projects.filter(project => project.active));
 
 const time = useTimeStore();
 
@@ -101,14 +103,6 @@ const handleDateChange  = (calendarDay) => {
   time.date = calendarDay.id;
   selectedProject.value = "null";
 };
-
-// const handleDateChange = async (selectedDate) => {
-//   const formattedDate = formatDate(selectedDate);
-//   if (formattedDate) {
-//     time.date = formattedDate;
-//     // selectedProject.value = "null";
-//   }
-// };
 
 const attributes = computed(() => generateAttributesInRange(twoMonthsBack, today));
 
@@ -346,8 +340,5 @@ onMounted(() => {
   list-style: none;
   padding: 0;
 }
-
-
-
 
 </style>

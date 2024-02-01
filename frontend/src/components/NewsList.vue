@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="toggleShowAllNews">
+        <button v-if="!hideSearchAndToggleButton" @click="toggleShowAllNews">
             {{ showAllNews ? 'Show less' : 'Show All News' }}
         </button>
 
@@ -17,7 +17,7 @@
                 <button type="button" class="close-button" @click="closeForm">Close</button>
             </form>
         </div>
-        <div>
+        <div v-if="!hideSearchAndToggleButton">
             <SearchBarNews :search-query="searchQuery" @search="handleSearch" />
         </div>
 
@@ -61,13 +61,20 @@ import SearchBarNews from '@/components/SearchBarNews.vue';
 export default {
     props: {
         searchQuery: String,
+        maxEntries: {
+            type: Number,
+            default: null,
+        },
         allowEdit: {
             type: Boolean,
             default: true,
         },
+        hideSearchAndToggleButton: {
+            type: Boolean,
+            default: false,
+        }
     },
     setup(props) {
-        // Reactive variables
         const newsStore = useNewsStore();
         const isFormVisible = ref(false);
         const editedNews = ref({});
@@ -77,27 +84,22 @@ export default {
         const selectedNewsItem = ref(null);
         const isNewsItemHovered = ref(null);
 
-        // Computed properties
         const displayedNewsList = computed(() => {
-            return newsStore.newsList
+            const sortedNewsList = newsStore.newsList
                 .slice()
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .filter(
-                    (newsItem) =>
-                        newsItem.subject.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                        newsItem.message.toLowerCase().includes(searchQuery.value.toLowerCase())
-                );
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            return props.maxEntries ? sortedNewsList.slice(0, props.maxEntries) : sortedNewsList;
         });
 
-        // Lifecycle hook
         onMounted(() => {
             newsStore.getAllNews();
         });
 
-        // Methods
         const toggleShowAllNews = () => {
             showAllNews.value = !showAllNews.value;
         };
+
+        const isSearchVisible = computed (() => !props.hideSearch);
 
         const formatDate = (dateTime) => new Date(dateTime)?.toLocaleDateString() || '';
 
@@ -168,7 +170,6 @@ export default {
             isFormVisible.value = !isFormVisible.value;
         };
 
-        // Watchers
         watch(() => props.searchQuery, (newQuery) => {
             handleSearch(newQuery);
         });
@@ -179,13 +180,13 @@ export default {
             }
         });
 
-        // Return data and methods
         return {
             editedNews,
             selectedNewsId,
             isFormVisible,
             editNewsItem,
             handleSearch,
+            isSearchVisible,
             displayedNewsList,
             showAllNews,
             toggleShowAllNews,

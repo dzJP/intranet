@@ -13,7 +13,7 @@
                         <router-link to="/colleagues">Colleagues</router-link> |
                     </li>
                     <li class="nav-item">
-                        <router-link to="/latestnews">Latest News</router-link> |
+                        <router-link to="/news">News</router-link> |
                     </li>
                     <li class="nav-item">
                         <a href="#" @click="logout">Logout</a>

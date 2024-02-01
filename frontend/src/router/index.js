@@ -31,9 +31,9 @@ const routes = [
 		component: () => import('../views/ColleaguesView.vue')
 	},
 	{
-		path: '/latestnews',
-		name: 'latestnews',
-		component: () => import('../views/LatestNewsView.vue')
+		path: '/news',
+		name: 'news',
+		component: () => import('../views/NewsView.vue')
 	},
 	{
 		path: '/register/:uuid',

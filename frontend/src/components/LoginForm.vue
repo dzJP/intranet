@@ -40,7 +40,7 @@ export default {
 	setup() {
 		const user = reactive({
 			email: '',
-			password: '',
+			password: 'password',
 		});
 
 		function onSubmit() {

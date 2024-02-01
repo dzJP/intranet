@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Latest news</h1>
+        <h1>News</h1>
         <NewsList :allow-edit="false" />
     </div>
 </template>

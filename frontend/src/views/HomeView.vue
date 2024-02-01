@@ -1,21 +1,24 @@
 <template>
 	<div>
 		<h1>Landing page</h1>
-		<!-- <NewsComponent /> -->
+		<div>
+			<h2>Latest News</h2>
+			<NewsList :allow-edit="false" :max-entries="1" :hide-search-and-toggle-button="true" />
+		</div>
 		<TimeRegister />
 		<MonthlyTimeRegister />
 	</div>
 </template>
 
 <script>
-// import NewsComponent from "@/components/NewsComponent.vue"
+import NewsList from "@/components/NewsList.vue"
 import MonthlyTimeRegister from "@/components/MonthlyTimeRegister.vue";
 import TimeRegister from "@/components/TimeRegister.vue";
 
 export default {
 	name: "HomeView",
 	components: {
-		// NewsComponent,
+		NewsList,
 		TimeRegister,
 		MonthlyTimeRegister,
 	},

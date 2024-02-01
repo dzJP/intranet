@@ -40,7 +40,7 @@ public class MonthlyTimeRegisterService {
 
             for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
                 if (year == currentYear && monthlyTimeRegister.getMonth() > selectedMonth) {
-                    continue; // Skip future months of the current year
+                    continue;
                 }
 
                 int totalTimeForMonth = monthlyTimeRegister.getTotalTime();
@@ -79,45 +79,13 @@ public class MonthlyTimeRegisterService {
     }
 
     @Scheduled(cron = "0 0 0 10 * ?")
-    public void saveAndResetMonthlyTime() {
+    public void scheduleSaveMonthlyTimeRegisters() {
         LocalDate currentDate = LocalDate.now();
-        int currentYear = currentDate.getYear();
-        int currentMonth = currentDate.getMonthValue();
-        saveMonthlyTimeRegisters(currentYear, currentMonth);
-
         LocalDate lastMonth = currentDate.minusMonths(1);
         int lastMonthYear = lastMonth.getYear();
         int lastMonthValue = lastMonth.getMonthValue();
         saveMonthlyTimeRegisters(lastMonthYear, lastMonthValue);
-
-        int twoMonthAgoYear = lastMonth.getYear();
-        int twoMonthsAgo = lastMonth.getMonthValue() - 1;
-        saveMonthlyTimeRegisters(twoMonthAgoYear, twoMonthsAgo);
-
-        // Reset and save for the next month
-//        resetMonthlyTimeForAllUsers(currentYear, currentMonth);
     }
-
-
-    //    public void resetMonthlyTimeForAllUsers(int currentYear, int currentMonth) {
-//        int nextMonth = currentMonth % 12 + 1;
-//        int nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
-//
-//        List<User> users = userRepository.findAll();
-//
-//        for (User user : users) {
-//            MonthlyTimeRegister nextMonthRecord = monthlyTimeRegisterRepository
-//                    .findByUserAndYearAndMonth(user, nextYear, nextMonth);
-//
-//            if (nextMonthRecord != null) {
-//                nextMonthRecord.setTotalTime(0);
-//            } else {
-//                nextMonthRecord = new MonthlyTimeRegister(0, nextYear, nextMonth, user);
-//            }
-//
-//            monthlyTimeRegisterRepository.save(nextMonthRecord);
-//        }
-//    }
 
 }
 

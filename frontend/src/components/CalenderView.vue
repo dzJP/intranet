@@ -13,7 +13,7 @@
       class="custom-calendar" 
       v-model="time.date" 
       :view="view" 
-      :min-date="twoMonthsBack" 
+      :min-date="oneYearBack" 
       :max-date="today"
       show-weeknumbers 
       trim-weeks borderless 
@@ -87,7 +87,8 @@ const view = ref('monthly');
 
 const today = new Date();
 
-const twoMonthsBack = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+const oneYearBack = new Date(today.getFullYear(), today.getMonth() - 12, 1);
+const oneMonthBack = new Date(today.getFullYear(), today.getMonth() - 1, 1);
 
 const formatDate = date => {
   if (!(date instanceof Date)) return null;
@@ -104,7 +105,9 @@ const handleDateChange  = (calendarDay) => {
   selectedProject.value = "null";
 };
 
-const attributes = computed(() => generateAttributesInRange(twoMonthsBack, today));
+
+
+const attributes = computed(() => generateAttributesInRange(oneMonthBack, today));
 
 const generateAttributesInRange = (start, end) => {
   const attributes = [];

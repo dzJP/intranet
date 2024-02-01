@@ -1,7 +1,6 @@
 package deltma.solutions.backend.controllers;
 
 import deltma.solutions.backend.dto.MonthlyTimeDTO;
-import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.services.MonthlyTimeRegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,24 +30,11 @@ public class MonthlyTimeRegisterController {
         }
     }
 
-//    @PostMapping("/calculate-monthly-time")
-//    public ResponseEntity<String> calculateMonthlyTime() {
-//        try {
-//            monthlyTimeRegisterService.saveAndResetMonthlyTime();
-//            return ResponseEntity.ok("Monthly time calculation completed.");
-//        } catch (Exception e) {
-//
-//            e.printStackTrace();
-//            System.out.println("Error in calculateMonthlyTime: " + e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//    }
-
     // For testing only
     @PostMapping("/save-and-reset-monthly-time")
-    public ResponseEntity<Void> saveAndResetMonthlyTimeRegister() {
+    public ResponseEntity<Void> saveMonthlyTimeRegister() {
         try {
-            monthlyTimeRegisterService.saveAndResetMonthlyTime();
+            monthlyTimeRegisterService.scheduleSaveMonthlyTimeRegisters();
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

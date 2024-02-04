@@ -35,7 +35,7 @@
                         <div class="date">Date: {{ formatDate(newsItem.date) }}</div>
                     </div>
                     <div>{{ newsItem.message }}</div>
-                    <div class="date-time">Deadline: {{ formatDate(newsItem.deadline) }}</div>
+                    <div v-if="newsItem.deadline" class="date-time">Deadline: {{ formatDate(newsItem.deadline) }}</div>
                 </div>
                 <div v-if="allowEdit" class="news-actions">
                     <button @click.stop="editNewsItem(newsItem)">Edit</button>
@@ -90,7 +90,7 @@ export default {
         const selectedNewsItem = ref(null);
         const isNewsItemHovered = ref(null);
 
-        const sortNewestOldestNews= computed(() => (ascendingOrder.value ? 'Show newest' : 'Show oldest'));
+        const sortNewestOldestNews= computed(() => (ascendingOrder.value ? 'Show newest first' : 'Show oldest first'));
 
         const displayedNewsList = computed(() => {
             const sortedNewsList = newsStore.newsList
@@ -117,14 +117,16 @@ export default {
         };
 
         const toggleSortNewestOldestNews = () => {
-            console.log('Before toggle:', ascendingOrder.value);
             ascendingOrder.value = !ascendingOrder.value;
-            console.log('After toggle:', ascendingOrder.value);
         };
 
         const isSearchVisible = computed(() => !props.hideSearch);
-
-        const formatDate = (dateTime) => new Date(dateTime)?.toLocaleDateString() || '';
+        const formatDate = (dateTime) => {
+    if (!dateTime) {
+        return '';
+    }
+    return new Date(dateTime).toLocaleDateString() || '';
+};
 
         const handleSearch = (query) => {
             searchQuery.value = query;

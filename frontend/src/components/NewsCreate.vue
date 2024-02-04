@@ -13,7 +13,7 @@
             <input v-model="newNews.date" type="datetime-local" required>
 
             <label>Deadline</label>
-            <input v-model="newNews.deadline" type="datetime-local" required>
+            <input v-model="newNews.deadline" type="datetime-local">
             <button type="submit" class="btn btn-primary">Create News</button>
         </form>
     </div>

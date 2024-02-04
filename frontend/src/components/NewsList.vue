@@ -3,6 +3,10 @@
         <button v-if="!hideSearchAndToggleButton" @click="toggleShowAllNews">
             {{ showAllNews ? 'Show less' : 'Show All News' }}
         </button>
+        
+        <button type="button" @click="toggleSortNewestOldestNews">
+            {{ sortNewestOldestNews }}
+        </button>
 
         <div v-if="isFormVisible" class="edit-form">
             <form @submit.prevent="submitForm">
@@ -81,14 +85,27 @@ export default {
         const selectedNewsId = ref(null);
         const searchQuery = ref('');
         const showAllNews = ref(false);
+        const ascendingOrder = ref(false);
+
         const selectedNewsItem = ref(null);
         const isNewsItemHovered = ref(null);
+
+        const sortNewestOldestNews= computed(() => (ascendingOrder.value ? 'Show newest' : 'Show oldest'));
 
         const displayedNewsList = computed(() => {
             const sortedNewsList = newsStore.newsList
                 .slice()
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
-            return props.maxEntries ? sortedNewsList.slice(0, props.maxEntries) : sortedNewsList;
+                .sort((a, b) =>
+                    ascendingOrder.value
+                        ? new Date(a.date) - new Date(b.date)
+                        : new Date(b.date) - new Date(a.date)
+                );
+
+            const filteredList = sortedNewsList.filter((newsItem) =>
+                newsItem.subject.toLowerCase().includes(searchQuery.value.toLowerCase())
+            );
+
+            return props.maxEntries ? filteredList.slice(0, props.maxEntries) : filteredList;
         });
 
         onMounted(() => {
@@ -99,7 +116,13 @@ export default {
             showAllNews.value = !showAllNews.value;
         };
 
-        const isSearchVisible = computed (() => !props.hideSearch);
+        const toggleSortNewestOldestNews = () => {
+            console.log('Before toggle:', ascendingOrder.value);
+            ascendingOrder.value = !ascendingOrder.value;
+            console.log('After toggle:', ascendingOrder.value);
+        };
+
+        const isSearchVisible = computed(() => !props.hideSearch);
 
         const formatDate = (dateTime) => new Date(dateTime)?.toLocaleDateString() || '';
 
@@ -124,19 +147,20 @@ export default {
         };
 
         const navigate = (direction) => {
-            const currentIndex = displayedNewsList.value.findIndex(
+            const currentIndex = newsStore.newsList.findIndex(
                 (newsItem) => newsItem.id === selectedNewsItem.value.id
             );
 
             let newIndex;
             if (direction === 'previous') {
-                newIndex = currentIndex > 0 ? currentIndex - 1 : displayedNewsList.value.length - 1;
+                newIndex = currentIndex > 0 ? currentIndex - 1 : newsStore.newsList.length - 1;
             } else {
-                newIndex = currentIndex < displayedNewsList.value.length - 1 ? currentIndex + 1 : 0;
+                newIndex = currentIndex < newsStore.newsList.length - 1 ? currentIndex + 1 : 0;
             }
 
-            selectedNewsItem.value = displayedNewsList.value[newIndex];
+            selectedNewsItem.value = newsStore.newsList[newIndex];
         };
+
 
         const closeForm = () => {
             isFormVisible.value = false;
@@ -190,6 +214,7 @@ export default {
             displayedNewsList,
             showAllNews,
             toggleShowAllNews,
+            toggleSortNewestOldestNews,
             formatDate,
             isNewsItemHovered,
             highlightItem,
@@ -201,6 +226,7 @@ export default {
             deleteNewsItem,
             submitForm,
             closeForm,
+            sortNewestOldestNews,
         };
     },
     components: {
@@ -221,6 +247,7 @@ export default {
 
 .news-item:hover {
     background-color: #f0f0f0;
+
 }
 
 .news-content {

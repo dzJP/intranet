@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class MonthlyTimeDTO {
     private Integer year;
     private Integer month;
-    private Integer totalTime;
 }

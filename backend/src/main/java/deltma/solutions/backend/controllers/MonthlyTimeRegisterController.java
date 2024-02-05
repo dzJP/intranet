@@ -1,14 +1,13 @@
 package deltma.solutions.backend.controllers;
 
-import deltma.solutions.backend.dto.MonthlyTimeDTO;
 import deltma.solutions.backend.services.MonthlyTimeRegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -18,19 +17,7 @@ public class MonthlyTimeRegisterController {
     @Autowired
     private MonthlyTimeRegisterService monthlyTimeRegisterService;
 
-    @GetMapping("/totals-last-year")
-    public ResponseEntity<List<MonthlyTimeDTO>> getMonthlyTotalsForLastYear(
-            @RequestParam String userEmail, @RequestParam int month) {
-        try {
-            return ResponseEntity.ok(monthlyTimeRegisterService.getMonthlyTotalsForLastYear(userEmail, month));
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error in getMonthlyTotalsForLastYear: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    // For testing only
+    // For testing only. Remove class later
     @PostMapping("/save-and-reset-monthly-time")
     public ResponseEntity<Void> saveMonthlyTimeRegister() {
         try {

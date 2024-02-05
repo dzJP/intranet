@@ -1,82 +1,64 @@
-    <template>
-        <div>
-            <button @click="togglePopup" class="btn btn-primary">Invite Users</button>
-            <div v-if="isPopupVisible" class="popup">
-                <div class="popup-content">
-                    <i class="toggle bi bi-x" @click="togglePopup"></i>
-                    <h2>Invite Users</h2>
-                    <form @submit.prevent="inviteUsers">
-                        <div v-for="(email, index) in emails" :key="index">
-                            <input v-model="emails[index]" type="email" />
-                        </div>
-                        <button @click.prevent="addEmail">Add Another Email</button>
-                        <button @click.prevent="removeLastEmail" v-if="emails.length > 1">Remove Last Email</button>
-                        <button type="submit">Send Invitations</button>
-                    </form>
-                </div>
+<template>
+    <div>
+        <button @click="togglePopup" class="btn btn-primary">Invite Users</button>
+        <div v-if="isPopupVisible" class="popup">
+            <div class="popup-content">
+                <i class="toggle bi bi-x" @click="togglePopup"></i>
+                <h2>Invite Users</h2>
+                <form @submit.prevent="inviteUsers">
+                    <div v-for="(email, index) in emails" :key="index">
+                        <input v-model="emails[index]" type="email" />
+                    </div>
+                    <button @click.prevent="addEmail">Add Another Email</button>
+                    <button @click.prevent="removeLastEmail" v-if="emails.length > 1">Remove Last Email</button>
+                    <button type="submit">Send Invitations</button>
+                </form>
             </div>
         </div>
-    </template>
+    </div>
+</template>
 
-    <script>
-    import axios from 'axios';
+<script>
+import { sendInvitations } from '../stores/invitation';
 
-    export default {
-        name: 'InvitationForm',
-        data() {
-            return {
-                isPopupVisible: false,
-                emails: [''], // Initial array with  empty strings for 1 fields (or more)
-            };
+export default {
+    name: 'InvitationForm',
+    data() {
+        return {
+            isPopupVisible: false,
+            emails: [''], // Initial array with empty strings for 1 field (or more)
+        };
+    },
+    methods: {
+        togglePopup() {
+            this.isPopupVisible = !this.isPopupVisible;
         },
-        methods: {
-            togglePopup() {
-                this.isPopupVisible = !this.isPopupVisible;
-            },
-            inviteUsers() {
-                const validEmails = this.emails.filter(email => email.trim() !== '');
-                console.log('Valid emails:', validEmails);
+        async inviteUsers() {
+            const validEmails = this.emails.filter(email => email.trim() !== '');
+            console.log('Valid emails:', validEmails);
 
-                if (validEmails.length > 0) {
-                    this.sendInvitations(validEmails);
-                } else {
-                    console.error('No valid emails to send invitations.');
+            if (validEmails.length > 0) {
+                try {
+                    await sendInvitations(validEmails, this.uuid);
+                    this.togglePopup();
+                } catch (error) {
+                    console.error('Error sending invitations:', error);
                 }
-            },
-            sendInvitations(emails) {
-                const jwtToken = localStorage.getItem('token');
-                console.log('JWT Token:', jwtToken);
-
-                const csrfToken = document.querySelector('meta[name="_csrf"]').content;
-                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
-
-                axios
-                    .post('http://localhost:8080/api/v1/admin/send-invitations', emails, {
-                        headers: {
-                            [csrfHeader]: csrfToken,
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${jwtToken}`
-                        }
-                    })
-                    .then(response => {
-                        console.log(response.data);
-                        this.togglePopup();
-                    })
-                    .catch(error => {
-                        console.error('Error sending invitations:', error);
-                    });
-            },
-            addEmail() {
-                this.emails.push('');
-            },
-            removeLastEmail() {
-                if (this.emails.length > 1) {
-                    this.emails.pop();
-                }
-            },
+            } else {
+                console.error('No valid emails to send invitations.');
+            }
         },
-    };
-    </script>
+        addEmail() {
+            this.emails.push('');
+        },
+        removeLastEmail() {
+            if (this.emails.length > 1) {
+                this.emails.pop();
+            }
+        },
+    },
+};
+</script>
 
     <style>
     .popup {

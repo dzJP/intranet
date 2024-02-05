@@ -165,8 +165,8 @@ public class UserService implements CommandLineRunner {
         }
     }
 
-    public void changePassword(String email, ChangePasswordDTO request) {
-        User user = userRepository.findByEmail(email);
+    public void changePassword(ChangePasswordDTO request) {
+        User user = userRepository.findByEmail(request.getEmail());
 
         if (user != null && passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             setNewPassword(user, request.getNewPassword());
@@ -187,8 +187,8 @@ public class UserService implements CommandLineRunner {
                 .collect(Collectors.toList());
     }
 
-    public void editUser(String email, UserProfileDTO request) {
-        User user = userRepository.findByEmail(email);
+    public void editUser(UserProfileDTO request) {
+        User user = userRepository.findByEmail(request.getEmail());
         if (user != null) {
             validatorService.validateUserProfile(request);
 

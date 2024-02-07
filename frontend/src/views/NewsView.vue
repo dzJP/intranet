@@ -12,7 +12,7 @@ export default {
 	name: "LatestNewsView",
     components: {
         NewsList,
-    },
+},
 
 };
 </script>

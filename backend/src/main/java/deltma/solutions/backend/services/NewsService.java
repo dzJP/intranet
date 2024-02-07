@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +20,9 @@ public class NewsService {
 
     @Autowired
     private final NewsRepository newsRepository;
+
+    @Autowired
+    private final EmailService emailService;
 
     public void createNewsArticle(NewsDTO newsDTO) {
         News news = new News(
@@ -81,4 +85,17 @@ public class NewsService {
         return updatedNews.getId();
     }
 
+
+    public void shareNews(String email, NewsDTO newsDTO) {
+        News news = newsRepository.findNewsById(newsDTO.getId());
+
+        System.out.println("Retrieved news article: " + news);
+
+        if (news != null) {
+            emailService.sendSharedNewsArticle(email, news.getSubject(), news.getMessage());
+            System.out.println("Shared news article with email: " + email);
+        } else {
+            throw new EntityNotFoundException("News with id " + newsDTO + " not found");
+        }
+    }
 }

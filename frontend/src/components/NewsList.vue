@@ -1,14 +1,14 @@
 <template>
     <div>
-        <button v-if="!hideSearchAndToggleButton" @click="toggleShowAllNews">
+        <button v-if="!hideSearchAndToggleShowAll" @click="toggleShowAllNews">
             {{ showAllNews ? 'Show less' : 'Show All News' }}
         </button>
-        
+
         <button type="button" @click="toggleSortNewestOldestNews">
             {{ sortNewestOldestNews }}
         </button>
 
-        <div v-if="isFormVisible" class="edit-form">
+        <div v-if="isEditFormVisible" class="edit-form">
             <form @submit.prevent="submitForm">
                 <label>Subject</label>
                 <input v-model="editedNews.subject" type="text" required />
@@ -21,12 +21,13 @@
                 <button type="button" class="close-button" @click="closeForm">Close</button>
             </form>
         </div>
-        <div v-if="!hideSearchAndToggleButton">
+
+        <div v-if="!hideSearchAndToggleShowAll">
             <SearchBarNews :search-query="searchQuery" @search="handleSearch" />
         </div>
 
         <div v-for="(newsItem, index) in displayedNewsList" :key="newsItem.id">
-            <div v-if="showAllNews || index < 5" @click="openPopup(newsItem)" class="news-item"
+            <div v-if="showAllNews || index < 5" @click="openNewsDetailsPopup(newsItem)" class="news-item"
                 :class="{ 'highlighted': isNewsItemHovered === index }" @mouseover="highlightItem(index)"
                 @mouseleave="unhighlightItem">
                 <div class="news-content">
@@ -44,7 +45,7 @@
         </div>
 
         <div v-if="selectedNewsItem" class="popup">
-            <button @click="closePopup">Close</button>
+            <button @click="closeNewsDetailsPopup">Close</button>
             <button @click="navigate('previous')">Previous</button>
             <button @click="navigate('next')">Next</button>
             <div class="popup-content">
@@ -52,6 +53,15 @@
                 <p>Date: {{ formatDate(selectedNewsItem.date) }}</p>
                 <p>{{ selectedNewsItem.message }}</p>
                 <p>Deadline: {{ formatDate(selectedNewsItem.deadline) }}</p>
+                <button @click="openSharePopup">Share News</button>
+            </div>
+        </div>
+        <div v-if="showSharePopup" class="popup">
+            <button @click="closeSharePopup">Close</button>
+            <div class="popup-content">
+                <h2>Share News</h2>
+                <textarea v-model="shareText" placeholder="Enter email.."></textarea>
+                <button @click="shareNews">Submit</button>
             </div>
         </div>
     </div>
@@ -61,6 +71,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useNewsStore } from '@/stores/news';
 import SearchBarNews from '@/components/SearchBarNews.vue';
+import axios from 'axios';
 
 export default {
     props: {
@@ -73,24 +84,26 @@ export default {
             type: Boolean,
             default: true,
         },
-        hideSearchAndToggleButton: {
+        hideSearchAndToggleShowAll: {
             type: Boolean,
             default: false,
         }
     },
     setup(props) {
         const newsStore = useNewsStore();
-        const isFormVisible = ref(false);
+
         const editedNews = ref({});
         const selectedNewsId = ref(null);
-        const searchQuery = ref('');
-        const showAllNews = ref(false);
-        const ascendingOrder = ref(false);
-
         const selectedNewsItem = ref(null);
         const isNewsItemHovered = ref(null);
+        const searchQuery = ref('');
+        const shareText = ref('');
+        const showAllNews = ref(false);
+        const isEditFormVisible = ref(false);
+        const ascendingOrder = ref(false);
+        const showSharePopup = ref(false);
 
-        const sortNewestOldestNews= computed(() => (ascendingOrder.value ? 'Show newest first' : 'Show oldest first'));
+        const sortNewestOldestNews = computed(() => (ascendingOrder.value ? 'Show newest first' : 'Show oldest first'));
 
         const displayedNewsList = computed(() => {
             const sortedNewsList = newsStore.newsList
@@ -122,11 +135,11 @@ export default {
 
         const isSearchVisible = computed(() => !props.hideSearch);
         const formatDate = (dateTime) => {
-    if (!dateTime) {
-        return '';
-    }
-    return new Date(dateTime).toLocaleDateString() || '';
-};
+            if (!dateTime) {
+                return '';
+            }
+            return new Date(dateTime).toLocaleDateString() || '';
+        };
 
         const handleSearch = (query) => {
             searchQuery.value = query;
@@ -140,11 +153,11 @@ export default {
             isNewsItemHovered.value = null;
         };
 
-        const openPopup = (newsItem) => {
+        const openNewsDetailsPopup = (newsItem) => {
             selectedNewsItem.value = newsItem;
         };
 
-        const closePopup = () => {
+        const closeNewsDetailsPopup = () => {
             selectedNewsItem.value = null;
         };
 
@@ -163,9 +176,8 @@ export default {
             selectedNewsItem.value = newsStore.newsList[newIndex];
         };
 
-
         const closeForm = () => {
-            isFormVisible.value = false;
+            isEditFormVisible.value = false;
         };
 
         const submitForm = async () => {
@@ -176,7 +188,7 @@ export default {
 
                 console.log('Update news response:', response);
                 await newsStore.getAllNews();
-                isFormVisible.value = false;
+                isEditFormVisible.value = false;
             } catch (error) {
                 console.error('Error updating news:', error);
             }
@@ -186,30 +198,66 @@ export default {
             if (selectedNewsId.value) {
                 await newsStore.deleteNews(selectedNewsId.value);
                 await newsStore.getAllNews();
-                isFormVisible.value = false;
+                isEditFormVisible.value = false;
             }
         };
 
         const editNewsItem = (newsItem) => {
             editedNews.value = { ...newsItem };
             selectedNewsId.value = newsItem.id;
-            isFormVisible.value = !isFormVisible.value;
+            isEditFormVisible.value = !isEditFormVisible.value;
+        };
+
+        const openSharePopup = () => {
+            showSharePopup.value = true;
+        };
+
+        const closeSharePopup = () => {
+            showSharePopup.value = false;
+        };
+
+        const shareNews = async () => {
+            const jwtToken = localStorage.getItem('token');
+            if (!jwtToken) {
+                console.error('JWT token not found in local storage.');
+                return;
+            }
+
+            const requestBody = {
+                email: shareText.value,
+                newsDTO: selectedNewsItem.value
+            };
+
+            console.log('Request Payload:', requestBody);
+
+            try {
+                const response = await axios.post('http://localhost:8080/api/v1/admin/share-news', requestBody, {
+                    headers: {
+                        Authorization: `Bearer ${jwtToken}`
+                    }
+                });
+
+                console.log('Response from server:', response.data);
+                closeSharePopup();
+            } catch (error) {
+                console.error('Error sharing news:', error.response ? error.response.data : error.message);
+            }
         };
 
         watch(() => props.searchQuery, (newQuery) => {
             handleSearch(newQuery);
         });
 
-        watch(() => isFormVisible.value, () => {
-            if (isFormVisible.value) {
-                closePopup();
+        watch(() => isEditFormVisible.value, () => {
+            if (isEditFormVisible.value) {
+                closeNewsDetailsPopup();
             }
         });
 
         return {
             editedNews,
             selectedNewsId,
-            isFormVisible,
+            isEditFormVisible,
             editNewsItem,
             handleSearch,
             isSearchVisible,
@@ -221,14 +269,19 @@ export default {
             isNewsItemHovered,
             highlightItem,
             unhighlightItem,
-            openPopup,
-            closePopup,
+            openNewsDetailsPopup,
+            closeNewsDetailsPopup,
             selectedNewsItem,
             navigate,
             deleteNewsItem,
             submitForm,
             closeForm,
             sortNewestOldestNews,
+            showSharePopup,
+            shareText,
+            openSharePopup,
+            closeSharePopup,
+            shareNews,
         };
     },
     components: {

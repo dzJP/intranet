@@ -3,7 +3,7 @@
 		<h1>Landing page</h1>
 		<div>
 			<h2>Latest News</h2>
-			<NewsList :allow-edit="false" :max-entries="1" :hide-search-and-toggle-button="true" />
+			<NewsList :allow-edit="false" :max-entries="1" :hide-search-and-toggle-show-all="true" />
 		</div>
 		<TimeRegister />
 		<MonthlyTimeRegister />

@@ -1,19 +1,19 @@
 <script>
 import { RouterView } from 'vue-router';
-import NavBar from '@/components/Navbar.vue';
+import SideBar from './components/SideBar.vue';
 
 
 export default {
     name: 'App',
     components: {
         RouterView,
-        NavBar,
+        SideBar,
     },
 };
 </script>
 
 <template>
-    <nav-bar />
+    <side-bar />
     <router-view />
 </template>
 

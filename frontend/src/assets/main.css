@@ -1,0 +1,19 @@
+:root {
+    --dark-blue: #040B24;
+    --orange: #E69141;
+    --white: #FFFFFF;
+    --black: #030B23;
+    --gray: #878787;
+    --purple-variance: #9C8FEC;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oxanium', sans-serif;
+}

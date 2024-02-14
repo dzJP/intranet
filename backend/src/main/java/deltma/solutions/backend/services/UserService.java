@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,12 +100,19 @@ public class UserService implements CommandLineRunner {
     public User createAndSaveUser(SignUpRequest request) {
         validatorService.validateUser(request);
 
+        LocalDate birthDate = LocalDate.of(
+                request.getBirthDate().getYear(),
+                request.getBirthDate().getMonth(),
+                request.getBirthDate().getDayOfMonth()
+        );
+
         var user = User.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
+                .birthDate(birthDate)
                 .role(Role.ROLE_USER)
                 .isActive(true)
                 .build();
@@ -130,7 +138,7 @@ public class UserService implements CommandLineRunner {
 
             if (user != null) {
                 return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                        user.getLastName(), user.getPhoneNumber(), user.getRole());
+                        user.getLastName(), user.getPhoneNumber(), user.getBirthDate(), user.getRole());
             } else {
                 throw new RuntimeException("User not found");
             }
@@ -183,7 +191,7 @@ public class UserService implements CommandLineRunner {
 
     public List<UserProfileDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getRole()))
+                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getBirthDate(), user.getRole()))
                 .collect(Collectors.toList());
     }
 

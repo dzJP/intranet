@@ -19,6 +19,11 @@
                 </div>
 
                 <div class="form-group mb-3">
+                    <label for="birthdate">Birthdate </label>
+                    <input type="date" class="form-control" id="birthdate" v-model="user.birthDate" />
+                </div>
+
+                <div class="form-group mb-3">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" v-model="user.password" />
                 </div>
@@ -45,13 +50,14 @@ const user = reactive({
 
 function onSubmit() {
     console.log('onSubmit triggered', user);
-    if (user.email !== '' && user.firstName !== '' && user.lastName !== '' && user.password !== '' && user.phoneNumber !== '') {
+    if (user.email !== '' && user.firstName !== '' && user.lastName !== '' && user.password !== '' && user.phoneNumber !== '' && user.birthDate !== '') {
         useAuthStore().register(
             user.email,
             user.firstName,
             user.lastName,
             user.password,
-            user.phoneNumber
+            user.phoneNumber,
+            user.birthDate
         );
     }
 }

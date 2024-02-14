@@ -6,9 +6,9 @@
         <table class="table mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Användare</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Telefonnr</th>
-              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Roll</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Employee</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone number</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
             </tr>
           </thead>
           <tbody>
@@ -27,10 +27,10 @@
               </td>
               <td>
                 <button class="btn btn-edit" @click="togglePopup">
-                  Ändra
+                  Change
                 </button>
                 <button class="btn btn-delete" @click="deleteUser(user)">
-                  Ta bort
+                  Remove
                 </button>
               </td>
 
@@ -42,36 +42,39 @@
                       <td><strong>Email:</strong> {{ user.email }}</td>
                     </tr>
                     <tr>
-                      <td><strong>Förnamn:</strong> <input v-model="user.firstName"></td>
+                      <td><strong>First name:</strong> <input v-model="user.firstName"></td>
                     </tr>
                     <tr>
-                      <td><strong>Efternamn:</strong> <input v-model="user.lastName"></td>
+                      <td><strong>Last name:</strong> <input v-model="user.lastName"></td>
                     </tr>
                     <tr>
-                      <td><strong>Telefonnr:</strong> <input v-model="user.phoneNumber"></td>
+                      <td><strong>Birthdate:</strong> <input v-model="user.birthDate"></td>
                     </tr>
                     <tr>
-                      <td><strong>Roll:</strong> <input v-model="user.role"></td>
+                      <td><strong>Phone number:</strong> <input v-model="user.phoneNumber"></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Role:</strong> <input v-model="user.role"></td>
                     </tr>
                     <tr>
                       <td>
-                        <strong>Byt lösenord:</strong>
+                        <strong>Change password:</strong>
                         <br>
-                        <input v-model="user.currentPassword" type="password" placeholder="Nuvarande lösenord">
-                        <input v-model="user.newPassword" type="password" placeholder="Nytt lösenord">
-                        <button class="btn btn-primary mt-2" @click="changePassword(user)">Ändra lösenord</button>
+                        <input v-model="user.currentPassword" type="password" placeholder="Current password">
+                        <input v-model="user.newPassword" type="password" placeholder="New password">
+                        <button class="btn btn-primary mt-2" @click="changePassword(user)">Change password</button>
                       </td>
                     </tr>
                     <tr>
                       <td>
-                        <button class="btn btn-deactivate" @click="deactivateUser(user)">Avaktivera</button>
-                        <button class="btn btn-primary" @click="activateUser(user)">Aktivera</button>
+                        <button class="btn btn-deactivate" @click="deactivateUser(user)">Inactivate</button>
+                        <button class="btn btn-primary" @click="activateUser(user)">Activate</button>
                       </td>
                     </tr>
                     <tr>
                       <td class="bottom-right">
-                        <button class="btn btn-primary" @click="togglePopup">Avbryt</button>
-                        <button class="btn btn-primary" @click="saveChanges(user)">Spara</button>
+                        <button class="btn btn-primary" @click="togglePopup">Cancel</button>
+                        <button class="btn btn-primary" @click="saveChanges(user)">Save</button>
                       </td>
                     </tr>
                   </table>
@@ -226,7 +229,6 @@ export default {
 <style scoped>
 .card {
   background-color: #fff;
-  /* border-color: #e5e5e5; */
   border: none;
 }
 

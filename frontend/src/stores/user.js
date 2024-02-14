@@ -9,6 +9,7 @@ export const useUserStore = defineStore({
     firstName: "",
     lastName: "",
     phoneNumber: "",
+    birthDate: "",
     users: [],
   }),
   actions: {
@@ -32,6 +33,7 @@ export const useUserStore = defineStore({
           this.firstName = userDetails.firstName;
           this.lastName = userDetails.lastName;
           this.phoneNumber = userDetails.phoneNumber;
+          this.birthDate = userDetails.birthDate;
 
           console.log('User details:', userDetails);
       } catch (error) {

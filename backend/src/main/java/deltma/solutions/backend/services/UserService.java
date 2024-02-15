@@ -204,6 +204,7 @@ public class UserService implements CommandLineRunner {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setPhoneNumber(request.getPhoneNumber());
+            user.setBirthDate(request.getBirthDate());
             user.setRole(request.getRole());
 
             userRepository.save(user);

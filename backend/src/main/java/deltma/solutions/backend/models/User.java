@@ -38,6 +38,8 @@ public class User implements UserDetails {
 
     Boolean isActive = false;
 
+    String profilePictureUrl;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TimeRegister> timeRegisters;

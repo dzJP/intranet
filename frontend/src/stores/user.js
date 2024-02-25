@@ -9,6 +9,7 @@ export const useUserStore = defineStore({
     firstName: "",
     lastName: "",
     phoneNumber: "",
+    profilePictureUrl: null,
     users: [],
   }),
   actions: {
@@ -32,6 +33,7 @@ export const useUserStore = defineStore({
           this.firstName = userDetails.firstName;
           this.lastName = userDetails.lastName;
           this.phoneNumber = userDetails.phoneNumber;
+          this.profilePictureUrl = userDetails.profilePictureUrl;
 
           console.log('User details:', userDetails);
       } catch (error) {
@@ -90,6 +92,46 @@ export const useUserStore = defineStore({
         throw error;
       }
     },
+    async updateFirstName(newFirstName) {
+      try {
+        const response = await axios.put(
+          "http://localhost:8080/api/v1/profile/update-first-name",
+          {
+            firstName: newFirstName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        this.firstName = newFirstName;
+        console.log(response.data, newFirstName);
+      } catch(error) {
+        console.error("Error updating first name: ", error);
+        throw error;
+      }
+    },
+    async updateLastName(newLastName) {
+      try {
+        const response = await axios.put(
+          "http://localhost:8080/api/v1/profile/update-last-name",
+          {
+            lastName: newLastName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        this.lastName = newLastName;
+        console.log(response.data), newLastName;
+      } catch (error) {
+        console.error("Error updating last name: ", error);
+        throw(error);
+      }
+    },
     async updatePhoneNumber(newPhoneNumber) {
       try {
         const response = await axios.put(
@@ -103,16 +145,13 @@ export const useUserStore = defineStore({
             },
           }
         );
-
         this.phoneNumber = newPhoneNumber;
-
-        console.log("Phone number updated successfully:", response.data);
+        console.log(response.data, newPhoneNumber);
       } catch (error) {
-        console.error("Error updating phone number:", error);
+        console.error("Error updating phone number: ", error);
         throw error;
       }
     },
-
     async deactivateUser(user) {
       try {
         const response = await axios.patch(
@@ -133,7 +172,6 @@ export const useUserStore = defineStore({
         throw error;
       }
     },
-
     async activateUser(user) {
       try {
         const response = await axios.patch(
@@ -184,6 +222,62 @@ export const useUserStore = defineStore({
         return response.data;
       } catch (error) {
         console.error("Error changing password:", error);
+        throw error;
+      }
+    },
+    async fetchSasToken() {
+      try {
+        const response = await axios.get('http://localhost:8080/api/v1/generate-sas-token');
+        this.sasToken = response.data;
+      } catch (error) {
+        console.error('Error fetching SAS token:', error.response || error.message);
+        throw error;
+      }
+    },
+    async uploadProfilePictureWithSasToken(file) {
+      try {
+        const auth = useAuthStore();
+        const token = auth.token;
+
+        await this.fetchSasToken();
+
+        const formData = new FormData();
+        formData.append('profilePicture', file);
+
+        const response = await axios.post('http://localhost:8080/api/v1/profile/upload-profile-picture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log('Profile picture uploaded successfully:', response.data);
+
+        await this.getUserDetails();
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        throw error;
+      }
+    },
+    async deleteProfilePicture() {
+      try {
+        const auth = useAuthStore();
+        const token = auth.token;
+
+        const response = await axios.delete(
+          'http://localhost:8080/api/v1/profile/delete-profile-picture',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log('Profile picture deleted successfully:', response.data);
+
+        this.profilePictureUrl = null;
+      } catch (error) {
+        console.error('Error deleting profile picture:', error);
         throw error;
       }
     },

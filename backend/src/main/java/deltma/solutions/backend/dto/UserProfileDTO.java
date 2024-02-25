@@ -14,4 +14,5 @@ public class UserProfileDTO {
     String lastName;
     String phoneNumber;
     Role role;
+    String profilePictureUrl;
 }

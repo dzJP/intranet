@@ -82,7 +82,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,
                                 "/api/v1/projects/update/{id}",
                                 "/api/v1/projects/inactivate/{id}",
-                                "/api/v1/projects/activate/{id}").permitAll()
+                                "/api/v1/projects/activate/{id}",
+                                "/api/v1/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/v1/projects",
                                 "/api/v1/time-registrations/{id}").permitAll()

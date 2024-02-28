@@ -82,5 +82,26 @@ public class TimeRegisterService {
         timeRegisterRepository.deleteById(id);
     }
 
+    public void updateTimeRegister(TimeRegisterRequestDTO timeRegisterRequestDTO) {
+        TimeRegister existingTimeRegister = timeRegisterRepository.findById(timeRegisterRequestDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Time registration not found for id: " + timeRegisterRequestDTO.getId()));
+
+        User user = userRepository.findByEmail(timeRegisterRequestDTO.getEmail());
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Project project = projectRepository.findById(timeRegisterRequestDTO.getProjectId())
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
+
+        existingTimeRegister.setWorkHours(timeRegisterRequestDTO.getWorkHours());
+        existingTimeRegister.setDate(timeRegisterRequestDTO.getDate());
+        existingTimeRegister.setUser(user);
+        existingTimeRegister.setProject(project);
+
+        timeRegisterRepository.save(existingTimeRegister);
+    }
+
 }
 

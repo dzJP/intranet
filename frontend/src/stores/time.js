@@ -10,6 +10,8 @@ export const useTimeStore = defineStore({
     date: '',
     timeRegistrations: [],
     totalTime: null,
+    registrationExists: false,
+    updateMsg: '',
   }),
   actions: {
     async registerTime(projectId) {
@@ -20,6 +22,15 @@ export const useTimeStore = defineStore({
         console.log("Email:", auth.user);
         console.log("Work Hours:", this.workHours);
         console.log("Date:", this.date);
+
+         const existingRegistration = this.timeRegistrations.find(registration => 
+          registration.date === this.date && registration.projectId === projectId);
+
+        if (existingRegistration) {
+          console.log("A registration already exists for this project and date.");
+          this.registrationExists = true;
+          return; 
+        }
 
         const response = await axios.post(
           "http://localhost:8080/api/v1/register-time",
@@ -40,8 +51,6 @@ export const useTimeStore = defineStore({
 
         this.timeRegistrations.push(newTimeRegistration);
 
-        // this.workHours = null;
-        // this.selectedProject = null; 
 
         console.log("Registration successful:", response.data);
 
@@ -54,6 +63,7 @@ export const useTimeStore = defineStore({
         this.email = '';
         this.workHours = '';
         this.date = '';
+        this.registrationExists = false;
         
       } catch (error) {
         console.error(
@@ -128,6 +138,28 @@ export const useTimeStore = defineStore({
           "Error fetching total time for this month:",
           error.response || error.message
         );
+      }
+    },
+
+    async updateTimeRegister(timeRegisterRequestDTO) {
+      try {
+        const response = await axios.put(
+          `http://localhost:8080/api/v1/time-registrations/${timeRegisterRequestDTO.id}`,
+          timeRegisterRequestDTO
+        );
+    
+        console.log("Time registration updated successfully:", response.data);
+    
+        const year = timeRegisterRequestDTO.date.split("-")[0];
+        const month = timeRegisterRequestDTO.date.split("-")[1];
+    
+       this.getTimeRegistrationsForSelectedMonth(year, month);
+        this.getTotalTimeForSelectedMonth(year, month);
+
+        this.updateMsg = 'Time registration updated successfully';
+      } catch (error) {
+        console.error("Error updating time registration:", error.response || error.message);
+        this.updateMsg = 'Error updating time registration';
       }
     },
     

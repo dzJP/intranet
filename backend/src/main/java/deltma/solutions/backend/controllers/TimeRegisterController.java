@@ -62,4 +62,16 @@ public class TimeRegisterController {
         }
     }
 
+    @PutMapping("/time-registrations/{id}")
+    public ResponseEntity<String> updateTimeRegister(@RequestBody TimeRegisterRequestDTO timeRegisterRequestDTO) {
+        try {
+            timeRegisterService.updateTimeRegister(timeRegisterRequestDTO);
+            return ResponseEntity.ok("Time registration updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error updating time registration: " + e.getMessage());
+        }
+    }
+
 }

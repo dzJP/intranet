@@ -1,6 +1,8 @@
 <template>
   <div class="card userlist">
-    <search-bar @search="updateSearchQuery" />
+    <div>
+    <SearchBarUsers @search="updateSearchQuery" />
+    </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table mb-0">
@@ -96,11 +98,11 @@
 <script>
 import { onMounted, ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import SearchBar from '@/components/SearchBar.vue';
+import SearchBarUsers from '@/components/SearchBarUsers.vue';
 
 export default {
   components: {
-    SearchBar,
+    SearchBarUsers,
   },
 
   setup() {

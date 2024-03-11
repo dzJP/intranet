@@ -124,7 +124,7 @@ export default {
 				console.error("Error triggering monthly time reset:", error.response || error.message);
 			}
 		},
-		// For testing only 
+		// For testing only
 		async saveAndResetMonthlyTime() {
 			try {
 				const auth = useAuthStore();

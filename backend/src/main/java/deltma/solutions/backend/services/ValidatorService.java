@@ -4,6 +4,7 @@ import deltma.solutions.backend.dto.SignUpRequest;
 import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.Role;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -93,8 +94,29 @@ public class ValidatorService {
         }
     }
 
+    public void validateFileType(MultipartFile file) {
+        if (!isValidFileType(file, "jpg") && !isValidFileType(file, "png")) {
+            throw new IllegalArgumentException("Invalid file format. Only JPEG or PNG files are allowed.");
+        }
+    }
 
+    private boolean isValidFileType(MultipartFile file, String fileType) {
+        if (file == null || file.isEmpty()) {
+            return false;
+        }
+        String originalFilename = file.getOriginalFilename();
+        return originalFilename != null && originalFilename.toLowerCase().endsWith("." + fileType);
+    }
 
-    // more
+    public void validateFileTypeAndSize(MultipartFile file)  {
+        // check file type
+        validateFileType(file);
+
+        // check file size
+        long maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+        if (file.getSize() > maxSizeInBytes) {
+            throw new IllegalArgumentException("File size exceeds the maximum allowed limit.");
+        }
+    }
 }
 

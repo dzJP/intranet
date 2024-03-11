@@ -16,7 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,7 @@ public class UserService implements CommandLineRunner {
     private final EmailService emailService;
     private final PasswordGenerator passwordGenerator;
     private final TemporaryUserService temporaryUserService;
+    private final AzureBlobStorageService azureBlobStorageService;
 
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
@@ -130,7 +133,7 @@ public class UserService implements CommandLineRunner {
 
             if (user != null) {
                 return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                        user.getLastName(), user.getPhoneNumber(), user.getRole());
+                        user.getLastName(), user.getPhoneNumber(), user.getRole(), user.getProfilePictureUrl());
             } else {
                 throw new RuntimeException("User not found");
             }
@@ -147,6 +150,34 @@ public class UserService implements CommandLineRunner {
 
         if (user != null) {
             user.setPhoneNumber(request.getPhoneNumber());
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    public void updateFirstName(UserProfileDTO request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(userEmail);
+
+        if (user != null) {
+            user.setFirstName(request.getFirstName());
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    public void updateLastName(UserProfileDTO request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(userEmail);
+
+        if (user != null) {
+            user.setLastName(request.getLastName());
             userRepository.save(user);
         } else {
             throw new IllegalArgumentException("User not found");
@@ -183,7 +214,8 @@ public class UserService implements CommandLineRunner {
 
     public List<UserProfileDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getRole()))
+                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(),
+                        user.getLastName(), user.getPhoneNumber(), user.getRole(), user.getProfilePictureUrl()))
                 .collect(Collectors.toList());
     }
 
@@ -234,9 +266,27 @@ public class UserService implements CommandLineRunner {
         }
     }
 
+    public void uploadProfilePicture(MultipartFile profilePicture) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        User user = userRepository.findByEmail(userEmail);
+
+        if (user != null) {
+            // Use AzureBlobStorageService to handle the file upload, including validation
+            String pictureUrl = azureBlobStorageService.uploadProfilePictureToBlobStorage(user.getEmail(), profilePicture);
+            user.setProfilePictureUrl(pictureUrl);
+
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
     @Override
     public void run(String... args) throws Exception {
         createDefaultUsers();
     }
+
 
 }

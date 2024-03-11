@@ -1,6 +1,6 @@
 <template>
     <div class="user-list-container">
-        <SearchBar @search="updateSearchQuery" />
+        <SearchBarUsers @search="updateSearchQuery" />
         <ul class="user-list">
             <li v-for="user in filteredUsers" :key="user.email" class="user-item">
                 <router-link :to="`/user/${user.email}`" class="user-link">
@@ -20,7 +20,7 @@
 <script>
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import SearchBar from '@/components/SearchBar.vue';
+import SearchBarUsers from '@/components/SearchBarUsers.vue';
 
 export default {
     setup() {
@@ -48,7 +48,7 @@ export default {
             user: useUserStore,
         };
     },
-    components: { SearchBar }
+    components: { SearchBarUsers }
 };
 </script>
 

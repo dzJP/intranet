@@ -1,8 +1,7 @@
 package deltma.solutions.backend.controllers;
 
-import deltma.solutions.backend.dto.ChangePasswordDTO;
-import deltma.solutions.backend.dto.TemporaryUserDTO;
-import deltma.solutions.backend.dto.UserProfileDTO;
+import deltma.solutions.backend.dto.*;
+import deltma.solutions.backend.services.NewsService;
 import deltma.solutions.backend.services.TemporaryUserService;
 import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ public class AdminController {
 
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
+    private final NewsService newsService;
     
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
@@ -43,6 +43,19 @@ public class AdminController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error sending invitations: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/share-news")
+    public ResponseEntity<String> shareNews(@RequestBody ShareNewsRequest request) {
+        try {
+            newsService.shareNews(request.getEmail(), request.getNewsDTO());
+            return ResponseEntity.ok("News shared successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error sharing news: " + e.getMessage());
         }
     }
 

@@ -82,6 +82,32 @@ public class AuthenticationController {
     }
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PutMapping("/profile/update-first-name")
+    public ResponseEntity<String> updateFirstName(@RequestBody UserProfileDTO request) {
+        try {
+            userService.updateFirstName(request);
+            return ResponseEntity.ok("First name updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error updating first name: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
+    @PutMapping("/profile/update-last-name")
+    public ResponseEntity<String> updateLastName(@RequestBody UserProfileDTO request) {
+        try {
+            userService.updateLastName(request);
+            return ResponseEntity.ok("Last name updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error updating last name: " + e.getMessage());
+        }
+    }
+
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/colleagues")
     public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
         try {

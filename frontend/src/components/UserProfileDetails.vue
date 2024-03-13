@@ -13,6 +13,10 @@
                 <p class="text-secondary">{{ user.lastName }}</p>
             </div>
             <div>
+                <h6 class="mb-0">Birthdate</h6>
+                <p class="text-secondary">{{ user.birthDate }}</p>
+            </div>
+            <div>
                 <h6 class="mb-0">Email</h6>
                 <p class="text-secondary">{{ user.email }}</p>
             </div>

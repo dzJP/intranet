@@ -10,6 +10,7 @@ export const useUserStore = defineStore({
     lastName: "",
     phoneNumber: "",
     profilePictureUrl: null,
+    birthDate: "",
     users: [],
   }),
   actions: {
@@ -34,6 +35,7 @@ export const useUserStore = defineStore({
           this.lastName = userDetails.lastName;
           this.phoneNumber = userDetails.phoneNumber;
           this.profilePictureUrl = userDetails.profilePictureUrl;
+          this.birthDate = userDetails.birthDate;
 
           console.log('User details:', userDetails);
       } catch (error) {

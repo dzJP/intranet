@@ -19,6 +19,16 @@
                             <input type="text" class="form-control" v-model="editedLastName" >
                         </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Birthdate</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <input type="text" class="form-control" :value="user.birthDate" disabled>
+                        </div>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="label">
                             <h6 class="mb-0">Email</h6>

@@ -7,8 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -22,21 +24,23 @@ public class User implements UserDetails {
     @NotBlank
     @Id
     @Column(unique = true)
-    String email;
+    private String email;
 
-    String firstName;
+    private String firstName;
 
-    String lastName;
+    private String lastName;
 
     @Column(unique = true)
-    String password;
+    private String password;
 
-    String phoneNumber;
+    private String phoneNumber;
+
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
 
-    Boolean isActive = false;
+    private Boolean isActive = false;
 
     String profilePictureUrl;
 

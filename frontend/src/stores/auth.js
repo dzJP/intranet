@@ -63,7 +63,7 @@ export const useAuthStore = defineStore({
         console.error("Login failed:", error);
       }
     },
-    async register(email, firstName, lastName, password, phoneNumber) {
+    async register(email, firstName, lastName, password, phoneNumber, birthDate) {
       try {
         const response = await axios.post(
           "http://localhost:8080/api/v1/register",
@@ -73,6 +73,7 @@ export const useAuthStore = defineStore({
             lastName,
             password,
             phoneNumber,
+            birthDate,
           },
           {
             headers: {

@@ -18,7 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
+
+import java.time.LocalDate;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,12 +106,19 @@ public class UserService implements CommandLineRunner {
     public User createAndSaveUser(SignUpRequest request) {
         validatorService.validateUser(request);
 
+        LocalDate birthDate = LocalDate.of(
+                request.getBirthDate().getYear(),
+                request.getBirthDate().getMonth(),
+                request.getBirthDate().getDayOfMonth()
+        );
+
         var user = User.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNumber(request.getPhoneNumber())
+                .birthDate(birthDate)
                 .role(Role.ROLE_USER)
                 .isActive(true)
                 .build();
@@ -133,7 +144,7 @@ public class UserService implements CommandLineRunner {
 
             if (user != null) {
                 return new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                        user.getLastName(), user.getPhoneNumber(), user.getRole(), user.getProfilePictureUrl());
+                        user.getLastName(), user.getPhoneNumber(), user.getBirthDate(), user.getRole(), user.getProfilePictureUrl());
             } else {
                 throw new RuntimeException("User not found");
             }
@@ -214,8 +225,8 @@ public class UserService implements CommandLineRunner {
 
     public List<UserProfileDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(),
-                        user.getLastName(), user.getPhoneNumber(), user.getRole(), user.getProfilePictureUrl()))
+                .map(user -> new UserProfileDTO(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhoneNumber(), user.getBirthDate(), user.getRole(),
+                user.getProfilePictureUrl()))
                 .collect(Collectors.toList());
     }
 
@@ -228,6 +239,7 @@ public class UserService implements CommandLineRunner {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
             user.setPhoneNumber(request.getPhoneNumber());
+            user.setBirthDate(request.getBirthDate());
             user.setRole(request.getRole());
 
             userRepository.save(user);

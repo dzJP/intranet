@@ -4,6 +4,7 @@
 
         <div v-if="user" class="profile-details">
             <div>
+    <router-link to="/admin">Go back</router-link>
                 <h6 class="mb-0">First Name</h6>
                 <p class="text-secondary">{{ user.firstName }}</p>
             </div>

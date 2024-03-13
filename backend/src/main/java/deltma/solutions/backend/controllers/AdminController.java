@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -35,9 +34,9 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/send-invitations")
-    public ResponseEntity<String> sendInvitations(@RequestBody Set<String> emails, TemporaryUserDTO temporaryUserDTO) {
+    public ResponseEntity<String> sendInvitations(@RequestBody TemporaryUserDTO temporaryUserDTO) {
         try {
-            temporaryUserService.validateAndSendInvitations(new TemporaryUserDTO(emails, temporaryUserDTO.getUuid()));
+            temporaryUserService.validateAndSendInvitations(temporaryUserDTO);
             return ResponseEntity.ok("Invitations sent successfully!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,9 +60,9 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/edit-user/{email}")
-    public ResponseEntity<String> editUser(@PathVariable String email, @RequestBody UserProfileDTO request) {
+    public ResponseEntity<String> editUser(@RequestBody UserProfileDTO request) {
         try {
-            userService.editUser(email,request);
+            userService.editUser(request);
             return ResponseEntity.ok("User successfully edited");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -109,9 +108,9 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/change-password/{email}")
-    public ResponseEntity<?> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO request) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO request) {
         try {
-            userService.changePassword(email, request);
+            userService.changePassword(request);
             return ResponseEntity.ok("User password changed successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

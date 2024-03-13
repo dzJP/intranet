@@ -203,11 +203,12 @@ export const useUserStore = defineStore({
         );
       }
     },
-    async changePassword(user, currentPassword, newPassword) {
+    async changePassword(email, currentPassword, newPassword) {
       try {
         const response = await axios.patch(
-          `http://localhost:8080/api/v1/admin/change-password/${user.email}`,
+          `http://localhost:8080/api/v1/admin/change-password/${email}`,
           {
+            email,
             currentPassword,
             newPassword,
           },
@@ -217,7 +218,7 @@ export const useUserStore = defineStore({
             },
           }
         );
-
+    
         console.log("Password changed successfully:", response.data);
         return response.data;
       } catch (error) {
@@ -225,6 +226,7 @@ export const useUserStore = defineStore({
         throw error;
       }
     },
+
     async fetchSasToken() {
       try {
         const response = await axios.get('http://localhost:8080/api/v1/generate-sas-token');
@@ -281,6 +283,7 @@ export const useUserStore = defineStore({
         throw error;
       }
     },
+
     logout() {
       this.email = "";
       this.firstName = "";

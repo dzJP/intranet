@@ -10,7 +10,6 @@ import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,7 +56,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/profile")
     public ResponseEntity<UserProfileDTO> getProfile(@RequestParam String email) {
         try {
@@ -68,7 +66,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping("/profile/update-phone-number")
     public ResponseEntity<String> updatePhoneNumber(@RequestBody UserProfileDTO request) {
         try {
@@ -81,7 +78,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping("/profile/update-first-name")
     public ResponseEntity<String> updateFirstName(@RequestBody UserProfileDTO request) {
         try {
@@ -94,7 +90,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @PutMapping("/profile/update-last-name")
     public ResponseEntity<String> updateLastName(@RequestBody UserProfileDTO request) {
         try {
@@ -107,7 +102,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/colleagues")
     public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
         try {
@@ -118,7 +112,6 @@ public class AuthenticationController {
         }
     }
 
-    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
     @GetMapping("/user/{email}")
     public ResponseEntity<UserProfileDTO> getUserByUsername(@PathVariable String email) {
         try {

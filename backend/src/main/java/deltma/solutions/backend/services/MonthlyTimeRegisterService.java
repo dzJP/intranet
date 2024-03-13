@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,26 +26,22 @@ public class MonthlyTimeRegisterService {
     @Autowired
     private UserRepository userRepository;
 
-    public void calculateMonthlyTimeForAllUsers() {
-        LocalDate currentDate = LocalDate.now();
-        int currentMonth = currentDate.getMonthValue();
-        int currentYear = currentDate.getYear();
-
+    private void saveMonthlyTimeRegisters(MonthlyTimeDTO monthlyTimeDTO) {
         List<User> users = userRepository.findAll();
 
         for (User user : users) {
             List<TimeRegister> timeRegistrations = timeRegisterRepository.findByUserEmailAndDateYearAndDateMonth(
-                    user.getEmail(), currentYear, currentMonth);
+                    user.getEmail(), monthlyTimeDTO.getYear(), monthlyTimeDTO.getMonth());
 
             int totalTimeForUser = timeRegistrations.stream()
                     .mapToInt(TimeRegister::getWorkHours)
                     .sum();
 
             MonthlyTimeRegister monthlyTimeRegister = monthlyTimeRegisterRepository
-                    .findByUserAndYearAndMonth(user, currentYear, currentMonth);
+                    .findByUserAndYearAndMonth(user, monthlyTimeDTO.getYear(), monthlyTimeDTO.getMonth());
 
             if (monthlyTimeRegister == null) {
-                monthlyTimeRegister = new MonthlyTimeRegister(0, currentYear, currentMonth, user);
+                monthlyTimeRegister = new MonthlyTimeRegister(0, monthlyTimeDTO.getYear(), monthlyTimeDTO.getMonth(), user);
             }
 
             monthlyTimeRegister.setTotalTime(totalTimeForUser);
@@ -54,68 +49,19 @@ public class MonthlyTimeRegisterService {
         }
     }
 
-    private List<MonthlyTimeRegister> getFormerMonths(User user, int selectedMonth) {
+    @Scheduled(cron = "0 0 0 10 * ?")
+    public void scheduleSaveMonthlyTimeRegisters() {
         LocalDate currentDate = LocalDate.now();
-        int currentYear = currentDate.getYear();
-        List<MonthlyTimeRegister> monthlyTimeRegisters =
-                monthlyTimeRegisterRepository.findAllByUserAndYearAndMonth(user, currentYear, selectedMonth);
+        LocalDate lastMonth = currentDate.minusMonths(1);
+        int lastMonthYear = lastMonth.getYear();
+        int lastMonthValue = lastMonth.getMonthValue();
 
-        System.out.println("Querying for user " + user.getEmail() +
-                " and year " + currentYear + " and month " + selectedMonth);
+        MonthlyTimeDTO monthlyTimeDTO = MonthlyTimeDTO.builder()
+                .year(lastMonthYear)
+                .month(lastMonthValue)
+                .build();
 
-        return monthlyTimeRegisters;
-    }
-
-    public List<MonthlyTimeDTO> calculateTotalTimeForLastYear(String email, int selectedMonth) {
-        List<MonthlyTimeDTO> monthlyTimeList = new ArrayList<>();
-        User user = userRepository.findByEmail(email);
-
-        List<MonthlyTimeRegister> monthlyTimeRegisters = getFormerMonths(user, selectedMonth);
-
-        for (MonthlyTimeRegister monthlyTimeRegister : monthlyTimeRegisters) {
-
-            if (monthlyTimeRegister.getMonth() <= selectedMonth) {
-                int totalTimeForMonth = monthlyTimeRegister.getTotalTime();
-                MonthlyTimeDTO monthlyTimeDTO = new MonthlyTimeDTO(
-                        monthlyTimeRegister.getYear(),
-                        monthlyTimeRegister.getMonth(),
-                        totalTimeForMonth
-                );
-                monthlyTimeList.add(monthlyTimeDTO);
-            }
-        }
-        return monthlyTimeList;
-    }
-
-    public void resetMonthlyTimeForAllUsers(int currentYear, int currentMonth) {
-        int nextMonth = currentMonth % 12 + 1;
-        int nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
-
-        List<User> users = userRepository.findAll();
-
-        for (User user : users) {
-            MonthlyTimeRegister nextMonthRecord = monthlyTimeRegisterRepository
-                    .findByUserAndYearAndMonth(user, nextYear, nextMonth);
-
-            if (nextMonthRecord != null) {
-                nextMonthRecord.setTotalTime(0);
-            } else {
-                nextMonthRecord = new MonthlyTimeRegister(0, nextYear, nextMonth, user);
-            }
-
-            monthlyTimeRegisterRepository.save(nextMonthRecord);
-        }
-    }
-
-    @Scheduled(cron = "0 0 0 L * ?")
-    public void saveAndResetMonthlyTime() {
-        LocalDate currentDate = LocalDate.now();
-        int currentYear = currentDate.getYear();
-        int currentMonth = currentDate.getMonthValue();
-
-        calculateMonthlyTimeForAllUsers();
-        resetMonthlyTimeForAllUsers(currentYear, currentMonth);
+        saveMonthlyTimeRegisters(monthlyTimeDTO);
     }
 
 }
-

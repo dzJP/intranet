@@ -1,7 +1,10 @@
 package deltma.solutions.backend.models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -15,6 +18,7 @@ public class TimeRegister {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "time_register_id")
     private Long id;
 
     @Column(nullable = false)
@@ -27,10 +31,15 @@ public class TimeRegister {
     @JoinColumn(name = "user_email", nullable = false)
     private User user;
 
-    public TimeRegister(Integer workHours, LocalDate date, User user) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    public TimeRegister(Integer workHours, LocalDate date, User user, Project project) {
         this.workHours = workHours;
         this.date = date;
         this.user = user;
+        this.project = project;
     }
 
     public Long getId() {
@@ -64,4 +73,13 @@ public class TimeRegister {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
 }

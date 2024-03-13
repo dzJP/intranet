@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class MonthlyTimeDTO {
-    private Integer year;
-    private Integer month;
+@AllArgsConstructor
+public class UserTotalTimeDTO {
+    private String email;
+    private int totalTime;
+    private Map<Long, Integer> totalPerProject;
 }

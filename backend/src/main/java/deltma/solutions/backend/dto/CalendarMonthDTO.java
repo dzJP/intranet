@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class MonthlyTimeDTO {
-    private Integer year;
-    private Integer month;
+@AllArgsConstructor
+public class CalendarMonthDTO {
+    String email;
+    int year;
+    int month;
 }

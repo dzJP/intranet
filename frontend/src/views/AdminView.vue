@@ -1,13 +1,10 @@
 <template>
-    <div>
-        <h1>Admin page</h1>
-        <InvitationForm />
-        <NewsCreate />
-        <!-- <div class="newsedit-and-userlist-container"> -->
-            <NewsList :search-query="searchQuery" />
-            <AdminUserList />
-        <!-- </div> -->
-    </div>
+<InvitationForm />
+<NewsCreate />
+<NewsList :search-query="searchQuery" />
+ <ProjectComponent />
+ <AdminUserList />
+ <UserTimeRegistrations />
 </template>
 
 <script>
@@ -15,6 +12,8 @@ import InvitationForm from '@/components/InvitationForm.vue';
 import AdminUserList from '@/components/AdminUserList.vue';
 import NewsCreate from '@/components/NewsCreate.vue';
 import NewsList from '@/components/NewsList.vue';
+import ProjectComponent from '../components/ProjectComponent.vue';
+import UserTimeRegistrations from '../components/UserTimeRegistrations.vue';
 
 export default {
     components: {
@@ -22,13 +21,11 @@ export default {
         AdminUserList,
         NewsCreate,
         NewsList,
+        ProjectComponent,
+        UserTimeRegistrations,
     },
 };
 </script>
 
 <style scoped>
-/* .newsedit-and-userlist-container {
-    display: flex;
-    min-width: auto;
-} */
 </style>

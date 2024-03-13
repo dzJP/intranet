@@ -34,7 +34,9 @@ public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    /**  Configures and provides a custom AuthenticationProvider for user authentication */
+    /**
+     * Configures and provides a custom AuthenticationProvider for user authentication
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -43,18 +45,22 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    /** Creates an AuthenticationManager using the provided AuthenticationConfiguration. */
+    /**
+     * Creates an AuthenticationManager using the provided AuthenticationConfiguration.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    /** Configures the security filters and rules for handling HTTP requests. */
+    /**
+     * Configures the security filters and rules for handling HTTP requests.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource()) 
+                        .configurationSource(corsConfigurationSource())
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session

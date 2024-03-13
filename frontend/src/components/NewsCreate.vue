@@ -32,7 +32,7 @@ export default {
 
         const { emit } = getCurrentInstance();
         const authStore = useAuthStore();
-        const userRole = authStore.role;
+        const userRole = ref(authStore.role);
 
         watch(() => authStore.role, (newRole) => {
             userRole.value = newRole;

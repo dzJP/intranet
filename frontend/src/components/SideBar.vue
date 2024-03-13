@@ -51,6 +51,7 @@
   left: 0;
   height: 100%;
   width: 300px;
+  border-right: 1px solid hsla(0, 0%, 100%, 0.5);
   background-color: var(--dark-blue);
   z-index: 1;
 }

@@ -12,6 +12,7 @@ export const useTimeStore = defineStore({
     totalTime: null,
     registrationExists: false,
     updateMsg: '',
+    usersTotalTime: [],
   }),
   actions: {
     async registerTime(projectId) {
@@ -199,6 +200,27 @@ export const useTimeStore = defineStore({
           "Error deleting time registration:",
           error.response || error.message
         );
+      }
+    },
+
+    async getUsersTotalTimePerMonth(year, month) {
+      try {
+        const auth = useAuthStore();
+        const token = auth.token;
+    
+        const response = await axios.get(`http://localhost:8080/api/v1/users-total-time`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            year,
+            month
+          }
+        });
+    
+        this.usersTotalTime = response.data;
+      } catch (error) {
+        console.error("Error fetching users total time per month:", error.response || error.message);
       }
     },
 

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <button v-if="!hideSearchAndToggleShowAll" @click="toggleShowAllNews">
+        <button v-if="!hideSearchAndToggleShowAll" class="allnews-btn btn btn-primary" @click="toggleShowAllNews">
             {{ showAllNews ? 'Show less' : 'Show All News' }}
         </button>
 
-        <button type="button" @click="toggleSortNewestOldestNews">
+        <button type="button" class="oldest-btn btn btn-primary"  @click="toggleSortNewestOldestNews">
             {{ sortNewestOldestNews }}
         </button>
 
@@ -23,7 +23,9 @@
         </div>
 
         <div v-if="!hideSearchAndToggleShowAll">
-            <SearchBarNews :search-query="searchQuery" @search="handleSearch" />
+            <SearchBarNews 
+            class="search-bar"
+            :search-query="searchQuery" @search="handleSearch" />
         </div>
 
         <div v-for="(newsItem, index) in displayedNewsList" :key="newsItem.id">
@@ -292,12 +294,31 @@ export default {
 
 
 <style scoped>
+
+.allnews-btn {
+    margin-left: 310px;
+}
+
+.search-bar {
+    display: flex;
+    width: 600px;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #ccc;
+}
+
 .news-item {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ccc;
+    width: 980px;
+    margin: auto;
+    border-radius: 9px;
 }
 
 .news-item:hover {
@@ -383,7 +404,6 @@ export default {
 
 button {
     padding: 10px;
-    background-color: #3498db;
     color: #fff;
     border: none;
     cursor: pointer;

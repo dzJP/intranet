@@ -1,5 +1,5 @@
 <template>
-  <button @click="togglePopup" class="btn btn-primary">View Projects</button>
+  <button @click="togglePopup" class="viewproject-btn btn btn-primary">View Projects</button>
 
   <div v-if="isPopupVisible" class="project-popup">
     <div class="popup-content">
@@ -141,6 +141,11 @@ onMounted(async () => {
 </script>
 
 <style>
+
+.viewproject-btn {
+  margin-top: 50px;
+  margin-left: 310px;
+}
 
 .project-popup {
   position: fixed;

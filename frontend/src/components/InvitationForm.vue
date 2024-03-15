@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button @click="togglePopup" class="btn btn-primary">Invite Users</button>
+        <button @click="togglePopup" class="invite-btn btn btn-primary">Invite Users</button>
         <div v-if="isPopupVisible" class="popup">
             <div class="popup-content">
                 <i class="toggle bi bi-x" @click="togglePopup"></i>
@@ -61,6 +61,11 @@ export default {
 </script>
 
     <style>
+
+    .invite-btn {
+        margin-left: 310px;
+        margin-top: 20px;
+    }
     .popup {
         position: absolute;
         top: 50%;

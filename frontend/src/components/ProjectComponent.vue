@@ -61,6 +61,7 @@ const createNewProject = async () => {
   try {
     await createProject({ project: newProjectName.value });
     hideCreateForm();
+    projects.value = await getAllProjects();
   } catch (error) {
     console.error('Error creating project:', error);
   }

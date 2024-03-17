@@ -22,8 +22,8 @@
             <td>{{ user.totalTime }}</td>
             <td>
               <ul>
-                <li v-for="(hours, projectId) in user.totalPerProject" :key="projectId">
-                  {{ projectId }}: {{  hours }}h
+                <li v-for="(totalTime, projectId) in user.totalPerProject" :key="projectId">
+                <span v-if="projects[projectId]">{{ projects[projectId].project }}: </span>{{ totalTime }}
               </li>
               </ul>
             </td>
@@ -37,12 +37,14 @@
   <script>
   import { defineComponent, onMounted, ref } from 'vue';
   import { useTimeStore } from '../stores/time';
+  import { useProjectStore } from '../stores/project';
   
   export default defineComponent({
     setup() {
       const timeStore = useTimeStore();
       const usersTotalTime = ref([]);
-      
+      const projectStore = useProjectStore();
+      const projects = ref({});
       const selectedMonth = ref(new Date().getMonth() + 1);
       const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   
@@ -52,8 +54,16 @@
         usersTotalTime.value = timeStore.usersTotalTime;
       };
 
+      const fetchProjects = async () => {
+        const allProjects = await projectStore.getAllProjects();allProjects.forEach(project => {
+          projects.value[project.id] = project;
+        });
+        projects.value = { ...projects.value }; 
+      };
+
 onMounted(async () => {
-      fetchUsersTotalTime();
+     await fetchUsersTotalTime();
+     await fetchProjects();
     });
   
       return {
@@ -61,6 +71,7 @@ onMounted(async () => {
         selectedMonth,
         months,
         fetchUsersTotalTime,
+        projects,
       };
     },
   });

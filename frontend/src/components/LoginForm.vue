@@ -79,8 +79,8 @@ export default {
 .logo {
 	width: 150px;
 	height: 50px;
-	margin-top: 80px;
-	margin-left: 60px;
+	margin-top: 60px;
+	margin-left: 40px;
 }
 
 .container {
@@ -112,26 +112,30 @@ export default {
 	margin-left: 150px;
 	width: 350px;
 	color: var(--white);
+	position: relative;
 }
 
 .login-form input {
 	width: 100%;
 	height: 40px;
 	border-radius: 5px;
-	margin: 5px 0;
+	margin: 10px 0;
 }
 
 .login-form a {
+	margin-right: 0;
 	color: var(--white);
 	text-decoration: none;
 	font-size: 14px;
 	font-weight: 500;
 	cursor: pointer;
+	position: absolute;
+	right: 0;
 }
 
 .signin-btn {
 	width: 100%;
-	margin: auto;
+	margin: 40px auto;
 	font-size: 20px;
 	letter-spacing: 1.5px;
 }

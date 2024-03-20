@@ -83,25 +83,12 @@ export default {
     font-size: 16px;
     min-height: 260px;
     width: 450px;
-    background: #111C44;
+    background: var(--blue);
     color: #fff;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 9px;
     z-index: 1;
-}
-
-.create-news button.btn-primary {
-    background-color: #3498db;
-    color: #fff;
-    border: 1px solid #3498db;
-    padding: 5px 50px;
-    cursor: pointer;
-}
-
-.create-news button.btn-primary:hover {
-    background-color: #0bb4e7;
-    border-color: #2980b9;
 }
 
 .create-news button {
@@ -134,16 +121,14 @@ export default {
     right: 0;
     height: 35px;
     width: 40px;
-    }
-
-    i {
     font-size: 25px;
-    color: #ffffff;
+    color: var(--white);
+    text-align: center;
     }
 
     .toggle-news:hover {
-    background-color: #df3232;
-    color: #fff;
+    background-color: var(--red);
+    color: var(--white);
     cursor: pointer;
     transition: 0.3s;
     border-top-right-radius: 9px;

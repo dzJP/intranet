@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="buttons-container">
         <button v-if="!hideSearchAndToggleShowAll" class="allnews-btn btn btn-primary" @click="toggleShowAllNews">
             {{ showAllNews ? 'Show less' : 'Show All News' }}
         </button>
@@ -7,6 +7,8 @@
         <button type="button" class="oldest-btn btn btn-primary"  @click="toggleSortNewestOldestNews">
             {{ sortNewestOldestNews }}
         </button>
+
+        </div>
 
         <div v-if="isEditFormVisible" class="edit-form">
             <form @submit.prevent="submitForm">
@@ -66,7 +68,6 @@
                 <button @click="shareNews">Submit</button>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -295,8 +296,8 @@ export default {
 
 <style scoped>
 
-.allnews-btn {
-    margin-left: 310px;
+.buttons-container {
+    margin-left: 300px;
 }
 
 .search-bar {
@@ -315,15 +316,15 @@ export default {
     justify-content: space-between;
     margin-bottom: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
-    width: 980px;
+    background-color: var(--blue);
+    color: var(--white);
     margin: auto;
+    width: 980px;
     border-radius: 9px;
 }
 
 .news-item:hover {
-    background-color: #f0f0f0;
-
+    background-color: #1a2652;
 }
 
 .news-content {
@@ -344,12 +345,10 @@ export default {
 
 .date {
     font-size: 14px;
-    color: #777;
 }
 
 .date-time {
     font-size: 14px;
-    color: #777;
     text-align: right;
 }
 
@@ -402,14 +401,4 @@ export default {
     background-color: #2980b9;
 }
 
-button {
-    padding: 10px;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
 </style>

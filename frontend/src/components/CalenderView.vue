@@ -231,6 +231,7 @@ onMounted(() => {
   border-right: 1px solid hsla(0, 0%, 100%, 0.5);
   border-bottom-left-radius: 9px;
   border-top-left-radius: 9px;
+  z-index: 0;
 }
 
 .calender-container :deep(.vc-header) {
@@ -546,6 +547,7 @@ onMounted(() => {
   border-top-right-radius: 9px;
   border-bottom-left-radius: 0;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.5);
+  border-right: none;
 }
 
 .weekly-view .time-container {

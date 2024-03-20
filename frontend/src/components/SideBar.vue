@@ -50,7 +50,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 300px;
+  width: 260px;
   border-right: 1px solid hsla(0, 0%, 100%, 0.5);
   background-color: var(--dark-blue);
   z-index: 1;
@@ -59,8 +59,8 @@
   .logo {
   width: 150px;
   height: 50px;
-  margin-top: 80px;
-  margin-left: 60px;
+  margin-top: 60px;
+  margin-left: 40px;
 }
 
 .sidebar ul {
@@ -75,7 +75,7 @@
 
  .sidebar ul li a {
    display: block;
-   padding: 0 60px;
+   padding: 0 40px;
    margin-bottom: 15px;
    font-size: 22px;
    font-weight: 600;
@@ -96,7 +96,7 @@
 .logout {
   position: fixed;
   bottom: 50px; 
-  left: 80px; 
+  left: 60px; 
   list-style: none;
 }
 
@@ -110,7 +110,7 @@
   border-radius: 5px; 
   transition: background-color 0.3s ease, color 0.3s ease; 
   text-transform: uppercase;
-  font-family: 'Oxanium', sans-serif;
+  letter-spacing: 1px;
 }
 
 .logout a:hover {

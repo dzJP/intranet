@@ -314,11 +314,10 @@ export default {
 .news-item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin: 10px auto;
     padding: 10px;
     background-color: var(--blue);
     color: var(--white);
-    margin: auto;
     width: 980px;
     border-radius: 9px;
 }

@@ -1,17 +1,17 @@
 <template>
     <div class="table-container">
       
-  <div>
+  <div class="select-wrapper">
       <label for="month">Select Month:</label>
-      <select v-model="selectedMonth" @change="fetchUsersTotalTime">
+      <select v-model="selectedMonth" @change="fetchUsersTotalTime" class="select-month">
         <option v-for="(month, index) in months" :value="index + 1" :key="index">{{ month }}</option>
       </select>
     </div>
   
-      <table>
+      <table class="user-table">
         <thead>
           <tr>
-            <th>User</th>
+            <th>Employee</th>
             <th>Total Time</th>
             <th>Total Project</th>
           </tr>
@@ -77,21 +77,31 @@ onMounted(async () => {
   });
   </script>
   
-  <style>
+  <style scoped>
 
   .table-container {
     margin: 20px auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  
+    color: var(--white);
+    padding: 20px;
+    width: 980px;
+    background-color: var(--blue);
+    border-radius: 9px;
+    position: relative;
   }
+
+  .select-wrapper {
+  position: absolute;
+  top: 10px; 
+  right: 30px; 
+}
   
   .table-container table {
-    width: 650px;
-    padding: 0;
-    background-color: aliceblue;
+    margin-top: 30px;
+    width: 100%;
+  }
+
+  .table-container select {
+    margin-left: 5px;
   }
   
   .table-container ul {

@@ -48,7 +48,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 .reset-msg {
     margin-top: 10px;

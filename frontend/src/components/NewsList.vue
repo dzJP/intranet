@@ -297,7 +297,13 @@ export default {
 <style scoped>
 
 .buttons-container {
-    margin-left: 300px;
+    margin-top: 10px;
+    margin-left: 310px;
+    margin-right: 5px;
+}
+
+.oldest-btn {
+    margin-left: 10px;
 }
 
 .search-bar {

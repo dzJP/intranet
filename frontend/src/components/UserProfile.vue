@@ -188,7 +188,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .user-profile-container {
     max-width: 800px;
     margin: auto;

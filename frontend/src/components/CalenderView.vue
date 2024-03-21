@@ -348,10 +348,20 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   width: 300px;
-  min-height: 170px;
+  min-height: 150px;
   padding: 5px;
   background-color: #223266;
   border: none;
+}
+
+.day-popover input {
+  border-radius: 5px;
+  outline: none;
+}
+
+.day-popover select {
+  padding: 3px;
+  border-radius: 5px;
 }
 
 .day-popover .save-btn {

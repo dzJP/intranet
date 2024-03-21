@@ -1,17 +1,17 @@
 <template>
     <div>
         <button @click="togglePopup" class="invite-btn btn btn-primary">Invite Users</button>
-        <div v-if="isPopupVisible" class="popup">
+        <div v-if="isPopupVisible" class="invite-popup">
             <div class="popup-content">
-                <i class="toggle bi bi-x" @click="togglePopup"></i>
-                <h2>Invite Users</h2>
+                <i class="invite-toggle bi bi-x" @click="togglePopup"></i>
+                <h1>Invite Users</h1>
                 <form @submit.prevent="inviteUsers">
                     <div v-for="(email, index) in emails" :key="index">
-                        <input v-model="emails[index]" type="email" />
+                        <input v-model="emails[index]" type="email" placeholder="email" />
                     </div>
-                    <button @click.prevent="addEmail">Add Another Email</button>
-                    <button @click.prevent="removeLastEmail" v-if="emails.length > 1">Remove Last Email</button>
-                    <button type="submit">Send Invitations</button>
+                    <button @click.prevent="addEmail" class="add-btn btn btn-primary">Add</button>
+                    <button @click.prevent="removeLastEmail" v-if="emails.length > 1" class="remove-btn btn btn-primary">Remove</button>
+                    <button type="submit" class="send-btn btn btn-primary">Send</button>
                 </form>
             </div>
         </div>
@@ -60,68 +60,84 @@ export default {
 };
 </script>
 
-    <style>
+    <style scoped>
 
     .invite-btn {
-        margin-left: 310px;
-        margin-top: 20px;
+        margin: 20px 0 10px 310px;
     }
-    .popup {
-        position: absolute;
+
+    .invite-popup {
+        position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
+        width: 400px;
+        background: var(--blue);
+        color: var(--white);
+        padding: 15px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 9px;
         z-index: 1;
     }
 
-    .popup-content {
-        text-align: center;
-    }
-
-    h2 {
-        color: #333;
-    }
-
-    button {
-        margin-left: 10px;
+    .invite-popup h1 {
+        font-size: 26px;
         margin-bottom: 10px;
-        padding: 10px;
-        cursor: pointer;
-        background-color: #3498db;
-        color: #fff;
-        border: none;
-        border-radius: 3px;
     }
 
-    input[type="email"] {
-        padding: 10px;
-        width: 200px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
+    .invite-popup input {
+        width: 100%;
+        margin-bottom: 5px;
+        padding: 5px;
+        border-radius: 5px;
+        outline: none;
     }
 
-    .toggle  {
-    position: absolute;
+    .invite-toggle  {
+    position: fixed;
     top: 0;
     right: 0;
     height: 35px;
     width: 40px;
-    }
-
-    i {
     font-size: 25px;
-    color: #454444;
     cursor: pointer;
     transition: 0.3s;
+    text-align: center
     }
 
-    .toggle:hover {
-    background-color: #df3232;
-    color: #fff;
+    .invite-toggle:hover {
+    background-color: var(--red);
+    color:var(--white);
+    border-top-right-radius: 9px;
     cursor: pointer;
     }
 
+    .invite-popup button {
+        margin-top: 5px;
+        margin-right: 5px;
+    }
+
+    .add-btn {
+        padding: 3px;
+        width: 50px;
+        background-color: #223266;
+        border-color: #223266;
+    }
+
+    .remove-btn {
+        padding: 3px;
+        width: 80px;
+        background-color: #223266;
+        border-color: #223266;
+    }
+
+    .send-btn {
+        position: fixed;
+        margin: 0;
+        right: 10px;
+        width: 70px;
+        padding: 3px;
+        background-color: #223266;
+        border-color: #223266;
+    }
     </style>

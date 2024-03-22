@@ -50,9 +50,9 @@
                 </button>
               </td>
 
-              <div v-if="isPopupVisible && selectedUser" class="popup">
+              <div v-if="isPopupVisible && selectedUser" class="admin-popup">
                 <div class="popup-content">
-                  <i class="toggle bi bi-x" @click="togglePopup"></i>
+                  <i class="admin-toggle bi bi-x" @click="togglePopup"></i>
                   <table class="table">
                     <tr>
                       <td><strong>Email:</strong> {{ selectedUser.email }}</td>
@@ -355,37 +355,36 @@ export default {
   border-color: #f13d3d;
 }
 
-.toggle {
+.admin-toggle {
   position: absolute;
   top: 0;
   right: 0;
   height: 35px;
   width: 40px;
+  font-size: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
 }
 
-.toggle:hover {
+.admin-toggle:hover {
   background-color: #df3232;
   color: #fff;
   cursor: pointer;
 }
 
-.toggle i {
-  font-size: 25px;
-  color: #454444;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.popup {
-  position: absolute;
-  margin: auto;
-  width: 100%;
-  height: auto;
+.admin-popup {
+  position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
-input:focus {
+.admin-popup input:focus {
   outline: none;
 }
 

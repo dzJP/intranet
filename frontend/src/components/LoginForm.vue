@@ -1,6 +1,6 @@
 <template>
 		<img src="@/assets/logo.png" alt="Deltma logo" class="logo" />
-	<div class="container">
+	<div class="login-container">
 		<div>
 		<h1>Deltma</h1>
 		<h2>Intranät</h2>
@@ -83,33 +83,34 @@ export default {
 	margin-left: 40px;
 }
 
-.container {
+.login-container {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-between;
+	align-items: center;
 	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	width: 900px;
 }
 
-.container h1 {
-	margin-top: 25px;
-	color: var(--orange);
-}
-
-.container h2 {
+.login-container h1 {
 	color: var(--white);
 }
 
-.container h1, .container h2 {
-	font-size: 52px;
+.login-container h2 {
+	color: var(--orange);
+}
+
+.login-container h1, .login-container h2 {
+	font-size: 64px;
 	text-transform: uppercase;
-	font-weight: 700;
+	font-weight: 600;
+	letter-spacing: 1px;
 }
 
 .login-form {
-	margin-left: 150px;
 	width: 350px;
 	color: var(--white);
 	position: relative;
@@ -122,22 +123,21 @@ export default {
 	margin: 10px 0;
 }
 
+.signin-btn {
+	width: 100%;
+	margin-top: 30px;
+	font-size: 20px;
+	letter-spacing: 1.5px;
+}
+
 .login-form a {
-	margin-right: 0;
+	position: absolute;
+	right: 0;
 	color: var(--white);
 	text-decoration: none;
 	font-size: 14px;
 	font-weight: 500;
 	cursor: pointer;
-	position: absolute;
-	right: 0;
-}
-
-.signin-btn {
-	width: 100%;
-	margin: 40px auto;
-	font-size: 20px;
-	letter-spacing: 1.5px;
 }
 
 .login-form a:hover {

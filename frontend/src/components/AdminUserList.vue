@@ -1,7 +1,7 @@
 <template>
   <div class="card userlist">
     <div>
-    <SearchBarUsers @search="updateSearchQuery" />
+    <SearchBarUsers @search="updateSearchQuery" class="search-bar"/>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -42,17 +42,19 @@
                 <p>{{ user.role }}</p>
               </td>
               <td>
-                <button class="btn btn-edit" @click="togglePopup(user)">
+                <div class="button-container">
+                  <button class="edit-button" @click="togglePopup(user)">
                   Change
                 </button>
-                <button class="btn btn-delete" @click="deleteUser(user)">
+                <button class="delete-button" @click="deleteUser(user)">
                   Remove
                 </button>
+              </div>
               </td>
 
-              <div v-if="isPopupVisible && selectedUser" class="admin-popup">
+              <div v-if="isPopupVisible && selectedUser" class="popup">
                 <div class="popup-content">
-                  <i class="admin-toggle bi bi-x" @click="togglePopup"></i>
+                  <i class="toggle bi bi-x" @click="togglePopup"></i>
                   <table class="table">
                     <tr>
                       <td><strong>Email:</strong> {{ selectedUser.email }}</td>
@@ -302,19 +304,34 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  background-color: #fff;
-  border: none;
+
+.search-bar {
+  background-color: #040B24;
+    color: #fff;
+    display: flex;
+    width: 600px;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid #111C44;
+    font-family: 'Oxanium', sans-serif;
 }
 
 .userlist {
+  background-color: #111C44;
   align-items: center;
   margin: 10px auto;
   width: 800px;
 }
 
+.userlist p {
+  color: #ffffff;
+  font-family: 'Oxanium', sans-serif;
+}
+
 .table td,
 .table th {
+  background-color: #111C44;
   border: none;
   text-align: left;
 }
@@ -335,17 +352,32 @@ export default {
   color: #fff;
 }
 
-.btn-delete,
-.btn-edit,
 .btn-deactivate {
   color: #454444;
   border-color: #454444;
 }
 
-.btn-edit:hover {
+.button-container {
+  display: flex;
+}
+
+.edit-button,
+.delete-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Oxanium', sans-serif;
+  height: 30px;
+  background-color: #040B24;
+  border: 1px solid #E69141;
+  border-radius: 10px;
+
+}
+
+.edit-button:hover,
+.delete-button:hover {
   color: #fff;
-  background-color: #454444;
-  border-color: #454444;
+  background-color: #0b1d5e;
 }
 
 .btn-delete:hover,
@@ -355,36 +387,37 @@ export default {
   border-color: #f13d3d;
 }
 
-.admin-toggle {
+.toggle {
   position: absolute;
   top: 0;
   right: 0;
   height: 35px;
   width: 40px;
-  font-size: 25px;
-  cursor: pointer;
-  transition: 0.3s;
-  text-align: center;
 }
 
-.admin-toggle:hover {
+.toggle:hover {
   background-color: #df3232;
   color: #fff;
   cursor: pointer;
 }
 
-.admin-popup {
-  position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+.toggle i {
+  font-size: 25px;
+  color: #454444;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.popup {
+  position: absolute;
+  margin: auto;
+  width: 100%;
+  height: auto;
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1;
 }
 
-.admin-popup input:focus {
+input:focus {
   outline: none;
 }
 

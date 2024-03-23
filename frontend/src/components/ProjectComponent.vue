@@ -27,8 +27,10 @@
       <form v-if="isCreateFormVisible" @submit.prevent="createNewProject">
           <label for="newProjectName">Project Name:</label>
           <input v-model="newProjectName" type="text" id="newProjectName" required />
+          <div class="button-container">
           <button type="submit" class="createProject-btn btn btn-primary">Create</button>
           <button @click="hideCreateForm" type="button" class="cancel-btn btn btn-secondary">Cancel</button>
+          </div>
         </form>
 
         <form v-if="isUpdateFormVisible" @submit.prevent="updateExistingProject">
@@ -147,12 +149,23 @@ onMounted(async () => {
 
 <style scoped>
 
+.table-container {
+  border: 2px solid #ffffff;
+  border-radius: 9px;
+}
+
 .viewproject-btn {
   margin-top: 50px;
-  margin-left: 310px;
+  margin-left: 290px;
+  font-family: 'Oxanium', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--dark-blue);
+  border: 2px solid var(--orange);
 }
 
 .project-popup {
+  background-color: var(--dark-blue);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -160,12 +173,25 @@ onMounted(async () => {
   width: 600px;
   font-size: 16px;
   min-height: 300px;
-  background: var(--blue);
   color: var(--white);
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 9px;
+  border: 2px solid #111C44;
+  border-radius: 4px;
   z-index: 1;
+}
+
+.popup-content form {
+  background-color: var(--dark-blue);
+  border: 2px solid #111C44;
+  height: 150px;
+  font-family: 'Oxanium', sans-serif;
+
+}
+
+.popup-content form label {
+  margin-top: 5%;
+  font-family: 'Oxanium', sans-serif;
 }
 
 .project-popup h1 {
@@ -186,22 +212,47 @@ onMounted(async () => {
   padding: 2px 10px;
 }
 
-.project-popup button:hover {
-  border: 1px solid var(--orange);
+.createProject-btn, .cancel-btn, .update-btn, .activate-btn, .inactivate-btn, .delete-btn, .edit-btn {
+  margin-left: 10px;
+  background-color: var(--light-blue);
+  border: none;
+  height: 40px;
+  font-size: 16px;
+  font-family: 'Oxanium', sans-serif;
+  font-weight: 600;
 }
 
-.createProject-btn, .cancel-btn, .update-btn {
-  margin-left: 10px;
-  background-color: #223266;
-  border-color: #223266;
+.createProject-btn:hover,
+.cancel-btn:hover,
+.update-btn:hover,
+.activate-btn:hover,
+.inactivate-btn:hover,
+.delete-btn:hover,
+.edit-btn:hover {
+  background-color: #2d2dc7;
+}
+
+.button-container {
+  position: absolute;
+  left: 50%;
+  margin-top: 35px;
+  transform: translateX(-50%);
 }
 
 .create-btn {
-  background-color: #223266;
-  border-color: #223266;
+  background-color: var(--light-blue);
+  border:none;
+  height: 40px;
+  font-size: 16px;
   position: fixed;
-  bottom: 20px;
+  bottom: 0;
   right: 20px;
+  font-family: 'Oxanium', sans-serif;
+  font-weight: 600;
+}
+
+.create-btn:hover {
+  background-color: #2d2dc7;
 }
 
 .project-list {
@@ -228,20 +279,23 @@ onMounted(async () => {
   margin-left: 10px;
 }
 
-.edit-btn {
-  background-color: #223266;
+.edit-btn,
+.delete-btn {
+  background-color: var(--light-blue);
   color: var(--white)
 }
 
 .inactivate-btn, .activate-btn {
-  background-color: #223266;
+  background-color: var(--light-blue);
   color: var(--white)
 }
 
-.delete-btn {
-  background-color: #223266;
-  color: var(--white)
+.inactivate-btn:hover,
+.activate-btn:hover,
+.edit-btn:hover {
+  background-color: #2d2dc7;;
 }
+
 
 .project-toggle  {
     position: fixed;
@@ -251,15 +305,16 @@ onMounted(async () => {
     width: 40px;
     font-size: 25px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
     text-align: center
     }
 
     .project-toggle:hover {
     background-color: var(--red);
     color:var(--white);
-    border-top-right-radius: 9px;
+    border-radius: 10px;
     cursor: pointer;
     }
+    
 
 </style>

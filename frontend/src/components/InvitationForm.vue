@@ -86,8 +86,7 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    border: 2px solid var(--dark-navy-blue);
-    border-radius: 5px;
+    border: 2px solid #111C44;
     transform: translate(-50%, -50%);
     background-color: var(--dark-blue);
     padding: 20px;
@@ -112,7 +111,7 @@ input[type="email"] {
     height: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-family: 'Oxanium', sans-serif;
     font-size: 16px;
     color: #333;
@@ -122,6 +121,7 @@ input[type="email"] {
 h2 {
     color: #ffffff;
     font-size: 22px;
+    font-weight: 600;
     font-family: 'Oxanium', sans-serif;
     text-transform: uppercase;
 }
@@ -132,6 +132,7 @@ button {
     padding: 10px;
     background-color: var(--light-blue);
     font-family: 'Oxanium', sans-serif;
+    font-weight: 600;
     cursor: pointer;
     color: #fff;
     border: none;

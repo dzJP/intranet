@@ -1,5 +1,5 @@
 <template>
-    <input v-model="searchQuery" @input="filterUsers" placeholder="Sök" class="search-input" />
+    <input v-model="searchQuery" @input="filterUsers" placeholder="Search for users.." class="search-input" />
 </template>
 
 <script>

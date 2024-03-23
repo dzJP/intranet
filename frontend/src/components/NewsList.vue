@@ -46,10 +46,10 @@
 
         <div v-if="selectedNewsItem" class="news-item-popup">
             <div class="news-item-popup-content">
-                <h2>{{ selectedNewsItem.subject }}</h2>
-                <div class="date">Date: {{ formatDate(selectedNewsItem.date) }}</div>
-                <p>{{ selectedNewsItem.message }}</p>
-                <div class="deadline-popup">Deadline: {{ formatDate(selectedNewsItem.deadline) }}</div>
+                <div class="news-item-popup-subject">{{ selectedNewsItem.subject }}</div>
+                <div class="news-item-popup-date">Date: {{ formatDate(selectedNewsItem.date) }}</div>
+                <div class="news-item-popup-message">{{ selectedNewsItem.message }}</div>
+                <div class="news-item-popup-deadline">Deadline: {{ formatDate(selectedNewsItem.deadline) }}</div>
             </div>
             <div class="button-container">
                 <button @click="navigate('previous')">Previous</button>
@@ -400,16 +400,6 @@ export default {
     width: 100%;
 }
 
-.deadline-popup {
-    font-size: px;
-    color: #ffffff;
-    font-family: 'Oxanium', sans-serif;
-    position: absolute;
-    bottom: 0;
-    left: 300px;
-    width: 100%;
-}
-
 .news-item-popup {
     position: fixed;
     top: 50%;
@@ -418,10 +408,49 @@ export default {
     height: 400px;
     background-color: var(--dark-blue);
     transform: translate(-50%, -50%);
-    border-radius: 5px;
-    border: 5px solid var(--blue);
+    border: 2px solid #111C44;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+}
+
+.news-item-popup-subject {
+    font-size: 22px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 30px;
+    
+}
+
+.news-item-popup-message {
+    font-size: 16;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    text-align: center;
+}
+
+.news-item-popup-date {
+    position: absolute;
+    left: 75%;
+    top: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    
+}
+
+.news-item-popup-deadline {
+    position: absolute;
+    bottom: 15%;
+    text-align: center;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+
+    width: 100%;
 }
 
 .news-content {
@@ -432,8 +461,51 @@ export default {
 
 }
 
+.share-news-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: auto;
+    background-color: var(--dark-blue);
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    border: 2px solid #111C44;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.share-news-popup-content textarea {
+    width: 75%;
+    height: 50px;
+    margin-top: 60px;
+    margin-left: 50px;
+    font-size: 22px;
+    color: #000000;
+    border-radius: 5px;
+    font-family: 'Oxanium', sans-serif;
+}
+
+.submit-button,
+.close-button {
+    background-color: var(--light-blue);
+}
+
+.submit-button:hover,
+.close-button:hover {
+    background-color: var(--light-blue-hover);
+}
+
+.share-news-popup-content {
+    font-family: 'Oxanium', sans-serif;
+    top: 50%;
+    left: 50%;
+    height: 300px;
+    background-color: var(--dark-blue);
+}
+
 .edit-news-button {
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     text-transform: uppercase;
     height: 25px;
@@ -451,7 +523,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--dark-blue);
-    border: 4px solid #111C44;
+    border: 2px solid #111C44;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -492,8 +564,8 @@ export default {
     background-color: var(--light-blue);
     color: #fff;
     font-family: 'Oxanium', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -502,49 +574,7 @@ export default {
     background-color: rgba(41, 41, 192, 0.507);
 }
 
-.share-news-popup {
-    position: fixed;
-    top: 50%;
-    left: 70%;
-    width: 400px;
-    height: auto;
-    background-color: var(--dark-blue);
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-    border: 5px solid var(--dark-navy-blue);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
 
-}
-
-.share-news-popup-content textarea {
-    width: 75%;
-    height: 50px;
-    margin-top: 60px;
-    margin-left: 50px;
-    font-size: 22px;
-    color: #000000;
-    border-radius: 5px;
-    font-family: 'Oxanium', sans-serif;
-}
-
-.submit-button,
-.close-button {
-    background-color: var(--light-blue);
-}
-
-.submit-button:hover,
-.close-button:hover {
-    background-color: var(--light-blue-hover);
-}
-
-.share-news-popup-content {
-    font-family: 'Oxanium', sans-serif;
-    top: 50%;
-    left: 50%;
-    height: 300px;
-    background-color: var(--dark-blue);
-}
 
 h3 {
     margin-top: 15px;

@@ -20,17 +20,7 @@ public class AdminController {
     private final TemporaryUserService temporaryUserService;
     private final UserService userService;
     private final NewsService newsService;
-    
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("")
-    public ResponseEntity<List<UserProfileDTO>> getUsers() {
-        try {
-            return ResponseEntity.ok(userService.getAllUsers());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/send-invitations")

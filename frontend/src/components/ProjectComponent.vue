@@ -27,10 +27,8 @@
       <form v-if="isCreateFormVisible" @submit.prevent="createNewProject">
           <label for="newProjectName">Project Name:</label>
           <input v-model="newProjectName" type="text" id="newProjectName" required />
-          <div class="button-container">
           <button type="submit" class="createProject-btn btn btn-primary">Create</button>
           <button @click="hideCreateForm" type="button" class="cancel-btn btn btn-secondary">Cancel</button>
-          </div>
         </form>
 
         <form v-if="isUpdateFormVisible" @submit.prevent="updateExistingProject">
@@ -237,20 +235,14 @@ onMounted(async () => {
   background-color: #2d2dc7;
 }
 
-.button-container {
-  position: absolute;
-  left: 50%;
-  margin-top: 35px;
-  transform: translateX(-50%);
-}
 
 .create-btn {
   background-color: var(--light-blue);
   border:none;
-  height: 40px;
+  //height: 40px;
   font-size: 16px;
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   right: 20px;
   font-family: 'Oxanium', sans-serif;
   font-weight: 600;
@@ -317,7 +309,6 @@ onMounted(async () => {
     .project-toggle:hover {
     background-color: var(--red);
     color:var(--white);
-    border-radius: 10px;
     cursor: pointer;
     }
     

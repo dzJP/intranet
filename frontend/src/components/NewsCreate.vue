@@ -121,6 +121,7 @@ export default {
     align-items: center;
     width: 180px;
     margin-left: 310px;
+    margin-bottom: 10px;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 600;
@@ -152,7 +153,6 @@ export default {
     color: #fff;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 9px;
     z-index: 1;
 }
 
@@ -198,25 +198,24 @@ export default {
     outline: none;
 }
 
-i {
-    font-size: 25px;
-    color: #ffffff;
-}
-
 .toggle-news {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+    color: #fff;
     font-size: 25px;
-    color: #ffffff;
-    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .toggle-news:hover {
     background-color: #df3232;
     color: #fff;
     cursor: pointer;
-    transition: 0.3s;
-    
 }
 </style>

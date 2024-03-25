@@ -36,19 +36,17 @@
                 <p>{{ user.role }}</p>
               </td>
               <td>
-                <div class="button-container">
-                  <button class="edit-button" @click="togglePopup(user)">
+                  <button class="btn btn-edit" @click="togglePopup(user)">
                     Change
                   </button>
-                  <button class="delete-button" @click="deleteUser(user)">
+                  <button class="btn btn-delete" @click="deleteUser(user)">
                     Remove
                   </button>
-                </div>
               </td>
 
-              <div v-if="isPopupVisible && selectedUser" class="popup">
+              <div v-if="isPopupVisible && selectedUser" class="admin-popup">
                 <div class="popup-content">
-                  <i class="toggle bi bi-x" @click="togglePopup"></i>
+                  <i class="admin-toggle bi bi-x" @click="togglePopup"></i>
                   <table class="table">
                     <tr>
                       <td class="popup-label"><strong>Email:</strong></td>
@@ -89,7 +87,7 @@
                         <button class="btn btn-deactivate" @click="deactivateUser(selectedUser)">
                           Inactivate
                         </button>
-                        <button class="btn btn-primary" @click="activateUser(selectedUser)">
+                        <button class="btn btn-primary btn-activate" @click="activateUser(selectedUser)">
                           Activate
                         </button>
                       </td>
@@ -316,26 +314,32 @@ export default {
   border-bottom: 1px solid #eee;
 }
 
-
 .btn-primary,
 .btn-change-password,
-.btn-deactivate {
+.btn-deactivate,
+.btn-edit,
+.btn-delete {
   border: none;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
-  margin-top: 10px;
+  margin-right: 10px;
   cursor: pointer;
   font-family: 'Oxanium', sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
   background-color: var(--light-blue);
 }
 
+.btn-change-password,
+.btn-deactivate,
+.btn-activate {
+  margin-top: 10px;
+}
+
 .btn-primary:hover,
 .btn:hover {
   background-color: #2d2dc7;
-
 }
 
 .btn-delete:hover,
@@ -344,67 +348,41 @@ export default {
   background-color: #df3232;
 }
 
-
 .button-container {
   display: flex;
 }
 
-.edit-button,
-.delete-button {
-  display:flex;
-  text-align: center;
-  text-transform: uppercase;
-  justify-content: center;
-  font-family: 'Oxanium', sans-serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  height: 35px;
-  cursor: pointer;
-  box-shadow: 1px 1px 8px 1px #2525A5;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--light-blue);
-}
-
-.edit-button:hover,
-.delete-button:hover {
-  color: #fff;
-  background-color: var(--light-blue-hover);
-}
-
-.toggle {
+.admin-toggle {
   position: absolute;
   top: 0;
   right: 0;
   height: 35px;
   width: 40px;
-}
-
-.toggle:hover {
-  background-color: #df3232;
-  color: #fff;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.toggle i {
   font-size: 25px;
-  color: #454444;
   cursor: pointer;
   transition: 0.3s;
+  text-align: center;
 }
 
-.popup {
-  background-color: var(--dark-blue);
-  position: absolute;
-  margin: auto;
-  width: 100%;
-  height: auto;
+.admin-toggle:hover {
+  background-color: #df3232;
+  color: #fff;
+  cursor: pointer;
+}
+
+.admin-popup {
+  position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
+  z-index: 1;
+  background-color: var(--dark-blue);
+  border: 2px solid #111C44;
 }
 
-input:focus {
+.admin-popup input:focus {
   outline: none;
 }
 
@@ -422,8 +400,8 @@ input:focus {
 
 .bottom-right {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  margin-right: 10px;
+  bottom: 10px;
+  right: 10px;
 }
+
 </style>

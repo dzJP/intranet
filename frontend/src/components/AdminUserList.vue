@@ -1,26 +1,20 @@
 <template>
+  <div>
+    <SearchBarUsers @search="updateSearchQuery" class="search-bar" />
+  </div>
   <div class="card userlist">
-    <div>
-    <SearchBarUsers @search="updateSearchQuery" />
-    </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table mb-0">
           <thead>
             <tr>
-              <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                 Employee
               </th>
-              <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                 Phone number
               </th>
-              <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-              >
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                 Role
               </th>
             </tr>
@@ -42,101 +36,70 @@
                 <p>{{ user.role }}</p>
               </td>
               <td>
-                <button class="btn btn-edit" @click="togglePopup(user)">
-                  Change
-                </button>
-                <button class="btn btn-delete" @click="deleteUser(user)">
-                  Remove
-                </button>
+                <div class="button-container">
+                  <button class="edit-button" @click="togglePopup(user)">
+                    Change
+                  </button>
+                  <button class="delete-button" @click="deleteUser(user)">
+                    Remove
+                  </button>
+                </div>
               </td>
 
-              <div v-if="isPopupVisible && selectedUser" class="admin-popup">
+              <div v-if="isPopupVisible && selectedUser" class="popup">
                 <div class="popup-content">
-                  <i class="admin-toggle bi bi-x" @click="togglePopup"></i>
+                  <i class="toggle bi bi-x" @click="togglePopup"></i>
                   <table class="table">
                     <tr>
-                      <td><strong>Email:</strong> {{ selectedUser.email }}</td>
+                      <td class="popup-label"><strong>Email:</strong></td>
+                      <td><input class="popup-input" v-model="selectedUser.email" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>First name:</strong>
-                        <input v-model="selectedUser.firstName" />
-                      </td>
+                      <td class="popup-label"><strong>First name:</strong></td>
+                      <td><input class="popup-input" v-model="selectedUser.firstName" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>Last name:</strong>
-                        <input v-model="selectedUser.lastName" />
-                      </td>
+                      <td class="popup-label"><strong>Last name:</strong></td>
+                      <td><input class="popup-input" v-model="selectedUser.lastName" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>Birthdate:</strong>
-                        <input type="date" v-model="selectedUser.birthDate" />
-                      </td>
+                      <td class="popup-label"><strong>Birthdate:</strong></td>
+                      <td><input type="date" v-model="selectedUser.birthDate" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>Phone number:</strong>
-                        <input v-model="selectedUser.phoneNumber" />
-                      </td>
+                      <td class="popup-label"><strong>Phone number:</strong></td>
+                      <td><input class="popup-input" v-model="selectedUser.phoneNumber" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>Role:</strong>
-                        <input v-model="selectedUser.role" />
-                      </td>
+                      <td class="popup-label"><strong>Role:</strong></td>
+                      <td><input class="popup-input" v-model="selectedUser.role" /></td>
                     </tr>
                     <tr>
-                      <td>
-                        <strong>Change password:</strong>
-                        <br />
-                        <input
-                          v-model="selectedUser.currentPassword"
-                          type="password"
-                          placeholder="Current password"
-                        />
-                        <input
-                          v-model="selectedUser.newPassword"
-                          type="password"
-                          placeholder="New password"
-                        />
-                        <button
-                          class="btn btn-primary mt-2"
-                          @click="changePassword(selectedUser)"
-                        >
+                      <td colspan="2">
+                        <strong>Change password:</strong><br />
+                        <input v-model="selectedUser.currentPassword" type="password" placeholder="Current password" />
+                        <input v-model="selectedUser.newPassword" type="password" placeholder="New password" />
+                        <button class="btn btn-change-password" @click="changePassword(selectedUser)">
                           Change password
                         </button>
                       </td>
                     </tr>
                     <tr>
-                      <td>
-                        <button
-                          class="btn btn-deactivate"
-                          @click="deactivateUser(selectedUser)"
-                        >
+                      <td colspan="2">
+                        <button class="btn btn-deactivate" @click="deactivateUser(selectedUser)">
                           Inactivate
                         </button>
-                        <button
-                          class="btn btn-primary"
-                          @click="activateUser(selectedUser)"
-                        >
+                        <button class="btn btn-primary" @click="activateUser(selectedUser)">
                           Activate
                         </button>
                       </td>
                     </tr>
                     <tr>
-                      <td class="bottom-right">
-                        <button
-                          class="btn btn-primary"
-                          @click="togglePopup(user)"
-                        >
+                      <td colspan="2" class="bottom-right">
+                        <button class="btn btn-primary" @click="togglePopup(user)">
                           Cancel
                         </button>
-                        <button
-                          class="btn btn-primary"
-                          @click="saveChanges(selectedUser)"
-                        >
+                        <button class="btn btn-primary" @click="saveChanges(selectedUser)">
                           Save
                         </button>
                       </td>
@@ -147,11 +110,7 @@
             </tr>
 
             <div class="mx-auto">
-              <button
-                class="btn btn-primary"
-                @click="loadMoreUsers"
-                v-if="filteredUsers.length >= 10"
-              >
+              <button class="btn btn-primary" @click="loadMoreUsers" v-if="filteredUsers.length >= 10">
                 Load More
               </button>
             </div>
@@ -302,19 +261,44 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  background-color: #fff;
-  border: none;
+
+.search-bar {
+  background-color: #040B24;
+  color: #fff;
+  display: flex;
+  width: 800px;
+  margin: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px solid #111C44;
+  border-radius: 1px;
+  font-family: 'Oxanium', sans-serif;
 }
 
 .userlist {
+  background-color: var(--dark-blue);
+  border: 2px solid #111C44;
+  border-radius: 1px;
   align-items: center;
   margin: 10px auto;
   width: 800px;
 }
 
+.userlist p {
+  color: #ffffff;
+  font-family: 'Oxanium', sans-serif;
+}
+
+.table strong {
+  background-color: var(--dark-blue);
+  font-family: 'Oxanium', sans-serif;
+  color: #ffffff;
+}
+
 .table td,
 .table th {
+  background-color: var(--dark-blue);
+  font-family: 'Oxanium', sans-serif;
   border: none;
   text-align: left;
 }
@@ -324,68 +308,116 @@ export default {
 }
 
 .table input {
-  width: 80%;
+  background-color: var(--dark-blue);
+  box-sizing: border-box;
+  color: #ffffff;
+  width: 100%;
   border: none;
   border-bottom: 1px solid #eee;
 }
 
-.btn-primary {
-  background-color: #2f2ff6;
-  border-color: #2f2ff6;
-  color: #fff;
-}
 
-.btn-delete,
-.btn-edit,
+.btn-primary,
+.btn-change-password,
 .btn-deactivate {
-  color: #454444;
-  border-color: #454444;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 10px;
+  cursor: pointer;
+  font-family: 'Oxanium', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
 }
 
-.btn-edit:hover {
-  color: #fff;
-  background-color: #454444;
-  border-color: #454444;
+.btn-primary:hover,
+.btn:hover {
+  background-color: #2d2dc7;
+
 }
 
 .btn-delete:hover,
 .btn-deactivate:hover {
   color: #fff;
   background-color: #df3232;
-  border-color: #f13d3d;
 }
 
-.admin-toggle {
+
+.button-container {
+  display: flex;
+}
+
+.edit-button,
+.delete-button {
+  display:flex;
+  text-align: center;
+  text-transform: uppercase;
+  justify-content: center;
+  font-family: 'Oxanium', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  height: 35px;
+  cursor: pointer;
+  box-shadow: 1px 1px 8px 1px #2525A5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  color: #fff;
+  background-color: var(--light-blue-hover);
+}
+
+.toggle {
   position: absolute;
   top: 0;
   right: 0;
   height: 35px;
   width: 40px;
-  font-size: 25px;
-  cursor: pointer;
-  transition: 0.3s;
-  text-align: center;
 }
 
-.admin-toggle:hover {
+.toggle:hover {
   background-color: #df3232;
   color: #fff;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-.admin-popup {
-  position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1;
+.toggle i {
+  font-size: 25px;
+  color: #454444;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.admin-popup input:focus {
+.popup {
+  background-color: var(--dark-blue);
+  position: absolute;
+  margin: auto;
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+input:focus {
   outline: none;
+}
+
+.popup-label {
+  color: #fff;
+  width: 30%;
+}
+
+.popup-input {
+  background-color: var(--dark-blue);
+  border: none;
+  border-bottom: 1px solid #eee;
+  width: 70%;
 }
 
 .bottom-right {

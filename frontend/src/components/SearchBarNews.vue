@@ -1,5 +1,5 @@
 <template>
-    <input v-model="searchQuery" @input="handleInput" placeholder="Sök">
+    <input v-model="searchQuery" @input="handleInput" placeholder="Search for news..">
 </template>
 
 <script>
@@ -18,7 +18,4 @@ export default {
 </script>
 
 <style scoped>
-.search-input {
-    margin-bottom: 20px;
-}
 </style>

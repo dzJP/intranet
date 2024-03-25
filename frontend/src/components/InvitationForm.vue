@@ -1,17 +1,19 @@
 <template>
     <div>
-        <button @click="togglePopup" class="invite-btn btn btn-primary">Invite Users</button>
-        <div v-if="isPopupVisible" class="invite-popup">
+        <button @click="togglePopup" class="invite-btn">Invite users</button>
+        <div v-if="isPopupVisible" class="popup">
             <div class="popup-content">
-                <i class="invite-toggle bi bi-x" @click="togglePopup"></i>
-                <h1>Invite Users</h1>
+                <i class="toggle bi bi-x" @click="togglePopup"></i>
+                <h2>Invite Users</h2>
                 <form @submit.prevent="inviteUsers">
                     <div v-for="(email, index) in emails" :key="index">
-                        <input v-model="emails[index]" type="email" placeholder="email" />
+                        <input v-model="emails[index]" type="email" placeholder="Enter email.."/>
                     </div>
-                    <button @click.prevent="addEmail" class="add-btn btn btn-primary">Add</button>
-                    <button @click.prevent="removeLastEmail" v-if="emails.length > 1" class="remove-btn btn btn-primary">Remove</button>
-                    <button type="submit" class="send-btn btn btn-primary">Send</button>
+                    <div class="button-container-invite-users">
+                        <button @click.prevent="addEmail" class="add-email-button">Add Another Email</button>
+                        <button @click.prevent="removeLastEmail" v-if="emails.length > 1" class="remove-email-button">Remove Last Email</button>
+                        <button type="submit" class="submit-button">Send Invitations</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -60,84 +62,121 @@ export default {
 };
 </script>
 
-    <style scoped>
+<style>
+.invite-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    margin-top: 20px;
+    margin-left: 310px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    border-radius: 5px;
+    border: 1px solid var(--orange);
+    color: var(--white);
+    background-color: #040B24;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    .invite-btn {
-        margin: 20px 0 10px 310px;
-    }
+.invite-btn:hover {
+    background-color: var(--orange);
+    color: var(--white);
+}
 
-    .invite-popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 400px;
-        background: var(--blue);
-        color: var(--white);
-        padding: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 9px;
-        z-index: 1;
-    }
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 20px;
+    border: 2px solid #111C44;
+    transform: translate(-50%, -50%);
+    background-color: var(--dark-blue);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
 
-    .invite-popup h1 {
-        font-size: 26px;
-        margin-bottom: 10px;
-    }
+.popup-content {
+    text-align: center;
+}
 
-    .invite-popup input {
-        width: 100%;
-        margin-bottom: 5px;
-        padding: 5px;
-        border-radius: 5px;
-        outline: none;
-    }
+.add-email-button,
+.remove-email-button,
+.submit-button {
+    background-color: var(--light-blue);
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    .invite-toggle  {
-    position: fixed;
+.add-email-button:hover,
+.remove-email-button:hover,
+.submit-button:hover {
+    background-color: var(--light-blue-hover);
+}
+
+input[type="email"] {
+    margin-bottom: 15px;
+    padding: 10px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--blue);
+    font-family: 'Oxanium', sans-serif;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: var(--dark-blue);
+}
+
+
+h2 {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 600;
+    font-family: 'Oxanium', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+button {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--light-blue);
+    font-family: 'Oxanium', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.toggle {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
     right: 0;
-    height: 35px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+
+}
+
+i {
     font-size: 25px;
+    color: #454444;
     cursor: pointer;
     transition: 0.3s;
-    text-align: center
-    }
+}
 
-    .invite-toggle:hover {
-    background-color: var(--red);
-    color:var(--white);
-    border-top-right-radius: 9px;
+.toggle:hover {
+    background-color: #df3232;
+    color: #fff;
     cursor: pointer;
-    }
-
-    .invite-popup button {
-        margin-top: 5px;
-        margin-right: 5px;
-    }
-
-    .add-btn {
-        padding: 3px;
-        width: 50px;
-        background-color: #223266;
-        border-color: #223266;
-    }
-
-    .remove-btn {
-        padding: 3px;
-        width: 80px;
-        background-color: #223266;
-        border-color: #223266;
-    }
-
-    .send-btn {
-        position: fixed;
-        margin: 0;
-        right: 10px;
-        width: 70px;
-        padding: 3px;
-        background-color: #223266;
-        border-color: #223266;
-    }
-    </style>
+}
+</style>

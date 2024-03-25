@@ -1,33 +1,29 @@
 <template>
-    <div class="buttons-container">
-        <button v-if="!hideSearchAndToggleShowAll" class="allnews-btn btn btn-primary" @click="toggleShowAllNews">
-            {{ showAllNews ? 'Show less' : 'Show All News' }}
-        </button>
+    <div>
 
-        <button type="button" class="oldest-btn btn btn-primary"  @click="toggleSortNewestOldestNews">
+        <button type="button" class="show-oldest-news-button" @click="toggleSortNewestOldestNews">
             {{ sortNewestOldestNews }}
         </button>
 
-        </div>
+        <button v-if="!hideSearchAndToggleShowAll" class="show-all-news-button" @click="toggleShowAllNews">
+            {{ showAllNews ? 'Show less' : 'Show all' }}
+        </button>
 
         <div v-if="isEditFormVisible" class="edit-form">
             <form @submit.prevent="submitForm">
-                <label>Subject</label>
                 <input v-model="editedNews.subject" type="text" required />
 
-                <label>Message</label>
                 <textarea v-model="editedNews.message" required></textarea>
-
+                <div class="button-container-edit-news">
                 <button type="submit">Update News</button>
                 <button type="button" @click="deleteNewsItem">Delete News</button>
                 <button type="button" class="close-button" @click="closeForm">Close</button>
+            </div>
             </form>
         </div>
 
         <div v-if="!hideSearchAndToggleShowAll">
-            <SearchBarNews 
-            class="search-bar"
-            :search-query="searchQuery" @search="handleSearch" />
+            <SearchBarNews class="search-bar" :search-query="searchQuery" @search="handleSearch" />
         </div>
 
         <div v-for="(newsItem, index) in displayedNewsList" :key="newsItem.id">
@@ -36,38 +32,43 @@
                 @mouseleave="unhighlightItem">
                 <div class="news-content">
                     <div class="header">
-                        <div class="subject">{{ newsItem.subject }}</div>
+                        <div class="news-item-subject">{{ newsItem.subject }}</div>
                         <div class="date">Date: {{ formatDate(newsItem.date) }}</div>
                     </div>
-                    <div>{{ newsItem.message }}</div>
-                    <div v-if="newsItem.deadline" class="date-time">Deadline: {{ formatDate(newsItem.deadline) }}</div>
+                    <div class="news-item-message">{{ newsItem.message }}</div>
+                    <div v-if="newsItem.deadline" class="deadline">Deadline: {{ formatDate(newsItem.deadline) }}</div>
                 </div>
-                <div v-if="allowEdit" class="news-actions">
-                    <button @click.stop="editNewsItem(newsItem)">Edit</button>
+                <div v-if="allowEdit" class="edit-news-button">
+                    <button class="edit-news-button-button" @click.stop="editNewsItem(newsItem)">Edit</button>
                 </div>
             </div>
         </div>
 
-        <div v-if="selectedNewsItem" class="popup">
-            <button @click="closeNewsDetailsPopup">Close</button>
-            <button @click="navigate('previous')">Previous</button>
-            <button @click="navigate('next')">Next</button>
-            <div class="popup-content">
-                <h2>{{ selectedNewsItem.subject }}</h2>
-                <p>Date: {{ formatDate(selectedNewsItem.date) }}</p>
-                <p>{{ selectedNewsItem.message }}</p>
-                <p>Deadline: {{ formatDate(selectedNewsItem.deadline) }}</p>
-                <button @click="openSharePopup">Share News</button>
+        <div v-if="selectedNewsItem" class="news-item-popup">
+            <div class="news-item-popup-content">
+                <div class="news-item-popup-subject">{{ selectedNewsItem.subject }}</div>
+                <div class="news-item-popup-date">Date: {{ formatDate(selectedNewsItem.date) }}</div>
+                <div class="news-item-popup-message">{{ selectedNewsItem.message }}</div>
+                <div class="news-item-popup-deadline">Deadline: {{ formatDate(selectedNewsItem.deadline) }}</div>
+            </div>
+            <div class="button-container">
+                <button @click="navigate('previous')">Previous</button>
+                <button @click="navigate('next')">Next</button>
+                <button @click="closeNewsDetailsPopup">Close</button>
+                <button @click="openSharePopup">Share</button>
             </div>
         </div>
-        <div v-if="showSharePopup" class="popup">
-            <button @click="closeSharePopup">Close</button>
-            <div class="popup-content">
-                <h2>Share News</h2>
+        <div v-if="showSharePopup" class="share-news-popup">
+            <div class="share-news-popup-content">
+                <h3>Share news</h3>
                 <textarea v-model="shareText" placeholder="Enter email.."></textarea>
-                <button @click="shareNews">Submit</button>
+            </div>
+            <div class="button-container">
+                <button @click="closeSharePopup" class="close-button">Close</button>
+                <button @click="shareNews" class="submit-button">Submit</button>
             </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -106,7 +107,7 @@ export default {
         const ascendingOrder = ref(false);
         const showSharePopup = ref(false);
 
-        const sortNewestOldestNews = computed(() => (ascendingOrder.value ? 'Show newest first' : 'Show oldest first'));
+        const sortNewestOldestNews = computed(() => (ascendingOrder.value ? 'SHOW LATEST' : 'SHOW OLDEST'));
 
         const displayedNewsList = computed(() => {
             const sortedNewsList = newsStore.newsList
@@ -296,114 +297,354 @@ export default {
 
 <style scoped>
 
-.buttons-container {
-    margin-top: 10px;
+.show-oldest-news-button, .show-all-news-button, .edit-news-button-button, .button-container button {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Oxanium', sans-serif;
+    
+}
+.show-oldest-news-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
     margin-left: 310px;
-    margin-right: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid var(--orange);
+    color: var(--white);
+    background-color: #040B24;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.oldest-btn {
-    margin-left: 10px;
+.show-all-news-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 310px;
+    width: 180px;
+    padding: 10px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid var(--orange);
+    background-color: #040B24;
+    
+}
+
+.show-all-news-button:hover,
+.show-oldest-news-button:hover {
+    background-color: var(--orange);
 }
 
 .search-bar {
+    background-color: #040B24;
+    color: #fff;
     display: flex;
     width: 600px;
     margin: auto;
     margin-bottom: 20px;
     padding: 10px;
-    border-radius: 5px;
-    outline: none;
-    border: 1px solid #ccc;
+    border: 2px solid #111C44;
+    font-family: 'Oxanium', sans-serif;
 }
 
 .news-item {
     display: flex;
     justify-content: space-between;
-    margin: 10px auto;
+    width: 600px;
+    height: 175px;
+    color: #ffffffd3;
+    margin-bottom: 10px;
     padding: 10px;
-    background-color: var(--blue);
-    color: var(--white);
-    width: 980px;
-    border-radius: 9px;
+    border: 2px solid #111C44;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Oxanium', sans-serif;
+    margin: auto;
 }
 
 .news-item:hover {
-    background-color: #1a2652;
+    background-color: #111c446c;
 }
 
-.news-content {
-    flex: 1;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.subject {
-    font-size: 18px;
+.news-item-subject {
+    color: #ffffff;
+    font-size: 20px;
     font-weight: bold;
+    font-family: 'Oxanium', sans-serif;
+    margin-left: 2px;
+}
+
+.news-item-message {
+    color: #ffffffd5;
+    font-size: 16px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Oxanium', sans-serif;
+    max-height: 6em;
+    line-height: 1.5em;
+    margin-top: 2px;
+    margin-left: 5px;
 }
 
 .date {
-    font-size: 14px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 5px;
 }
 
-.date-time {
-    font-size: 14px;
-    text-align: right;
+.deadline {
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    position: absolute;
+    bottom: 0;
+    left: 450px;
+    width: 100%;
 }
 
-.news-actions {
-    display: flex;
-    align-items: center;
-}
-
-.news-actions button {
-    margin-left: 10px;
-}
-
-.edit-form {
-    margin-top: 20px;
+.news-item-popup {
     position: fixed;
     top: 50%;
     left: 50%;
+    width: 500px;
+    height: 400px;
+    background-color: var(--dark-blue);
     transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-}
-
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
+    border: 2px solid #111C44;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
 
-.popup-content {
+.news-item-popup-subject {
+    font-size: 22px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 30px;
+}
+
+.news-item-popup-message {
+    font-size: 16;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    text-align: center;
+}
+
+.news-item-popup-date {
+    position: absolute;
+    left: 75%;
+    top: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+}
+
+.news-item-popup-deadline {
+    position: absolute;
+    bottom: 15%;
+    text-align: center;
+    font-size: 12px;
+    color: #ffffff;
+    font-family: 'Oxanium', sans-serif;
+    width: 100%;
+}
+
+.news-content {
+    flex: 1;
+    position: relative;
+    font-family: 'Oxanium', sans-serif;
+    width: 300px;
+}
+
+.share-news-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: auto;
+    background-color: var(--dark-blue);
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    border: 2px solid #111C44;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.share-news-popup-content textarea {
+    width: 75%;
+    height: 50px;
+    margin-top: 60px;
+    margin-left: 50px;
+    font-size: 22px;
+    color: #000000;
+    border-radius: 5px;
+    font-family: 'Oxanium', sans-serif;
+}
+
+.submit-button,
+.close-button {
+    background-color: var(--light-blue);
+}
+
+.submit-button:hover,
+.close-button:hover {
+    background-color: var(--light-blue-hover);
+}
+
+.share-news-popup-content {
+    font-family: 'Oxanium', sans-serif;
+    top: 50%;
+    left: 50%;
+    height: 300px;
+    background-color: var(--dark-blue);
+}
+
+.edit-news-button-button {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    height: 36px;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Oxanium', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 8px 1px #2525A5;
+    background-color: var(--light-blue);
+}
+
+.edit-news-button-button:hover {
+    background-color: var(--light-blue-hover);
+}
+
+.edit-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--dark-blue);
+    border: 2px solid #111C44;
     padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.edit-form textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    border: 2px solid #111C44;
+    border-radius: 5px;
+    background-color: var(--dark-blue);
+    color: #fff;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 16px;
+}
+
+.edit-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    background-color: var(--dark-blue);
+    border: 2px solid #111C44;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 16px;
+}
+.button-container-edit-news {
+    margin-left: 20px;
+}
+
+.edit-form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--light-blue);
+    color: #fff;
+    font-family: 'Oxanium', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-form button:hover {
+    background-color: rgba(41, 41, 192, 0.507);
+}
+
+h3 {
+    margin-top: 15px;
+    margin-left: 125px;
+    font-weight: 600;
+    position: absolute;
+    color: #ffffff;
+    font-size: 22px;
+    font-family: 'Oxanium', sans-serif;
+    text-transform: uppercase;
+}
+
+.share-news-popup-content button:hover {
+    background-color: #2d2dc7;
+}
+
+h2,
+p {
+    color: #fff;
+    font-family: 'Oxanium', sans-serif;
+    margin-top: 10px;
+    margin-right: 10px;
+
 }
 
 .popup button {
+    background-color: var(--light-blue);
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Oxanium', sans-serif;
     margin: 5px;
     padding: 10px;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 .popup button:hover {
-    background-color: #2980b9;
+    background-color: rgba(41, 41, 192, 0.507);
 }
 
+.button-container {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.button-container button {
+    font-family: 'Oxanium', sans-serif;
+    background-color: var(--light-blue);
+    width: 110px;
+    margin: 0 5px;
+    flex: 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 8px 1px #2525A5;
+}
+
+.button-container button:hover {
+    background-color: var(--light-blue-hover);
+}
 </style>

@@ -39,7 +39,7 @@
                     <div v-if="newsItem.deadline" class="deadline">Deadline: {{ formatDate(newsItem.deadline) }}</div>
                 </div>
                 <div v-if="allowEdit" class="edit-news-button">
-                    <button @click.stop="editNewsItem(newsItem)">Edit</button>
+                    <button class="edit-news-button-button" @click.stop="editNewsItem(newsItem)">Edit</button>
                 </div>
             </div>
         </div>
@@ -296,32 +296,43 @@ export default {
 
 
 <style scoped>
+
+.show-oldest-news-button, .show-all-news-button, .edit-news-button-button, .button-container button {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Oxanium', sans-serif;
+    
+}
 .show-oldest-news-button {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
     margin-left: 310px;
     padding: 10px 20px;
-    font-family: 'Oxanium', sans-serif;
     font-size: 16px;
     font-weight: 600;
     border-radius: 5px;
     border: 1px solid var(--orange);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    color: var(--white);
     background-color: #040B24;
-    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .show-all-news-button {
     display: flex;
+    justify-content: center;
+    align-items: center;
     margin-left: 310px;
+    width: 180px;
     padding: 10px 35px;
-    font-family: 'Oxanium', sans-serif;
     font-size: 16px;
     font-weight: 600;
     border-radius: 5px;
     border: 1px solid var(--orange);
-    transition: background-color 0.3s ease, color 0.3s ease;
     background-color: #040B24;
-    text-transform: uppercase;
+    
 }
 
 .show-all-news-button:hover,
@@ -357,7 +368,6 @@ export default {
 
 .news-item:hover {
     background-color: #111c446c;
-
 }
 
 .news-item-subject {
@@ -365,7 +375,7 @@ export default {
     font-size: 20px;
     font-weight: bold;
     font-family: 'Oxanium', sans-serif;
-    margin-top: -5px;
+    margin-left: 2px;
 }
 
 .news-item-message {
@@ -377,10 +387,10 @@ export default {
     font-family: 'Oxanium', sans-serif;
     max-height: 6em;
     line-height: 1.5em;
-    margin-bottom: 10px;
-    margin-left: 10px;
-
+    margin-top: 2px;
+    margin-left: 5px;
 }
+
 .date {
     font-size: 12px;
     color: #ffffff;
@@ -388,6 +398,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
+    margin-left: 5px;
 }
 
 .deadline {
@@ -420,7 +431,6 @@ export default {
     text-align: center;
     font-weight: 600;
     margin-top: 30px;
-    
 }
 
 .news-item-popup-message {
@@ -439,7 +449,6 @@ export default {
     font-size: 12px;
     color: #ffffff;
     font-family: 'Oxanium', sans-serif;
-    
 }
 
 .news-item-popup-deadline {
@@ -449,7 +458,6 @@ export default {
     font-size: 12px;
     color: #ffffff;
     font-family: 'Oxanium', sans-serif;
-
     width: 100%;
 }
 
@@ -458,7 +466,6 @@ export default {
     position: relative;
     font-family: 'Oxanium', sans-serif;
     width: 300px;
-
 }
 
 .share-news-popup {
@@ -504,17 +511,22 @@ export default {
     background-color: var(--dark-blue);
 }
 
-.edit-news-button {
-    font-size: 14px;
+.edit-news-button-button {
+    display: flex;
     text-align: center;
+    justify-content: center;
+    height: 36px;
+    font-size: 14px;
     text-transform: uppercase;
-    height: 25px;
     cursor: pointer;
     font-family: 'Oxanium', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 8px 1px #2525A5;
+    background-color: var(--light-blue);
 }
 
-.edit-news-button button:hover {
-    background-color: #2d2dc7;
+.edit-news-button-button:hover {
+    background-color: var(--light-blue-hover);
 }
 
 .edit-form {
@@ -574,8 +586,6 @@ export default {
     background-color: rgba(41, 41, 192, 0.507);
 }
 
-
-
 h3 {
     margin-top: 15px;
     margin-left: 125px;
@@ -590,7 +600,6 @@ h3 {
 .share-news-popup-content button:hover {
     background-color: #2d2dc7;
 }
-
 
 h2,
 p {
@@ -622,20 +631,20 @@ p {
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    justify-content: space-around;
     align-items: center;
 }
 
 .button-container button {
     font-family: 'Oxanium', sans-serif;
     background-color: var(--light-blue);
-    font-weight: 600;
-    width: 100px;
+    width: 110px;
     margin: 0 5px;
     flex: 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 1px 1px 8px 1px #2525A5;
 }
 
 .button-container button:hover {
-    background-color: #2d2dc7;
+    background-color: var(--light-blue-hover);
 }
 </style>

@@ -9,7 +9,7 @@
                     <div v-for="(email, index) in emails" :key="index">
                         <input v-model="emails[index]" type="email" placeholder="Enter email.."/>
                     </div>
-                    <div class="button-container">
+                    <div class="button-container-invite-users">
                         <button @click.prevent="addEmail" class="add-email-button">Add Another Email</button>
                         <button @click.prevent="removeLastEmail" v-if="emails.length > 1" class="remove-email-button">Remove Last Email</button>
                         <button type="submit" class="submit-button">Send Invitations</button>
@@ -64,17 +64,21 @@ export default {
 
 <style>
 .invite-btn {
-    color: var(--white);
-    padding: 10px 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    margin-top: 20px;
+    margin-left: 310px;
+    padding: 10px 20px;
     font-size: 16px;
     font-weight: 600;
-    font-family: 'Oxanium', sans-serif;
-    border: 1px solid var(--orange);
+    letter-spacing: 2px;
     border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 1px solid var(--orange);
+    color: var(--white);
     background-color: #040B24;
-    margin-left: 310px;
-    margin-top: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .invite-btn:hover {
@@ -86,10 +90,10 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
+    padding: 20px;
     border: 2px solid #111C44;
     transform: translate(-50%, -50%);
     background-color: var(--dark-blue);
-    padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1;
 }
@@ -103,27 +107,35 @@ export default {
 .submit-button {
     background-color: var(--light-blue);
     font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.add-email-button:hover,
+.remove-email-button:hover,
+.submit-button:hover {
+    background-color: var(--light-blue-hover);
 }
 
 input[type="email"] {
+    margin-bottom: 15px;
     padding: 10px;
     width: 100%;
     height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    border: 1px solid var(--blue);
     font-family: 'Oxanium', sans-serif;
     font-size: 16px;
-    color: #333;
+    color: #ffffff;
+    background-color: var(--dark-blue);
 }
 
 
 h2 {
     color: #ffffff;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 600;
     font-family: 'Oxanium', sans-serif;
     text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 button {
@@ -133,26 +145,26 @@ button {
     background-color: var(--light-blue);
     font-family: 'Oxanium', sans-serif;
     font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
     color: #fff;
     border: none;
     border-radius: 5px;
     text-transform: uppercase;
-}
-
-input[type="email"] {
-    padding: 10px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    letter-spacing: 2px;
 }
 
 .toggle {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
     right: 0;
-    height: 35px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+
 }
 
 i {

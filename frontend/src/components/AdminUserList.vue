@@ -79,7 +79,7 @@
                         <strong>Change password:</strong><br />
                         <input v-model="selectedUser.currentPassword" type="password" placeholder="Current password" />
                         <input v-model="selectedUser.newPassword" type="password" placeholder="New password" />
-                        <button class="btn btn-primary mt-2" @click="changePassword(selectedUser)">
+                        <button class="btn btn-change-password" @click="changePassword(selectedUser)">
                           Change password
                         </button>
                       </td>
@@ -261,6 +261,7 @@ export default {
 </script>
 
 <style scoped>
+
 .search-bar {
   background-color: #040B24;
   color: #fff;
@@ -315,22 +316,34 @@ export default {
   border-bottom: 1px solid #eee;
 }
 
+
 .btn-primary,
-.btn-deactivate,
-.btn {
-  background-color: var(--light-blue);
+.btn-change-password,
+.btn-deactivate {
   border: none;
   color: #fff;
   font-size: 14px;
   font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 10px;
+  cursor: pointer;
+  font-family: 'Oxanium', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
 }
 
 .btn-primary:hover,
-.btn-deactive:hover,
 .btn:hover {
   background-color: #2d2dc7;
 
 }
+
+.btn-delete:hover,
+.btn-deactivate:hover {
+  color: #fff;
+  background-color: #df3232;
+}
+
 
 .button-container {
   display: flex;
@@ -338,26 +351,24 @@ export default {
 
 .edit-button,
 .delete-button {
-  font-size: 14px;
+  display:flex;
   text-align: center;
   text-transform: uppercase;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  justify-content: center;
+  font-family: 'Oxanium', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
   height: 35px;
   cursor: pointer;
-  font-family: 'Oxanium', sans-serif;
+  box-shadow: 1px 1px 8px 1px #2525A5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
 }
 
 .edit-button:hover,
 .delete-button:hover {
   color: #fff;
-  background-color: #0b1d5e;
-}
-
-.btn-delete:hover,
-.btn-deactivate:hover {
-  color: #fff;
-  background-color: #df3232;
-  border-color: #f13d3d;
+  background-color: var(--light-blue-hover);
 }
 
 .toggle {

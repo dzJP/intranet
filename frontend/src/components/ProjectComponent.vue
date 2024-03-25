@@ -156,12 +156,17 @@ onMounted(async () => {
 
 .viewproject-btn {
   margin-top: 50px;
-  margin-left: 290px;
+  margin-left: 310px;
   font-family: 'Oxanium', sans-serif;
   font-size: 16px;
   font-weight: 600;
   background-color: var(--dark-blue);
   border: 2px solid var(--orange);
+  letter-spacing: 2px;
+}
+
+.viewproject-btn:hover {
+  background-color: var(--orange);
 }
 
 .project-popup {

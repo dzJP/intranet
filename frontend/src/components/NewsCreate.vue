@@ -116,16 +116,22 @@ export default {
 
 <style scoped>
 .create-news-button {
-    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 180px;
+    margin-left: 310px;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 600;
-    border: 1px solid var(--orange);
-    border-radius: 5px;
     font-family: 'Oxanium', sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    letter-spacing: 2px;
+    border-radius: 5px;
+    border: 1px solid var(--orange);
+    color: var(--white);
     background-color: #040B24;
-    margin-left: 310px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    
 }
 
 .create-news-button:hover {
@@ -151,17 +157,17 @@ export default {
 }
 
 .create-news button.btn-primary {
-    background-color: #3498db;
+    background-color: var(--light-blue);
     color: #fff;
-    border: 1px solid #3498db;
     font-family: 'Oxanium', sans-serif;
+    font-weight: 600;
     padding: 5px 50px;
     cursor: pointer;
+    border: none;
 }
 
 .create-news button.btn-primary:hover {
-    background-color: #0bb4e7;
-    border-color: #2980b9;
+    background-color: var(--light-blue-hover);
 }
 
 .create-news button {

@@ -44,7 +44,7 @@ export const useUserStore = defineStore({
   },
     async getAllUsers() {
       try {
-        const response = await axios.get("http://localhost:8080/api/v1/admin", {
+        const response = await axios.get("http://localhost:8080/api/v1/users", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

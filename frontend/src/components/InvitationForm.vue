@@ -3,7 +3,7 @@
         <button @click="togglePopup" class="invite-btn">Invite users</button>
         <div v-if="isPopupVisible" class="popup">
             <div class="popup-content">
-                <i class="toggle bi bi-x" @click="togglePopup"></i>
+                <i class="invite-toggle bi bi-x" @click="togglePopup"></i>
                 <h2>Invite Users</h2>
                 <form @submit.prevent="inviteUsers">
                     <div v-for="(email, index) in emails" :key="index">
@@ -62,7 +62,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .invite-btn {
     display: flex;
     justify-content: center;
@@ -154,7 +154,7 @@ button {
     letter-spacing: 2px;
 }
 
-.toggle {
+.invite-toggle {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -163,18 +163,13 @@ button {
     right: 0;
     height: 30px;
     width: 30px;
-    border-radius: 100%;
-
-}
-
-i {
+    color: #fff;
     font-size: 25px;
-    color: #454444;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.toggle:hover {
+.invite-toggle:hover {
     background-color: #df3232;
     color: #fff;
     cursor: pointer;

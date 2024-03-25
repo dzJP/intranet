@@ -1,8 +1,5 @@
 <template>
-    <div>
-        <h1>Colleagues View</h1>
         <UserList  />
-    </div>
 </template>
 
 <script>

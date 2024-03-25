@@ -15,9 +15,9 @@
 
                 <textarea v-model="editedNews.message" required></textarea>
                 <div class="button-container-edit-news">
-                <button type="submit">Update News</button>
-                <button type="button" @click="deleteNewsItem">Delete News</button>
-                <button type="button" class="close-button" @click="closeForm">Close</button>
+                <button type="submit" class="btn">Update News</button>
+                <button type="button" @click="deleteNewsItem" class="btn">Delete News</button>
+                <button type="button" class="btn close-button" @click="closeForm">Close</button>
             </div>
             </form>
         </div>
@@ -39,7 +39,7 @@
                     <div v-if="newsItem.deadline" class="deadline">Deadline: {{ formatDate(newsItem.deadline) }}</div>
                 </div>
                 <div v-if="allowEdit" class="edit-news-button">
-                    <button class="edit-news-button-button" @click.stop="editNewsItem(newsItem)">Edit</button>
+                    <button class="btn edit-news-button-button" @click.stop="editNewsItem(newsItem)">Edit</button>
                 </div>
             </div>
         </div>
@@ -52,10 +52,10 @@
                 <div class="news-item-popup-deadline">Deadline: {{ formatDate(selectedNewsItem.deadline) }}</div>
             </div>
             <div class="button-container">
-                <button @click="navigate('previous')">Previous</button>
-                <button @click="navigate('next')">Next</button>
-                <button @click="closeNewsDetailsPopup">Close</button>
-                <button @click="openSharePopup">Share</button>
+                <button @click="navigate('previous')" class="btn">Previous</button>
+                <button @click="navigate('next')" class="btn">Next</button>
+                <button @click="closeNewsDetailsPopup" class="btn">Close</button>
+                <button @click="openSharePopup" class="btn">Share</button>
             </div>
         </div>
         <div v-if="showSharePopup" class="share-news-popup">
@@ -64,8 +64,8 @@
                 <textarea v-model="shareText" placeholder="Enter email.."></textarea>
             </div>
             <div class="button-container">
-                <button @click="closeSharePopup" class="close-button">Close</button>
-                <button @click="shareNews" class="submit-button">Submit</button>
+                <button @click="closeSharePopup" class="btn close-button">Close</button>
+                <button @click="shareNews" class="btn submit-button">Submit</button>
             </div>
         </div>
     </div>
@@ -297,13 +297,15 @@ export default {
 
 <style scoped>
 
-.show-oldest-news-button, .show-all-news-button, .edit-news-button-button, .button-container button {
+.show-oldest-news-button, .show-all-news-button,
+.button-container button {
     letter-spacing: 2px;
     text-transform: uppercase;
     transition: background-color 0.3s ease, color 0.3s ease;
     font-family: 'Oxanium', sans-serif;
-    
+    margin-bottom: 10px;
 }
+
 .show-oldest-news-button {
     display: flex;
     justify-content: center;
@@ -331,8 +333,8 @@ export default {
     font-weight: 600;
     border-radius: 5px;
     border: 1px solid var(--orange);
+    color: var(--white);
     background-color: #040B24;
-    
 }
 
 .show-all-news-button:hover,
@@ -368,6 +370,19 @@ export default {
 
 .news-item:hover {
     background-color: #111c446c;
+}
+
+.edit-news-button-button {
+    border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 10px;
+  cursor: pointer;
+  font-family: 'Oxanium', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
 }
 
 .news-item-subject {
@@ -635,13 +650,16 @@ p {
 }
 
 .button-container button {
-    font-family: 'Oxanium', sans-serif;
-    background-color: var(--light-blue);
-    width: 110px;
-    margin: 0 5px;
-    flex: 1;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    box-shadow: 1px 1px 8px 1px #2525A5;
+    border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 10px;
+  cursor: pointer;
+  font-family: 'Oxanium', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--light-blue);
 }
 
 .button-container button:hover {

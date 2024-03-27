@@ -16,10 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-
-import java.io.IOException;
 
 import java.time.LocalDate;
 
@@ -64,6 +60,7 @@ public class UserService implements CommandLineRunner {
                 .email("admin1@admin.com")
                 .firstName("admin")
                 .lastName("admin")
+                .birthDate(LocalDate.of(1980, 11, 19))
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_ADMIN)
@@ -78,6 +75,7 @@ public class UserService implements CommandLineRunner {
                 .email("user1@user.com")
                 .firstName("user")
                 .lastName("user")
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .password(passwordEncoder.encode("password"))
                 .phoneNumber("123456789")
                 .role(Role.ROLE_USER)
@@ -278,17 +276,14 @@ public class UserService implements CommandLineRunner {
         }
     }
 
-    public void uploadProfilePicture(MultipartFile profilePicture) throws IOException {
+    public void updateBirthdate(UserProfileDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
 
         User user = userRepository.findByEmail(userEmail);
 
         if (user != null) {
-            // Use AzureBlobStorageService to handle the file upload, including validation
-            String pictureUrl = azureBlobStorageService.uploadProfilePictureToBlobStorage(user.getEmail(), profilePicture);
-            user.setProfilePictureUrl(pictureUrl);
-
+            user.setBirthDate(request.getBirthDate());
             userRepository.save(user);
         } else {
             throw new IllegalArgumentException("User not found");

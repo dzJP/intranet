@@ -1,28 +1,25 @@
 package deltma.solutions.backend.controllers;
 
-import deltma.solutions.backend.dto.ChangePasswordDTO;
-import deltma.solutions.backend.dto.UserProfileDTO;
 import deltma.solutions.backend.models.User;
 import deltma.solutions.backend.repositories.UserRepository;
 import deltma.solutions.backend.services.AzureBlobStorageService;
-import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/profile")
 @RequiredArgsConstructor
 public class UserProfileController {
 
-    private final UserService userService;
     private final UserRepository userRepository;
     private final AzureBlobStorageService azureBlobStorageService;
 
@@ -51,7 +48,7 @@ public class UserProfileController {
     }
 
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN')")
-    @PostMapping("/delete-profile-picture")
+    @DeleteMapping("/delete-profile-picture")
     public ResponseEntity<String> deleteProfilePicture() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,4 +70,5 @@ public class UserProfileController {
                     .body("Error deleting profile picture");
         }
     }
+
 }

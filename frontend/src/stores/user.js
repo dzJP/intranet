@@ -154,6 +154,28 @@ export const useUserStore = defineStore({
         throw error;
       }
     },
+
+    async updateBirthDate(newBirthDate) {
+      try {
+        await axios.put(
+          "http://localhost:8080/api/v1/profile/update-birthdate",
+          {
+            birthDate: newBirthDate, 
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        this.birthDate = newBirthDate;
+        console.log("Birthdate updated successfully:", newBirthDate);
+      } catch(error) {
+        console.error("Error updating birthdate:", error);
+        throw error;
+      }
+    },
+    
     async deactivateUser(user) {
       try {
         const response = await axios.patch(
@@ -280,6 +302,7 @@ export const useUserStore = defineStore({
         console.log('Profile picture deleted successfully:', response.data);
 
         this.profilePictureUrl = null;
+        console.log('Profile picture deleted successfully:', response.data);
       } catch (error) {
         console.error('Error deleting profile picture:', error);
         throw error;

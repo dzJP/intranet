@@ -10,7 +10,6 @@ import deltma.solutions.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -110,6 +109,18 @@ public class AuthenticationController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error updating last name: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/profile/update-birthdate")
+    public ResponseEntity<String> updateBirthdate(@RequestBody UserProfileDTO request) {
+        try {
+            userService.updateBirthdate(request);
+            return ResponseEntity.ok("Birthdate updated successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error updating birthdate: " + e.getMessage());
         }
     }
 

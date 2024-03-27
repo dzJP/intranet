@@ -6,7 +6,7 @@
             <label for="fileInput" class="img-container">
                 
                 <img v-if="user.profilePictureUrl" :src="user.profilePictureUrl" :alt="user.firstName + user.lastName + ' Profile Picture'" />
-                <img v-else src="../assets/no-profile-picture.png" alt="No Profile Picture" @click="triggerFileInput" />
+                <img v-else src="../assets/no-profile-picture.png" alt="No Profile Picture" />
 
                 <div class="user-name">
                     {{ user.firstName }} {{ user.lastName }}

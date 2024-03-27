@@ -14,9 +14,9 @@
           <tbody>
             <tr v-for="user in filteredUsers" :key="user.email" class="user-list">
               <td>
-                <router-link :to="`/user/${user.email}`" class="user-item">
                 <img v-if="user.profilePictureUrl" :src="user.profilePictureUrl" class="avatar sm rounded-pill me-3 flex-shrink-0" :alt="user.firstName + ' ' + user.lastName + ' Profile Picture'">
                 <img v-else src="../assets/no-profile-picture.png" class="avatar sm rounded-pill me-3 flex-shrink-0" alt="No Profile Picture">
+                <router-link :to="`/user/${user.email}`" class="user-item">
                   {{ user.firstName }} {{ user.lastName }}
                 </router-link>
               </td>

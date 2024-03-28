@@ -15,12 +15,7 @@
         <router-link to="/news">Latest news</router-link>
         </li>
       </ul>
-
-      <div class="logout" v-if="userRole">
-          <a href="#" @click="logout">Logout</a>
-        </div>
     </nav>
-    
   </template>
   
   <script>
@@ -91,31 +86,6 @@
 
 .sidebar li a.router-link-exact-active {
   border-left: 10px solid var(--orange); 
-}
-
-.logout {
-  position: fixed;
-  bottom: 50px; 
-  left: 60px; 
-  list-style: none;
-}
-
-.logout a {
-  color: var(--white);
-  text-decoration: none;
-  padding: 10px 30px;
-  font-size: 16px; 
-  font-weight: 600;
-  border: 1px solid var(--orange); 
-  border-radius: 5px; 
-  transition: background-color 0.3s ease, color 0.3s ease; 
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.logout a:hover {
-  background-color: var(--orange); 
-  color: var(--white); 
 }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
 <InvitationForm />
 <NewsCreate />
-<NewsList :search-query="searchQuery" />
+<NewsList />
  <ProjectComponent />
  <AdminUserList />
  <UserTimeRegistrations />

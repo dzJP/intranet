@@ -1,5 +1,10 @@
 <template>
     <div class="user-profile-container">
+        <div class="top-left">
+            <router-link v-if="userRole === 'ROLE_ADMIN'" to="/admin">
+                <button class="back-btn btn btn-primary"><i class="bi bi-chevron-left"></i> Back</button>
+            </router-link>
+        </div>
         <span v-if="!editMode" class="edit-text" @click="openEditPopup">Edit profile</span>
         <div class="content-container">
 
@@ -154,6 +159,7 @@
 import { onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 import Overlay from './OverlayComponent.vue';
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     components: {
@@ -161,6 +167,7 @@ export default {
     },
     setup() {
         const userStore = useUserStore();
+        const authStore = useAuthStore();
         const editedPhoneNumber = ref(userStore.phoneNumber);
         const editedFirstName = ref(userStore.firstName);
         const editedLastName = ref(userStore.lastName);
@@ -309,6 +316,7 @@ export default {
             updateFirstName,
             updateLastName,
             updateBirthDate,
+            userRole: authStore.role,
         };
     },
 };
@@ -328,6 +336,27 @@ export default {
     height: 500px;
     border-radius: 9px;
     padding: 20px;
+}
+
+.top-left {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.back-btn {
+    background-color: #223266;
+    color: var(--white);
+    padding: 6px 10px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.back-btn:hover {
+    background-color: var(--orange);
 }
 
 .content-container {

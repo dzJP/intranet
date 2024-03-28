@@ -1,5 +1,5 @@
 <template>
-    <input v-model="searchQuery" @input="handleInput" placeholder="Search for news..">
+    <input v-model="searchQuery" @input="handleInput">
 </template>
 
 <script>

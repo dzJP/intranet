@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchBarUsers @search="updateSearchQuery" class="search-bar" />
+    <SearchBar @search="updateSearchQuery" class="search-bar" placeholder="Search for users.."/>
   </div>
   <div class="card userlist">
     <div class="card-body px-0 pt-0 pb-2">
@@ -122,11 +122,11 @@
 <script>
 import { onMounted, ref, computed } from 'vue';
 import { useUserStore } from '@/stores/user';
-import SearchBarUsers from '@/components/SearchBarUsers.vue';
+import SearchBar from './SearchBar.vue';
 
 export default {
   components: {
-    SearchBarUsers,
+    SearchBar,
   },
 
   setup() {

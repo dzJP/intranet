@@ -15,7 +15,7 @@
   
   
   <script>
-  import {  ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useUserStore } from '@/stores/user';
     import { useAuthStore } from '@/stores/auth';
   
@@ -26,14 +26,16 @@
       const authStore = useAuthStore();
   
       const profileToggle = () => {
-        console.log('Profile toggled');
         showContent.value = !showContent.value;
-        console.log('showContent:', showContent.value);
       };
-
+      
       const logout = () => {
         authStore.logout();
       };
+
+      onMounted(async () => {
+        await userStore.getUserDetails();
+      });
   
       return {
         showContent,

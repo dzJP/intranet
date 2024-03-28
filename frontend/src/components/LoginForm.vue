@@ -1,5 +1,6 @@
 <template>
-		<img src="@/assets/logo.png" alt="Deltma logo" class="logo" />
+<div class="">
+<img src="@/assets/logo.png" alt="Deltma logo" class="logo" />
 	<div class="login-container">
 		<div>
 		<h1>Deltma</h1>
@@ -20,27 +21,34 @@
 				</div>
 			</form>
 		</div>
-
+	
 		<transition name="fade">
-			<div v-if="showPopup" class="popup">
+			<div v-if="showPopup" class="forgotpasswordPopup">
 				<i class="forgetpassword-toggle bi bi-x" @click="closePopup"></i>
 				<ForgotPassword />
 			</div>
 		</transition>
 	</div>
+</div>
+
+<Overlay v-if="showPopup" @close-overlay="closePopup" />
 </template>
 
 <script>
 import { reactive, ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import ForgotPassword from './ForgotPassword.vue';
+import Overlay from './OverlayComponent.vue';
 
 export default {
 	name: 'LoginForm',
 	components: {
-		ForgotPassword
+		ForgotPassword,
+		Overlay,
 	},
 	setup() {
+		const showPopup = ref(false);
+
 		const user = reactive({
 			email: '',
 			password: 'password',
@@ -52,8 +60,6 @@ export default {
 				useAuthStore().login(user.email, user.password);
 			}
 		}
-
-		const showPopup = ref(false);
 
 		function showForgotPasswordPopup() {
 			showPopup.value = true;
@@ -88,10 +94,7 @@ export default {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	margin: 25vh auto;
 	width: 900px;
 }
 
@@ -144,8 +147,8 @@ export default {
 	text-decoration: underline;
 }
 
-.popup {
-	position: fixed;
+.forgotpasswordPopup {
+	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -155,6 +158,7 @@ export default {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	max-width: 500px;
 	border-radius: 5px;
+	z-index: 9;
 }
 
 .forgetpassword-toggle  {

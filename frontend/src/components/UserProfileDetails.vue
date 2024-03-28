@@ -3,7 +3,7 @@
 
         <div class="top-left">
             <router-link :to="goBackRoute">
-                <button class="back-btn btn btn-primary">Go back</button>
+                <button class="back-btn btn btn-primary"><i class="bi bi-chevron-left"></i> Back</button>
             </router-link>
         </div>
         

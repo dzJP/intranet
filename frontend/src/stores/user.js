@@ -314,6 +314,9 @@ export const useUserStore = defineStore({
       this.firstName = "";
       this.lastName = "";
       this.phoneNumber = "";
+      this.profilePictureUrl = null;
+      this.birthDate = "";
+      this.users = [];
     },
   },
 });

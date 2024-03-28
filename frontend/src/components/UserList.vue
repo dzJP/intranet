@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <SearchBarUsers @search="updateSearchQuery" placeholder="search employee" class="search-input"  />
+      <SearchBar @search="updateSearchQuery" placeholder="search employee" class="search-input"  />
 
         <table>
           <thead>
@@ -38,7 +38,7 @@
   <script>
   import { ref, computed, onMounted } from 'vue';
   import { useUserStore } from '@/stores/user';
-  import SearchBarUsers from '@/components/SearchBarUsers.vue';
+  import SearchBar from '@/components/SearchBar.vue';
   
   export default {
     setup() {
@@ -73,7 +73,7 @@
         loadMoreUsers,
       };
     },
-    components: { SearchBarUsers }
+    components: { SearchBar }
   };
   </script>
   

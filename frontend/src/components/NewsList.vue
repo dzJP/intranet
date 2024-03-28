@@ -23,7 +23,7 @@
         </div>
 
         <div v-if="!hideSearchAndToggleShowAll">
-            <SearchBarNews class="search-bar" :search-query="searchQuery" @search="handleSearch" />
+            <SearchBar class="search-bar" :search-query="searchQuery" @search="handleSearch" placeholder="Search for news.." />
         </div>
 
         <div v-for="(newsItem, index) in displayedNewsList" :key="newsItem.id">
@@ -74,7 +74,7 @@
 <script>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useNewsStore } from '@/stores/news';
-import SearchBarNews from '@/components/SearchBarNews.vue';
+import SearchBar from './SearchBar.vue';
 import axios from 'axios';
 
 export default {
@@ -289,7 +289,7 @@ export default {
         };
     },
     components: {
-        SearchBarNews,
+        SearchBar,
     },
 };
 </script>

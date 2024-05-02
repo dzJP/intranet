@@ -4,16 +4,16 @@
         <form @submit.prevent="onSubmit">
             <div class="form-group mb-3">
                 <div class="reset-msg" v-if="passwordSent">
-                    <p>An email containing your new password has been sent to the provided email address. Please check your inbox and spam/junk folder.</p>
+                    <p style="font-family: 'Oxanium', sans-serif;">An email containing your new password has been sent to the provided email address. Please check your inbox and spam/junk folder.</p>
                 </div>
 
                 <div class="reset-msg" v-if="!passwordSent">
-                    <p>Please enter the email address associated with your account. We'll send you a new password shortly.</p>
+                    <p style="font-family: 'Oxanium', sans-serif;">Please enter the email address associated with your account. <br>We'll send you a new password shortly.</p>
                 </div>
                 
                 <input type="email" v-if="!passwordSent" class="form-control" id="email" name="email" v-model="email"  placeholder="email"/>
             </div>
-            <button type="submit" v-if="!passwordSent" class="send-btn btn btn-primary">Send</button>
+            <button type="submit" v-if="!passwordSent" class="resetPassword-btn btn btn-primary">Reset password</button>
         </form>
     </div>
 </template>
@@ -53,11 +53,22 @@ export default {
 .reset-msg {
     margin-top: 10px;
     margin-bottom: 20px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
-.send-btn {
+.resetPassword-btn {
+    background-color: var(--light-blue);
+    border-color: var(--light-blue);
     margin-top: 5px;
-    width: 80px;
+    width: 200px;
+    height: 45px;
+    font-size: 16px;
+    font-family: 'Oxanium', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.form-control::placeholder {
+    color: var(--purple-variance);
 }
 </style>

@@ -124,6 +124,12 @@ export default {
 	height: 40px;
 	border-radius: 5px;
 	margin: 10px 0;
+	font-family: 'Oxanium', sans-serif;
+	color: var(--purple-variance);
+}
+
+.login-form input::placeholder {
+	color: var(--purple-variance);
 }
 
 .signin-btn {
@@ -159,7 +165,9 @@ export default {
 	max-width: 500px;
 	border-radius: 5px;
 	z-index: 9;
+	text-align: center;
 }
+
 
 .forgetpassword-toggle  {
     position: absolute;
